@@ -224,6 +224,7 @@
 			this.btnChooseTesseractOcrDir.TabIndex = 5;
 			this.btnChooseTesseractOcrDir.Text = "选择";
 			this.btnChooseTesseractOcrDir.UseVisualStyleBackColor = true;
+			this.btnChooseTesseractOcrDir.Click += new System.EventHandler(this.btnChooseTesseractOcrDir_Click);
 			// 
 			// Options
 			// 

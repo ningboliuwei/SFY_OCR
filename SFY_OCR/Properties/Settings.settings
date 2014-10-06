@@ -6,7 +6,7 @@
       <Value Profile="(Default)">D:\Tesseract-OCR</Value>
     </Setting>
     <Setting Name="OutputDir" Type="System.String" Scope="User">
-      <Value Profile="(Default)">R:\</Value>
+      <Value Profile="(Default)">D:\TEMP</Value>
     </Setting>
   </Settings>
 </SettingsFile>

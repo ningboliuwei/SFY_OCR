@@ -37,7 +37,7 @@ namespace SFY_OCR.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("R:\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\TEMP")]
         public string OutputDir {
             get {
                 return ((string)(this["OutputDir"]));
