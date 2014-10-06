@@ -103,6 +103,11 @@ namespace SFY_OCR
 			lblPictureBoxError.Top = pbxForOcr.Top + 5;
 			//lblPictureBoxError.Text = "";
 
+			//设置主窗体双缓冲，减少闪烁
+			this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
+				  ControlStyles.ResizeRedraw |
+				  ControlStyles.AllPaintingInWmPaint, true);
+
 		}
 
 
@@ -173,7 +178,11 @@ namespace SFY_OCR
 										imageFilePaths[i].Substring(imageFilePaths[i].LastIndexOf("\\") + 1) + ".txt";
 				if (File.Exists(resultFilePath))
 				{
-					lbxImages.Items[i] += "    (已识别)";
+					//避免再次显示“已识别”
+					if (!lbxImages.Items[i].ToString().Contains("(已识别)"))
+					{
+						lbxImages.Items[i] += "    (已识别)";
+					}
 				}
 			}
 		}
@@ -302,6 +311,20 @@ namespace SFY_OCR
 		private void backgroundWorkerInvokeCommand_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
 			progressBarOcr.Value = e.ProgressPercentage;
+		}
+
+
+		/// <summary>
+		/// 重写方法，改善闪烁
+		/// </summary>
+		protected override CreateParams CreateParams
+		{
+			get
+			{
+				CreateParams cp = base.CreateParams;
+				cp.ExStyle |= 0x02000000;////用双缓冲绘制窗口的所有子控件
+				return cp;
+			}
 		}
 	}
 }
