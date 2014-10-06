@@ -40,6 +40,9 @@ namespace SFY_OCR
 
 				lbxImages.SelectedIndex = 0;
 
+				//导入图片后马上检测结果文件状态
+				CheckoutputResultFileStatus();
+
 			}
 		}
 
@@ -66,11 +69,13 @@ namespace SFY_OCR
 		private void lbxImages_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			//显示图片
-			ShowImage(imageFilePaths[lbxImages.SelectedIndex]);
+			if (lbxImages.SelectedIndex != -1)
+			{
+				ShowImage(imageFilePaths[lbxImages.SelectedIndex]);
 
-			//显示结果文件的内容
-			ShowResultFile(imageFilePaths[lbxImages.SelectedIndex] + ".txt");
-
+				//显示结果文件的内容
+				ShowResultFile(imageFilePaths[lbxImages.SelectedIndex] + ".txt");
+			}
 
 		}
 
@@ -83,7 +88,7 @@ namespace SFY_OCR
 			lbxImages.DisplayMember = "Text";
 			lbxImages.ValueMember = "Value";
 
-		
+
 
 			//设置backgroundWorker的属性
 			backgroundWorkerInvokeCommand.WorkerReportsProgress = true;
@@ -91,6 +96,13 @@ namespace SFY_OCR
 
 			//设置“取消”按钮为不可用
 			btnCancel.Enabled = false;
+
+			//设置PictureBox中的Label不可见
+			lblPictureBoxError.Visible = false;
+			lblPictureBoxError.Left = pbxForOcr.Left + 5;
+			lblPictureBoxError.Top = pbxForOcr.Top + 5;
+			//lblPictureBoxError.Text = "";
+
 		}
 
 
@@ -103,6 +115,8 @@ namespace SFY_OCR
 				imageFilePaths.Clear();
 				lbxImages.Items.Clear();
 				pbxForOcr.ImageLocation = null;
+				lblPictureBoxError.Visible = false;
+				txtResult.Text = "";
 			}
 		}
 
@@ -136,6 +150,9 @@ namespace SFY_OCR
 					{
 						backgroundWorkerInvokeCommand.RunWorkerAsync(arguments);
 					}
+
+
+					//lbxImages.SelectedIndex = 0;
 				}
 				catch (Exception exception)
 				{
@@ -145,6 +162,19 @@ namespace SFY_OCR
 			else
 			{
 				MessageBox.Show("请先导入要识别的图片", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
+
+		private void CheckoutputResultFileStatus()
+		{
+			for (int i = 0; i < imageFilePaths.Count; i++)
+			{
+				string resultFilePath = Settings.Default.OutputDir +
+										imageFilePaths[i].Substring(imageFilePaths[i].LastIndexOf("\\") + 1) + ".txt";
+				if (File.Exists(resultFilePath))
+				{
+					lbxImages.Items[i] += "    (已识别)";
+				}
 			}
 		}
 
@@ -185,16 +215,12 @@ namespace SFY_OCR
 				backgroundWorkerInvokeCommand.ReportProgress(beforeSpan + (i + 1) * (100 - beforeSpan - afterSpan) / imageFilePaths.Count);
 			}
 
-			backgroundWorkerInvokeCommand.ReportProgress(100-afterSpan);
+			backgroundWorkerInvokeCommand.ReportProgress(100 - afterSpan);
 			//稍微暂停一下，以表现满格前最后一步动作
-			Thread.Sleep(500);
+			Thread.Sleep(1000);
 
 			//进度条满格
 			backgroundWorkerInvokeCommand.ReportProgress(100);
-			//稍微暂停一下，以表现满格动作
-			Thread.Sleep(500);
-		
-
 		}
 
 
@@ -220,10 +246,14 @@ namespace SFY_OCR
 			MessageBox.Show("识别完毕！", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 			//识别完毕后，选中第一张图片
+			lbxImages.SelectedIndex = -1;
 			lbxImages.SelectedIndex = 0;
 
 			//重新设置“取消”按钮为不可用
 			btnCancel.Enabled = false;
+
+			//显示图片识别状态
+			CheckoutputResultFileStatus();
 		}
 
 		/// <summary>
@@ -239,6 +269,7 @@ namespace SFY_OCR
 			}
 			else
 			{
+				txtResult.Text = "错误：该图片对应的识别结果不存在，请识别。";
 				//MessageBox.Show("该图片对应的识别结果不存在，请重新识别。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
@@ -251,11 +282,13 @@ namespace SFY_OCR
 		{
 			if (File.Exists(imageFilePath))
 			{
+				lblPictureBoxError.Visible = false;
 				pbxForOcr.ImageLocation = imageFilePath;
 			}
 			else
 			{
-				//MessageBox.Show("该图片不存在，请重新选择。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				pbxForOcr.ImageLocation = null;
+				lblPictureBoxError.Visible = true;
 			}
 
 		}

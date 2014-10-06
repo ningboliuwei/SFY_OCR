@@ -213,6 +213,36 @@
   <data name="&gt;&gt;groupBox1.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="lblPictureBoxError.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="lblPictureBoxError.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 14.25pt</value>
+  </data>
+  <data name="lblPictureBoxError.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 19</value>
+  </data>
+  <data name="lblPictureBoxError.Size" type="System.Drawing.Size, System.Drawing">
+    <value>249, 373</value>
+  </data>
+  <data name="lblPictureBoxError.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="lblPictureBoxError.Text" xml:space="preserve">
+    <value>错误：该图片不存在，请重新选择。</value>
+  </data>
+  <data name="&gt;&gt;lblPictureBoxError.Name" xml:space="preserve">
+    <value>lblPictureBoxError</value>
+  </data>
+  <data name="&gt;&gt;lblPictureBoxError.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblPictureBoxError.Parent" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;lblPictureBoxError.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="pbxForOcr.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
@@ -241,7 +271,7 @@
     <value>groupBox2</value>
   </data>
   <data name="&gt;&gt;pbxForOcr.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="groupBox2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -317,6 +347,9 @@
   </data>
   <data name="txtResult.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
+  </data>
+  <data name="txtResult.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 14.25pt</value>
   </data>
   <data name="txtResult.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 19</value>
@@ -520,22 +553,22 @@
     <value>17, 17</value>
   </metadata>
   <data name="打开OToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>131, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="打开OToolStripMenuItem.Text" xml:space="preserve">
     <value>导入图片(&amp;I)</value>
   </data>
   <data name="清空CToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>131, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="清空CToolStripMenuItem.Text" xml:space="preserve">
     <value>清空(&amp;C)</value>
   </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 6</value>
+    <value>149, 6</value>
   </data>
   <data name="退出XToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>131, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="退出XToolStripMenuItem.Text" xml:space="preserve">
     <value>退出(&amp;X)</value>

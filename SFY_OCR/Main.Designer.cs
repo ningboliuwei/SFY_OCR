@@ -57,6 +57,7 @@
 			this.ofdPicture = new System.Windows.Forms.OpenFileDialog();
 			this.tmrProgressBar = new System.Windows.Forms.Timer(this.components);
 			this.backgroundWorkerInvokeCommand = new System.ComponentModel.BackgroundWorker();
+			this.lblPictureBoxError = new System.Windows.Forms.Label();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -114,6 +115,7 @@
 			// 
 			// groupBox2
 			// 
+			this.groupBox2.Controls.Add(this.lblPictureBoxError);
 			this.groupBox2.Controls.Add(this.pbxForOcr);
 			resources.ApplyResources(this.groupBox2, "groupBox2");
 			this.groupBox2.Name = "groupBox2";
@@ -252,6 +254,13 @@
 			this.backgroundWorkerInvokeCommand.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerInvokeCommand_ProgressChanged);
 			this.backgroundWorkerInvokeCommand.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerInvokeCommand_RunWorkerCompleted);
 			// 
+			// lblPictureBoxError
+			// 
+			this.lblPictureBoxError.AutoEllipsis = true;
+			this.lblPictureBoxError.BackColor = System.Drawing.SystemColors.Window;
+			resources.ApplyResources(this.lblPictureBoxError, "lblPictureBoxError");
+			this.lblPictureBoxError.Name = "lblPictureBoxError";
+			// 
 			// Main
 			// 
 			resources.ApplyResources(this, "$this");
@@ -312,6 +321,7 @@
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
 		private System.Windows.Forms.Button btnCancel;
 		private System.Windows.Forms.ProgressBar progressBarOcr;
+		private System.Windows.Forms.Label lblPictureBoxError;
 
 	}
 }
