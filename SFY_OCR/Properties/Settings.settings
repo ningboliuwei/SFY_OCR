@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SFY_OCR.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TesseractOcrDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Tesseract-OCR</Value>
+    </Setting>
+    <Setting Name="OutputDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">R:\</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
