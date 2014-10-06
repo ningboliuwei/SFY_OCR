@@ -40,6 +40,9 @@
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.txtResult = new System.Windows.Forms.TextBox();
+			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+			this.btnCancel = new System.Windows.Forms.Button();
+			this.progressBarOcr = new System.Windows.Forms.ProgressBar();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.文件FToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.打开OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,9 +57,6 @@
 			this.ofdPicture = new System.Windows.Forms.OpenFileDialog();
 			this.tmrProgressBar = new System.Windows.Forms.Timer(this.components);
 			this.backgroundWorkerInvokeCommand = new System.ComponentModel.BackgroundWorker();
-			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-			this.btnCancel = new System.Windows.Forms.Button();
-			this.progressBarOcr = new System.Windows.Forms.ProgressBar();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -66,8 +66,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.pbxForOcr)).BeginInit();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
-			this.menuStrip1.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
+			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -145,6 +145,25 @@
 			// 
 			resources.ApplyResources(this.txtResult, "txtResult");
 			this.txtResult.Name = "txtResult";
+			// 
+			// tableLayoutPanel3
+			// 
+			resources.ApplyResources(this.tableLayoutPanel3, "tableLayoutPanel3");
+			this.tableLayoutPanel3.Controls.Add(this.btnCancel, 1, 0);
+			this.tableLayoutPanel3.Controls.Add(this.progressBarOcr, 0, 0);
+			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+			// 
+			// btnCancel
+			// 
+			resources.ApplyResources(this.btnCancel, "btnCancel");
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.UseVisualStyleBackColor = true;
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+			// 
+			// progressBarOcr
+			// 
+			resources.ApplyResources(this.progressBarOcr, "progressBarOcr");
+			this.progressBarOcr.Name = "progressBarOcr";
 			// 
 			// menuStrip1
 			// 
@@ -233,25 +252,6 @@
 			this.backgroundWorkerInvokeCommand.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerInvokeCommand_ProgressChanged);
 			this.backgroundWorkerInvokeCommand.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerInvokeCommand_RunWorkerCompleted);
 			// 
-			// tableLayoutPanel3
-			// 
-			resources.ApplyResources(this.tableLayoutPanel3, "tableLayoutPanel3");
-			this.tableLayoutPanel3.Controls.Add(this.btnCancel, 1, 0);
-			this.tableLayoutPanel3.Controls.Add(this.progressBarOcr, 0, 0);
-			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-			// 
-			// btnCancel
-			// 
-			resources.ApplyResources(this.btnCancel, "btnCancel");
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.UseVisualStyleBackColor = true;
-			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-			// 
-			// progressBarOcr
-			// 
-			resources.ApplyResources(this.progressBarOcr, "progressBarOcr");
-			this.progressBarOcr.Name = "progressBarOcr";
-			// 
 			// Main
 			// 
 			resources.ApplyResources(this, "$this");
@@ -275,9 +275,9 @@
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox3.PerformLayout();
+			this.tableLayoutPanel3.ResumeLayout(false);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
-			this.tableLayoutPanel3.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

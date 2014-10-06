@@ -28,27 +28,28 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Options));
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this.label2 = new System.Windows.Forms.Label();
+			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
 			this.txtOutputDir = new System.Windows.Forms.TextBox();
+			this.label2 = new System.Windows.Forms.Label();
 			this.btnChooseOutputDir = new System.Windows.Forms.Button();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnDefault = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnOK = new System.Windows.Forms.Button();
-			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-			this.fbdChooseDir = new System.Windows.Forms.FolderBrowserDialog();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-			this.btnChooseTesseractOcrDir = new System.Windows.Forms.Button();
 			this.txtTesseractOcrDir = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
-			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+			this.btnChooseTesseractOcrDir = new System.Windows.Forms.Button();
+			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+			this.fbdChooseDir = new System.Windows.Forms.FolderBrowserDialog();
 			this.groupBox1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
+			this.tableLayoutPanel4.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
-			this.tableLayoutPanel4.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// groupBox1
@@ -79,15 +80,22 @@
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(478, 119);
 			this.tableLayoutPanel1.TabIndex = 0;
 			// 
-			// label2
+			// tableLayoutPanel4
 			// 
-			this.label2.AutoSize = true;
-			this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label2.Location = new System.Drawing.Point(3, 0);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(166, 29);
-			this.label2.TabIndex = 1;
-			this.label2.Text = "识别结果输出文件夹：";
+			this.tableLayoutPanel4.ColumnCount = 3;
+			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 250F));
+			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+			this.tableLayoutPanel4.Controls.Add(this.txtOutputDir, 1, 0);
+			this.tableLayoutPanel4.Controls.Add(this.label2, 0, 0);
+			this.tableLayoutPanel4.Controls.Add(this.btnChooseOutputDir, 2, 0);
+			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 38);
+			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+			this.tableLayoutPanel4.RowCount = 1;
+			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel4.Size = new System.Drawing.Size(472, 29);
+			this.tableLayoutPanel4.TabIndex = 21;
 			// 
 			// txtOutputDir
 			// 
@@ -98,6 +106,16 @@
 			this.txtOutputDir.ReadOnly = true;
 			this.txtOutputDir.Size = new System.Drawing.Size(244, 23);
 			this.txtOutputDir.TabIndex = 3;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label2.Location = new System.Drawing.Point(3, 0);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(166, 29);
+			this.label2.TabIndex = 1;
+			this.label2.Text = "识别结果输出文件夹：";
 			// 
 			// btnChooseOutputDir
 			// 
@@ -177,16 +195,6 @@
 			this.tableLayoutPanel3.Size = new System.Drawing.Size(472, 29);
 			this.tableLayoutPanel3.TabIndex = 20;
 			// 
-			// btnChooseTesseractOcrDir
-			// 
-			this.btnChooseTesseractOcrDir.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.btnChooseTesseractOcrDir.Location = new System.Drawing.Point(425, 3);
-			this.btnChooseTesseractOcrDir.Name = "btnChooseTesseractOcrDir";
-			this.btnChooseTesseractOcrDir.Size = new System.Drawing.Size(44, 23);
-			this.btnChooseTesseractOcrDir.TabIndex = 5;
-			this.btnChooseTesseractOcrDir.Text = "选择";
-			this.btnChooseTesseractOcrDir.UseVisualStyleBackColor = true;
-			// 
 			// txtTesseractOcrDir
 			// 
 			this.txtTesseractOcrDir.BackColor = System.Drawing.SystemColors.Window;
@@ -207,22 +215,15 @@
 			this.label1.TabIndex = 3;
 			this.label1.Text = "tesseract.exe 所在文件夹：";
 			// 
-			// tableLayoutPanel4
+			// btnChooseTesseractOcrDir
 			// 
-			this.tableLayoutPanel4.ColumnCount = 3;
-			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 250F));
-			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-			this.tableLayoutPanel4.Controls.Add(this.txtOutputDir, 1, 0);
-			this.tableLayoutPanel4.Controls.Add(this.label2, 0, 0);
-			this.tableLayoutPanel4.Controls.Add(this.btnChooseOutputDir, 2, 0);
-			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 38);
-			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-			this.tableLayoutPanel4.RowCount = 1;
-			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel4.Size = new System.Drawing.Size(472, 29);
-			this.tableLayoutPanel4.TabIndex = 21;
+			this.btnChooseTesseractOcrDir.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnChooseTesseractOcrDir.Location = new System.Drawing.Point(425, 3);
+			this.btnChooseTesseractOcrDir.Name = "btnChooseTesseractOcrDir";
+			this.btnChooseTesseractOcrDir.Size = new System.Drawing.Size(44, 23);
+			this.btnChooseTesseractOcrDir.TabIndex = 5;
+			this.btnChooseTesseractOcrDir.Text = "选择";
+			this.btnChooseTesseractOcrDir.UseVisualStyleBackColor = true;
 			// 
 			// Options
 			// 
@@ -231,17 +232,18 @@
 			this.ClientSize = new System.Drawing.Size(484, 141);
 			this.Controls.Add(this.groupBox1);
 			this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "Options";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "选项";
 			this.Load += new System.EventHandler(this.Options_Load);
 			this.groupBox1.ResumeLayout(false);
 			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel4.ResumeLayout(false);
+			this.tableLayoutPanel4.PerformLayout();
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
-			this.tableLayoutPanel4.ResumeLayout(false);
-			this.tableLayoutPanel4.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
