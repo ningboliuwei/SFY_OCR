@@ -14,27 +14,9 @@ namespace SFY_OCR
 		//用于保存所有选中的图片文件
 		private readonly List<string> imageFilePaths = new List<string>();
 
-		// 与PictureBox缩放相关
-		#region
-		private Point mouseOriginalLocation; //鼠标原始位置
-		private int mouse_move_offset_x; //鼠标移动x方向上的偏移量
-		private int mouse_move_offset_y; //鼠标移动y方向上的偏移量
-		private int mouse_offset_x; // 鼠标x位置与位置中心的偏移量
-		private int mouse_offset_y; // 鼠标y位置与位置中心的偏移量
-		private Point picLocation; //图片当前位置
-		private float scale_x = 1f; //图片x位置变化幅度
-		private float scale_y = 1f; //图片y位置变化幅度
-		private Size stopScalingSize; // 图片停止缩放时图片大小（如图片大于窗体大小则为窗体大小）
-		#endregion
-
 		public Main()
 		{
 			InitializeComponent();
-
-			//防止闪屏
-			base.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint,
-				true);
-			base.SetStyle(ControlStyles.ResizeRedraw | ControlStyles.Selectable, true);
 		}
 
 
@@ -101,8 +83,7 @@ namespace SFY_OCR
 			lbxImages.DisplayMember = "Text";
 			lbxImages.ValueMember = "Value";
 
-			//注册PictureBox的鼠标滚轮事件
-			pbxForOcr.MouseWheel += pbxForOcr_MouseWheel; //鼠标滚轮事件
+		
 
 			//设置backgroundWorker的属性
 			backgroundWorkerInvokeCommand.WorkerReportsProgress = true;
@@ -110,47 +91,6 @@ namespace SFY_OCR
 
 			//设置“取消”按钮为不可用
 			btnCancel.Enabled = false;
-		}
-
-
-		private void pbxForOcr_MouseWheel(object sender, MouseEventArgs e)
-		{
-			mouse_offset_x = e.X - pbxForOcr.Width / 2;
-			mouse_offset_y = e.Y - pbxForOcr.Height / 2;
-
-			scale_x = GetLocationScale(pbxForOcr.Width / 2, mouse_offset_x);
-			scale_y = GetLocationScale(pbxForOcr.Height / 2, mouse_offset_y);
-
-			Size t = pbxForOcr.Size;
-			t.Width += e.Delta;
-			t.Height += e.Delta;
-
-			Point p = picLocation;
-			p.X += (int)(((float)(pbxForOcr.Width - t.Width)) / 2 * scale_x);
-			p.Y += (int)(((float)(pbxForOcr.Height - t.Height)) / 2 * scale_y);
-
-			if (t.Width > stopScalingSize.Width || t.Height > stopScalingSize.Height)
-			{
-				pbxForOcr.Width = t.Width;
-				pbxForOcr.Height = t.Height;
-				picLocation = p;
-			}
-			pbxForOcr.Location = picLocation;
-		}
-
-
-		private float GetLocationScale(int range, int offset)
-		{
-			float s = 1f;
-			if (offset < 0)
-			{
-				s = 1f - -offset / (float)range;
-			}
-			else if (offset > 0)
-			{
-				s = 1f + offset / (float)range;
-			}
-			return s;
 		}
 
 
@@ -206,10 +146,6 @@ namespace SFY_OCR
 			{
 				MessageBox.Show("请先导入要识别的图片", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
-		}
-
-		private void tmrProgressBar_Tick(object sender, EventArgs e)
-		{
 		}
 
 		private void backgroundWorkerInvokeCommand_DoWork(object sender, DoWorkEventArgs e)
@@ -276,36 +212,6 @@ namespace SFY_OCR
 
 			frmMyAboutBox.ShowDialog();
 		}
-
-		private void pbxForOcr_MouseDown(object sender, MouseEventArgs e)
-		{
-			mouseOriginalLocation = e.Location;
-			//记录下鼠标原始位置
-			Cursor = Cursors.SizeAll;
-		}
-
-		private void pbxForOcr_MouseMove(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Left)
-			{
-				mouse_move_offset_x = mouseOriginalLocation.X - e.Location.X;
-				mouse_move_offset_y = mouseOriginalLocation.Y - e.Location.Y;
-
-				picLocation.X = pbxForOcr.Location.X - mouse_move_offset_x;
-				picLocation.Y = pbxForOcr.Location.Y - mouse_move_offset_y;
-				pbxForOcr.Location = picLocation;
-			}
-			else
-			{
-				Cursor = Cursors.Default;
-			}
-		}
-
-		private void pbxForOcr_MouseEnter(object sender, EventArgs e)
-		{
-			pbxForOcr.Focus();
-		}
-
 		private void backgroundWorkerInvokeCommand_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			//进度条进度清零
@@ -338,7 +244,7 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		/// 用于在文本框中显示指定路径的识别结果
+		/// 用于在文本框中显示指定路径的图片
 		/// </summary>
 		/// <param name="imageFilePath">要显示的识别结果路径</param>
 		private void ShowImage(string imageFilePath)

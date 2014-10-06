@@ -126,9 +126,6 @@
 			resources.ApplyResources(this.pbxForOcr, "pbxForOcr");
 			this.pbxForOcr.Name = "pbxForOcr";
 			this.pbxForOcr.TabStop = false;
-			this.pbxForOcr.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbxForOcr_MouseDown);
-			this.pbxForOcr.MouseEnter += new System.EventHandler(this.pbxForOcr_MouseEnter);
-			this.pbxForOcr.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbxForOcr_MouseMove);
 			// 
 			// tableLayoutPanel2
 			// 
@@ -229,7 +226,6 @@
 			// tmrProgressBar
 			// 
 			this.tmrProgressBar.Enabled = true;
-			this.tmrProgressBar.Tick += new System.EventHandler(this.tmrProgressBar_Tick);
 			// 
 			// backgroundWorkerInvokeCommand
 			// 
