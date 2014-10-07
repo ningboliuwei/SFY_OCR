@@ -39,6 +39,7 @@
 			this.lblPictureBoxError = new System.Windows.Forms.Label();
 			this.pbxForOcr = new System.Windows.Forms.PictureBox();
 			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+			this.btnOcr = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
 			this.cbxLanguageType = new System.Windows.Forms.ComboBox();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -61,7 +62,6 @@
 			this.ofdPicture = new System.Windows.Forms.OpenFileDialog();
 			this.tmrProgressBar = new System.Windows.Forms.Timer(this.components);
 			this.backgroundWorkerInvokeCommand = new System.ComponentModel.BackgroundWorker();
-			this.btnOcr = new System.Windows.Forms.Button();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -156,6 +156,13 @@
 			this.tableLayoutPanel4.Controls.Add(this.label1, 0, 0);
 			this.tableLayoutPanel4.Controls.Add(this.cbxLanguageType, 1, 0);
 			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+			// 
+			// btnOcr
+			// 
+			resources.ApplyResources(this.btnOcr, "btnOcr");
+			this.btnOcr.Name = "btnOcr";
+			this.btnOcr.UseVisualStyleBackColor = true;
+			this.btnOcr.Click += new System.EventHandler(this.btnOcr_Click);
 			// 
 			// label1
 			// 
@@ -293,13 +300,6 @@
 			this.backgroundWorkerInvokeCommand.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerInvokeCommand_DoWork);
 			this.backgroundWorkerInvokeCommand.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerInvokeCommand_ProgressChanged);
 			this.backgroundWorkerInvokeCommand.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerInvokeCommand_RunWorkerCompleted);
-			// 
-			// btnOcr
-			// 
-			resources.ApplyResources(this.btnOcr, "btnOcr");
-			this.btnOcr.Name = "btnOcr";
-			this.btnOcr.UseVisualStyleBackColor = true;
-			this.btnOcr.Click += new System.EventHandler(this.btnOcr_Click);
 			// 
 			// Main
 			// 

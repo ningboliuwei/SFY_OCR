@@ -2622,7 +2622,7 @@
 </value>
   </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
-    <value>500, 400</value>
+    <value>750, 400</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Tesseract-OCR GUI</value>
