@@ -343,7 +343,7 @@
     <value>7</value>
   </data>
   <data name="btnOcr.Text" xml:space="preserve">
-    <value>识别(&amp;O)</value>
+    <value>识别所有(&amp;A)</value>
   </data>
   <data name="&gt;&gt;btnOcr.Name" xml:space="preserve">
     <value>btnOcr</value>

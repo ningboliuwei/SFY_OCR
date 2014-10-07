@@ -248,6 +248,8 @@ namespace SFY_OCR
 
 			//进度条满格
 			backgroundWorkerInvokeCommand.ReportProgress(100);
+			//稍微暂停一下，以表现满格
+			Thread.Sleep(500);
 		}
 
 
