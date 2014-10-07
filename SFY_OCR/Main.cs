@@ -12,7 +12,8 @@ namespace SFY_OCR
 	public partial class Main : Form
 	{
 		//用于保存所有选中的图片文件
-		private readonly List<string> imageFilePaths = new List<string>();
+		private List<string> imageFilePaths = new List<string>();
+		private const string NO_LANGUAGE_DATA_COMBOBOX_TEXT= "无语言文件";
 
 		public Main()
 		{
@@ -66,15 +67,24 @@ namespace SFY_OCR
 		}
 
 
+		/// <summary>
+		/// 在更改选中的图片同时显示图片及对应的结果文件
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void lbxImages_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			//显示图片
 			if (lbxImages.SelectedIndex != -1)
 			{
-				ShowImage(imageFilePaths[lbxImages.SelectedIndex]);
+				//获取当前选中的图片的路径
+				string imageFilePath = imageFilePaths[lbxImages.SelectedIndex];
+				//显示图片
+				ShowImage(imageFilePath);
 
+				string resultFilePath = Settings.Default.OutputDir + imageFilePath.Substring(imageFilePath.LastIndexOf("\\") + 1) +
+				                        ".txt";
 				//显示结果文件的内容
-				ShowResultFile(imageFilePaths[lbxImages.SelectedIndex] + ".txt");
+				ShowResultFile(resultFilePath);
 			}
 
 		}
@@ -82,7 +92,7 @@ namespace SFY_OCR
 		private void Main_Load(object sender, EventArgs e)
 		{
 			//设置OpenFileDialog的filter属性
-			ofdPicture.Filter = "JPG图片文件|*.JPG;*.JPEG|所有文件|*.*";
+			ofdPicture.Filter = "JPG|*.JPG;*.JPEG|TIFF|*.TIFF;*.TIF|所有文件|*.*";
 
 			//设置图片列表框的DisplayMember和ValueMember属性
 			lbxImages.DisplayMember = "Text";
@@ -108,6 +118,9 @@ namespace SFY_OCR
 				  ControlStyles.ResizeRedraw |
 				  ControlStyles.AllPaintingInWmPaint, true);
 
+			//显示语言文件
+			ShowLanguageType();
+
 		}
 
 
@@ -127,10 +140,18 @@ namespace SFY_OCR
 
 		private void btnOcr_Click(object sender, EventArgs e)
 		{
-			const string langType = "chi_sim";
+			string langType = cbxLanguageType.Text;
 
 
-			if (lbxImages.Items.Count != 0)
+			if (lbxImages.Items.Count == 0)
+			{
+				MessageBox.Show("请先导入要识别的图片", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			else if (cbxLanguageType.Text == NO_LANGUAGE_DATA_COMBOBOX_TEXT)
+			{
+				MessageBox.Show("无语言文件，无法识别。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			else
 			{
 				try
 				{
@@ -164,10 +185,7 @@ namespace SFY_OCR
 					throw new Exception(exception.Message);
 				}
 			}
-			else
-			{
-				MessageBox.Show("请先导入要识别的图片", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			}
+			
 		}
 
 		private void CheckoutputResultFileStatus()
@@ -233,7 +251,7 @@ namespace SFY_OCR
 		}
 
 
-
+		
 		private void 退出XToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			//退出程序
@@ -255,7 +273,7 @@ namespace SFY_OCR
 			MessageBox.Show("识别完毕！", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 			//识别完毕后，选中第一张图片
-			lbxImages.SelectedIndex = -1;
+			//lbxImages.SelectedIndex = -1;
 			lbxImages.SelectedIndex = 0;
 
 			//重新设置“取消”按钮为不可用
@@ -325,6 +343,35 @@ namespace SFY_OCR
 				cp.ExStyle |= 0x02000000;////用双缓冲绘制窗口的所有子控件
 				return cp;
 			}
+		}
+
+		/// <summary>
+		/// 在下拉菜单中显示语言
+		/// </summary>
+		private void ShowLanguageType()
+		{
+			string[] trainedDataFilePaths = Directory.GetFiles(Settings.Default.TesseractOcrDir + "\\tessdata");
+
+			foreach (string trainedDataFilePath in trainedDataFilePaths)
+			{
+				string extName = trainedDataFilePath.Substring(trainedDataFilePath.LastIndexOf(".") + 1);
+				string trainedDataFileName = trainedDataFilePath.Substring(trainedDataFilePath.LastIndexOf("\\") + 1);
+
+				//如果文件扩展名是 .traineddata
+				if (extName == "traineddata")
+				{
+					cbxLanguageType.Items.Add(trainedDataFileName.Replace(".traineddata", ""));
+				}
+			}
+
+
+			//若无语言文件，显示“无语言文件”
+			if (cbxLanguageType.Items.Count == 0)
+			{
+				cbxLanguageType.Items.Add(NO_LANGUAGE_DATA_COMBOBOX_TEXT);
+			}
+			//选中第一项（可能是“无语言文件那项”）
+			cbxLanguageType.SelectedIndex = 0;
 		}
 	}
 }

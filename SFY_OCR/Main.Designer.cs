@@ -32,12 +32,15 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this.btnOcr = new System.Windows.Forms.Button();
+			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.lbxImages = new System.Windows.Forms.ListBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.lblPictureBoxError = new System.Windows.Forms.Label();
 			this.pbxForOcr = new System.Windows.Forms.PictureBox();
+			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+			this.label1 = new System.Windows.Forms.Label();
+			this.cbxLanguageType = new System.Windows.Forms.ComboBox();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.txtResult = new System.Windows.Forms.TextBox();
@@ -58,21 +61,22 @@
 			this.ofdPicture = new System.Windows.Forms.OpenFileDialog();
 			this.tmrProgressBar = new System.Windows.Forms.Timer(this.components);
 			this.backgroundWorkerInvokeCommand = new System.ComponentModel.BackgroundWorker();
-			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.btnOcr = new System.Windows.Forms.Button();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
+			this.splitContainer2.Panel1.SuspendLayout();
+			this.splitContainer2.Panel2.SuspendLayout();
+			this.splitContainer2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxForOcr)).BeginInit();
+			this.tableLayoutPanel4.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
-			this.splitContainer2.Panel1.SuspendLayout();
-			this.splitContainer2.Panel2.SuspendLayout();
-			this.splitContainer2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -91,16 +95,22 @@
 			// tableLayoutPanel1
 			// 
 			resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
-			this.tableLayoutPanel1.Controls.Add(this.btnOcr, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.splitContainer2, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel4, 0, 1);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			// 
-			// btnOcr
+			// splitContainer2
 			// 
-			resources.ApplyResources(this.btnOcr, "btnOcr");
-			this.btnOcr.Name = "btnOcr";
-			this.btnOcr.UseVisualStyleBackColor = true;
-			this.btnOcr.Click += new System.EventHandler(this.btnOcr_Click);
+			resources.ApplyResources(this.splitContainer2, "splitContainer2");
+			this.splitContainer2.Name = "splitContainer2";
+			// 
+			// splitContainer2.Panel1
+			// 
+			this.splitContainer2.Panel1.Controls.Add(this.groupBox1);
+			// 
+			// splitContainer2.Panel2
+			// 
+			this.splitContainer2.Panel2.Controls.Add(this.groupBox2);
 			// 
 			// groupBox1
 			// 
@@ -138,6 +148,26 @@
 			resources.ApplyResources(this.pbxForOcr, "pbxForOcr");
 			this.pbxForOcr.Name = "pbxForOcr";
 			this.pbxForOcr.TabStop = false;
+			// 
+			// tableLayoutPanel4
+			// 
+			resources.ApplyResources(this.tableLayoutPanel4, "tableLayoutPanel4");
+			this.tableLayoutPanel4.Controls.Add(this.btnOcr, 2, 0);
+			this.tableLayoutPanel4.Controls.Add(this.label1, 0, 0);
+			this.tableLayoutPanel4.Controls.Add(this.cbxLanguageType, 1, 0);
+			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+			// 
+			// label1
+			// 
+			resources.ApplyResources(this.label1, "label1");
+			this.label1.Name = "label1";
+			// 
+			// cbxLanguageType
+			// 
+			resources.ApplyResources(this.cbxLanguageType, "cbxLanguageType");
+			this.cbxLanguageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cbxLanguageType.FormattingEnabled = true;
+			this.cbxLanguageType.Name = "cbxLanguageType";
 			// 
 			// tableLayoutPanel2
 			// 
@@ -264,18 +294,12 @@
 			this.backgroundWorkerInvokeCommand.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerInvokeCommand_ProgressChanged);
 			this.backgroundWorkerInvokeCommand.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerInvokeCommand_RunWorkerCompleted);
 			// 
-			// splitContainer2
+			// btnOcr
 			// 
-			resources.ApplyResources(this.splitContainer2, "splitContainer2");
-			this.splitContainer2.Name = "splitContainer2";
-			// 
-			// splitContainer2.Panel1
-			// 
-			this.splitContainer2.Panel1.Controls.Add(this.groupBox1);
-			// 
-			// splitContainer2.Panel2
-			// 
-			this.splitContainer2.Panel2.Controls.Add(this.groupBox2);
+			resources.ApplyResources(this.btnOcr, "btnOcr");
+			this.btnOcr.Name = "btnOcr";
+			this.btnOcr.UseVisualStyleBackColor = true;
+			this.btnOcr.Click += new System.EventHandler(this.btnOcr_Click);
 			// 
 			// Main
 			// 
@@ -294,18 +318,19 @@
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.ResumeLayout(false);
 			this.tableLayoutPanel1.ResumeLayout(false);
+			this.splitContainer2.Panel1.ResumeLayout(false);
+			this.splitContainer2.Panel2.ResumeLayout(false);
+			this.splitContainer2.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pbxForOcr)).EndInit();
+			this.tableLayoutPanel4.ResumeLayout(false);
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox3.PerformLayout();
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
-			this.splitContainer2.Panel1.ResumeLayout(false);
-			this.splitContainer2.Panel2.ResumeLayout(false);
-			this.splitContainer2.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -329,7 +354,6 @@
 		private System.Windows.Forms.PictureBox pbxForOcr;
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.ToolStripMenuItem 清空CToolStripMenuItem;
-		private System.Windows.Forms.Button btnOcr;
 		private System.Windows.Forms.Timer tmrProgressBar;
 		private System.ComponentModel.BackgroundWorker backgroundWorkerInvokeCommand;
 		private System.Windows.Forms.ToolStripMenuItem 退出XToolStripMenuItem;
@@ -342,6 +366,10 @@
 		private System.Windows.Forms.ProgressBar progressBarOcr;
 		private System.Windows.Forms.Label lblPictureBoxError;
 		private System.Windows.Forms.SplitContainer splitContainer2;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.ComboBox cbxLanguageType;
+		private System.Windows.Forms.Button btnOcr;
 
 	}
 }

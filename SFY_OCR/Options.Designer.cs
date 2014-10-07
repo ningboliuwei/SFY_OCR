@@ -116,6 +116,7 @@
 			this.label2.Size = new System.Drawing.Size(166, 29);
 			this.label2.TabIndex = 1;
 			this.label2.Text = "识别结果输出文件夹：";
+			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// btnChooseOutputDir
 			// 
@@ -124,7 +125,7 @@
 			this.btnChooseOutputDir.Name = "btnChooseOutputDir";
 			this.btnChooseOutputDir.Size = new System.Drawing.Size(44, 23);
 			this.btnChooseOutputDir.TabIndex = 4;
-			this.btnChooseOutputDir.Text = "选择";
+			this.btnChooseOutputDir.Text = "...";
 			this.btnChooseOutputDir.UseVisualStyleBackColor = true;
 			this.btnChooseOutputDir.Click += new System.EventHandler(this.btnChooseOutputDir_Click);
 			// 
@@ -222,7 +223,7 @@
 			this.btnChooseTesseractOcrDir.Name = "btnChooseTesseractOcrDir";
 			this.btnChooseTesseractOcrDir.Size = new System.Drawing.Size(44, 23);
 			this.btnChooseTesseractOcrDir.TabIndex = 5;
-			this.btnChooseTesseractOcrDir.Text = "选择";
+			this.btnChooseTesseractOcrDir.Text = "...";
 			this.btnChooseTesseractOcrDir.UseVisualStyleBackColor = true;
 			this.btnChooseTesseractOcrDir.Click += new System.EventHandler(this.btnChooseTesseractOcrDir_Click);
 			// 
