@@ -27,7 +27,7 @@ namespace SFY_OCR
 			{
 				return;
 			}
-			//
+			
 
 			#endregion
 			
