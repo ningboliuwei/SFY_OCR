@@ -75,6 +75,7 @@ namespace SFY_OCR
 
 			settings.TesseractOcrDir = txtTesseractOcrDir.Text.Trim();
 			settings.OutputDir = txtOutputDir.Text.Trim();
+			settings.ImageMagickDir = txtImageMagickDir.Text.Trim();
 
 			settings.Save();
 		}
@@ -88,6 +89,7 @@ namespace SFY_OCR
 
 			txtTesseractOcrDir.Text = settings.TesseractOcrDir;
 			txtOutputDir.Text = settings.OutputDir;
+			txtImageMagickDir.Text = settings.ImageMagickDir;
 		}
 
 		private void btnChooseTesseractOcrDir_Click(object sender, EventArgs e)
@@ -114,6 +116,22 @@ namespace SFY_OCR
 				try
 				{
 					txtOutputDir.Text = fbdChooseDir.SelectedPath;
+				}
+				catch (Exception exception)
+				{
+					throw new Exception(exception.Message);
+				}
+			}
+		}
+
+		private void btnChooseImageMagickDir_Click(object sender, EventArgs e)
+		{
+			//选择ImageMagick所在文件夹
+			if (fbdChooseDir.ShowDialog() == DialogResult.OK)
+			{
+				try
+				{
+					txtImageMagickDir.Text = fbdChooseDir.SelectedPath;
 				}
 				catch (Exception exception)
 				{

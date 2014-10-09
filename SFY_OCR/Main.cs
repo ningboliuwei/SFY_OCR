@@ -375,5 +375,13 @@ namespace SFY_OCR
 			//选中第一项（可能是“无语言文件那项”）
 			cbxLanguageType.SelectedIndex = 0;
 		}
+
+		private void 训练TToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			//打开训练对话框
+			var frmTraining = new TrainingTool();
+
+			frmTraining.ShowDialog();
+		}
 	}
 }

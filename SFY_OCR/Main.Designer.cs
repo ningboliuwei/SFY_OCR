@@ -62,6 +62,8 @@
 			this.ofdPicture = new System.Windows.Forms.OpenFileDialog();
 			this.tmrProgressBar = new System.Windows.Forms.Timer(this.components);
 			this.backgroundWorkerInvokeCommand = new System.ComponentModel.BackgroundWorker();
+			this.训练TToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -259,6 +261,8 @@
 			// 工具TToolStripMenuItem
 			// 
 			this.工具TToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.训练TToolStripMenuItem,
+            this.toolStripSeparator2,
             this.选项OToolStripMenuItem});
 			this.工具TToolStripMenuItem.Name = "工具TToolStripMenuItem";
 			resources.ApplyResources(this.工具TToolStripMenuItem, "工具TToolStripMenuItem");
@@ -300,6 +304,17 @@
 			this.backgroundWorkerInvokeCommand.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerInvokeCommand_DoWork);
 			this.backgroundWorkerInvokeCommand.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerInvokeCommand_ProgressChanged);
 			this.backgroundWorkerInvokeCommand.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerInvokeCommand_RunWorkerCompleted);
+			// 
+			// 训练TToolStripMenuItem
+			// 
+			this.训练TToolStripMenuItem.Name = "训练TToolStripMenuItem";
+			resources.ApplyResources(this.训练TToolStripMenuItem, "训练TToolStripMenuItem");
+			this.训练TToolStripMenuItem.Click += new System.EventHandler(this.训练TToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
 			// 
 			// Main
 			// 
@@ -370,6 +385,8 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ComboBox cbxLanguageType;
 		private System.Windows.Forms.Button btnOcr;
+		private System.Windows.Forms.ToolStripMenuItem 训练TToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 
 	}
 }

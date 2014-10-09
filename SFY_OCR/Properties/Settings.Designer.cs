@@ -46,5 +46,17 @@ namespace SFY_OCR.Properties {
                 this["OutputDir"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\ImageMagick")]
+        public string ImageMagickDir {
+            get {
+                return ((string)(this["ImageMagickDir"]));
+            }
+            set {
+                this["ImageMagickDir"] = value;
+            }
+        }
     }
 }

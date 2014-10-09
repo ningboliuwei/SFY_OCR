@@ -8,5 +8,8 @@
     <Setting Name="OutputDir" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\TEMP</Value>
     </Setting>
+    <Setting Name="ImageMagickDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\ImageMagick</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
