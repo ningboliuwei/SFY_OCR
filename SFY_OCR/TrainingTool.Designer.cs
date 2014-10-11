@@ -182,7 +182,6 @@
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.44262F));
 			this.tableLayoutPanel2.Size = new System.Drawing.Size(510, 486);
 			this.tableLayoutPanel2.TabIndex = 1;
-			this.tableLayoutPanel2.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel2_Paint);
 			// 
 			// button1
 			// 
@@ -272,6 +271,7 @@
 			// bgwProcessImage
 			// 
 			this.bgwProcessImage.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProcessImage_DoWork);
+			this.bgwProcessImage.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwProcessImage_RunWorkerCompleted);
 			// 
 			// TrainingTool
 			// 

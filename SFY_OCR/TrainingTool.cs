@@ -43,14 +43,12 @@ namespace SFY_OCR
 			}
 		}
 
-		public delegate void ConvertImageDelegate(OcrImage sourceImage, Hashtable convertArgs);
-
 
 
 		/// <summary>
 		/// 打开样本图片，自动复制一份到输出目录，并将该副本显示在文本框中。
 		/// </summary>
-		/// <param name="sourceImage"></param>
+		/// <param name="sourceImage">原本（被打开）的图片（OcrImage）对象</param>
 		private void OpenImage(OcrImage sourceImage)
 		{
 			string displayingImagePath = Settings.Default.OutputDir + sourceImage.MainFileName + "_temp." + sourceImage.ExtFileName;
@@ -131,26 +129,26 @@ namespace SFY_OCR
 			cmbPreProcess.SelectedIndex = 0;
 		}
 
-		private void ConvertToTiff(OcrImage sourceImage)
-		{
-			string args = string.Format("-compress none {0} {1}", sourceImage.FilePath, sourceImage.FilePath);
+		//private void ConvertToTiff(OcrImage sourceImage)
+		//{
+		//	string args = string.Format("-compress none {0} {1}", sourceImage.FilePath, sourceImage.FilePath);
 
-			Common.InvokeImageMagickConvertCommandLine(Settings.Default.ImageMagickDir, args);
-		}
+		//	Common.InvokeImageMagickConvertCommandLine(args);
+		//}
 
-		private void ConvertToGrayColorSpace(string sourceImagePath, string resultImagePath)
-		{
-			string args = string.Format("-colorspace Gray {0} {1}", sourceImagePath, resultImagePath);
+		//private void ConvertToGrayColorSpace(string sourceImagePath, string resultImagePath)
+		//{
+		//	string args = string.Format("-colorspace Gray {0} {1}", sourceImagePath, resultImagePath);
 
-			Common.InvokeImageMagickConvertCommandLine(Settings.Default.ImageMagickDir, args);
-		}
+		//	Common.InvokeImageMagickConvertCommandLine(args);
+		//}
 
-		private void ConvertToBlackAndWhite(string sourceImagePath, string resultImagePath)
-		{
-			string args = string.Format("-monochrome {0} {1}", sourceImagePath, resultImagePath);
+		//private void ConvertToBlackAndWhite(string sourceImagePath, string resultImagePath)
+		//{
+		//	string args = string.Format("-monochrome {0} {1}", sourceImagePath, resultImagePath);
 
-			Common.InvokeImageMagickConvertCommandLine(Settings.Default.ImageMagickDir, args);
-		}
+		//	Common.InvokeImageMagickConvertCommandLine(args);
+		//}
 
 		/// <summary>
 		/// 使用TextCleaner效果，放到背景线程调用
@@ -164,41 +162,31 @@ namespace SFY_OCR
 					"( {0} -colorspace gray -type grayscale -contrast-stretch 0 ) ( -clone 0 -colorspace gray -negate -lat {1}x{1}+{2}% -contrast-stretch 0 ) -compose copy_opacity -composite -fill \"{3}\" -opaque none +matte -deskew {4}% -sharpen 0x1  {5}",
 					sourceImage.FilePath, convertArgs["filter_size"], convertArgs["off_set"], convertArgs["bgcolor"], convertArgs["deskew"], sourceImage.FilePath);
 
-			Common.InvokeImageMagickConvertCommandLine(Settings.Default.OutputDir, commandLineArgs);
+			Common.InvokeImageMagickConvertCommandLine(commandLineArgs);
 		}
 
 		private void button2_Click(object sender, EventArgs e)
 		{
-			TextCleaner();
+			TextCleanerProcess();
 		}
 
 		/// <summary>
 		/// 进行文本降噪黑白高对比度操作
 		/// </summary>
-		private void TextCleaner()
+		private void TextCleanerProcess()
 		{
+			ConvertDelegatePackage package = new ConvertDelegatePackage();
+
 			//效果参数
-			Hashtable convertArgs = new Hashtable();
-
-			convertArgs.Add("filter_size", trackBar1.Value);
-			convertArgs.Add("off_set", 10);
-			convertArgs.Add("bgcolor", "white");
+			package.ConvertImageArgs.Add("filter_size", trackBar1.Value);
+			package.ConvertImageArgs.Add("off_set", 10);
+			package.ConvertImageArgs.Add("bgcolor", "white");
 			//裁剪时候倾斜角
-			convertArgs.Add("deskew", 0);
+			package.ConvertImageArgs.Add("deskew", 0);
 
-
-			ConvertImageDelegate convertImageDelegate = ConvertToTextCleaner;
-
-			bgwProcessImage.RunWorkerAsync(new ArrayList() { convertImageDelegate, convertArgs });
-
-			//convertImageDelegate.Invoke(displayingImage, convertArgs);
-
-			//pbxExample.ImageLocation = displayingImage.FilePath;
-
-			//if (File.Exists(pbxExample.ImageLocation))
-			//{
-			//	pbxExample.ImageLocation = pbxExample.ImageLocation;
-			//}
+			//调用指向TextCleaner
+			package.ConvertImageDelegate = ConvertToTextCleaner;
+			bgwProcessImage.RunWorkerAsync(package);
 		}
 
 		private void trackBar1_Scroll(object sender, EventArgs e)
@@ -211,21 +199,17 @@ namespace SFY_OCR
 			}
 		}
 
+		/// <summary>
+		/// 背景线程处理图像
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void bgwProcessImage_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
 		{
-			//将传进来的Argument对象变为存放了调用Convert函数委托以及各种转换参数的ArrayList对象
-			//第1个为委托
-			//第2个为参数列表
-			ArrayList arrayList = (ArrayList)e.Argument;
+			//拆箱，还原出delegate和hashtable形式的参数列表
+			ConvertDelegatePackage package = (ConvertDelegatePackage)e.Argument;
 
-			((ConvertImageDelegate)arrayList[0]).Invoke(displayingImage, (Hashtable)arrayList[1]);
-
-
-		}
-
-		private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
-		{
-
+			package.ConvertImageDelegate.Invoke(displayingImage, package.ConvertImageArgs);
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -234,11 +218,22 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		/// 复原到样本图片
+		/// 复原到样本图片（重新进行一次打开图片处理）
 		/// </summary>
 		private void ResetImage()
 		{
 			OpenImage(originalImage);
+		}
+
+		/// <summary>
+		/// 背景线程处理完毕
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void bgwProcessImage_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+		{
+			//当背景线程处理完毕后，显示处理完的图像
+			pbxExample.ImageLocation = displayingImage.FilePath;
 		}
 	}
 }
