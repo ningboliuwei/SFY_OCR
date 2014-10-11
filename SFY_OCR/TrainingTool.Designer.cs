@@ -37,13 +37,17 @@
 			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.cmbPreProcess = new System.Windows.Forms.ComboBox();
-			this.chkToTiff = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.button1 = new System.Windows.Forms.Button();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.pbxExample = new System.Windows.Forms.PictureBox();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
+			this.chkToTiff = new System.Windows.Forms.CheckBox();
+			this.chkDenoise = new System.Windows.Forms.CheckBox();
+			this.trackBar1 = new System.Windows.Forms.TrackBar();
+			this.button2 = new System.Windows.Forms.Button();
+			this.bgwProcessImage = new System.ComponentModel.BackgroundWorker();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -55,6 +59,7 @@
 			this.tableLayoutPanel2.SuspendLayout();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -139,11 +144,17 @@
 			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel3.Controls.Add(this.cmbPreProcess, 0, 0);
 			this.tableLayoutPanel3.Controls.Add(this.chkToTiff, 0, 1);
+			this.tableLayoutPanel3.Controls.Add(this.chkDenoise, 0, 2);
+			this.tableLayoutPanel3.Controls.Add(this.trackBar1, 0, 4);
+			this.tableLayoutPanel3.Controls.Add(this.button2, 0, 3);
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 21);
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-			this.tableLayoutPanel3.RowCount = 2;
+			this.tableLayoutPanel3.RowCount = 5;
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel3.Size = new System.Drawing.Size(250, 191);
 			this.tableLayoutPanel3.TabIndex = 1;
@@ -156,16 +167,6 @@
 			this.cmbPreProcess.Name = "cmbPreProcess";
 			this.cmbPreProcess.Size = new System.Drawing.Size(121, 25);
 			this.cmbPreProcess.TabIndex = 0;
-			// 
-			// chkToTiff
-			// 
-			this.chkToTiff.AutoSize = true;
-			this.chkToTiff.Location = new System.Drawing.Point(3, 98);
-			this.chkToTiff.Name = "chkToTiff";
-			this.chkToTiff.Size = new System.Drawing.Size(142, 21);
-			this.chkToTiff.TabIndex = 1;
-			this.chkToTiff.Text = "转换为无损 TIFF 格式";
-			this.chkToTiff.UseVisualStyleBackColor = true;
 			// 
 			// tableLayoutPanel2
 			// 
@@ -181,6 +182,7 @@
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.44262F));
 			this.tableLayoutPanel2.Size = new System.Drawing.Size(510, 486);
 			this.tableLayoutPanel2.TabIndex = 1;
+			this.tableLayoutPanel2.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel2_Paint);
 			// 
 			// button1
 			// 
@@ -190,6 +192,7 @@
 			this.button1.TabIndex = 1;
 			this.button1.Text = "button1";
 			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// panel1
 			// 
@@ -224,6 +227,52 @@
 			// 
 			this.ofdFile.FileName = "openFileDialog1";
 			// 
+			// chkToTiff
+			// 
+			this.chkToTiff.AutoSize = true;
+			this.chkToTiff.Location = new System.Drawing.Point(3, 54);
+			this.chkToTiff.Name = "chkToTiff";
+			this.chkToTiff.Size = new System.Drawing.Size(142, 21);
+			this.chkToTiff.TabIndex = 1;
+			this.chkToTiff.Text = "转换为无损 TIFF 格式";
+			this.chkToTiff.UseVisualStyleBackColor = true;
+			// 
+			// chkDenoise
+			// 
+			this.chkDenoise.AutoSize = true;
+			this.chkDenoise.Checked = true;
+			this.chkDenoise.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkDenoise.Location = new System.Drawing.Point(3, 84);
+			this.chkDenoise.Name = "chkDenoise";
+			this.chkDenoise.Size = new System.Drawing.Size(51, 21);
+			this.chkDenoise.TabIndex = 2;
+			this.chkDenoise.Text = "降噪";
+			this.chkDenoise.UseVisualStyleBackColor = true;
+			// 
+			// trackBar1
+			// 
+			this.trackBar1.Location = new System.Drawing.Point(3, 143);
+			this.trackBar1.Maximum = 100;
+			this.trackBar1.Name = "trackBar1";
+			this.trackBar1.Size = new System.Drawing.Size(172, 45);
+			this.trackBar1.TabIndex = 3;
+			this.trackBar1.TickFrequency = 5;
+			this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+			// 
+			// button2
+			// 
+			this.button2.Location = new System.Drawing.Point(3, 113);
+			this.button2.Name = "button2";
+			this.button2.Size = new System.Drawing.Size(75, 23);
+			this.button2.TabIndex = 4;
+			this.button2.Text = "降噪";
+			this.button2.UseVisualStyleBackColor = true;
+			this.button2.Click += new System.EventHandler(this.button2_Click);
+			// 
+			// bgwProcessImage
+			// 
+			this.bgwProcessImage.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProcessImage_DoWork);
+			// 
 			// TrainingTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -251,6 +300,7 @@
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -272,5 +322,9 @@
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
 		private System.Windows.Forms.ComboBox cmbPreProcess;
 		private System.Windows.Forms.CheckBox chkToTiff;
+		private System.Windows.Forms.CheckBox chkDenoise;
+		private System.Windows.Forms.TrackBar trackBar1;
+		private System.Windows.Forms.Button button2;
+		private System.ComponentModel.BackgroundWorker bgwProcessImage;
 	}
 }

@@ -13,7 +13,7 @@ namespace SFY_OCR
 	{
 		//用于保存所有选中的图片文件
 		private List<string> imageFilePaths = new List<string>();
-		private const string NO_LANGUAGE_DATA_COMBOBOX_TEXT= "无语言文件";
+		private const string NO_LANGUAGE_DATA_COMBOBOX_TEXT = "无语言文件";
 
 		public Main()
 		{
@@ -82,7 +82,7 @@ namespace SFY_OCR
 				ShowImage(imageFilePath);
 
 				string resultFilePath = Settings.Default.OutputDir + imageFilePath.Substring(imageFilePath.LastIndexOf("\\") + 1) +
-				                        ".txt";
+										".txt";
 				//显示结果文件的内容
 				ShowResultFile(resultFilePath);
 			}
@@ -92,7 +92,7 @@ namespace SFY_OCR
 		private void Main_Load(object sender, EventArgs e)
 		{
 			//设置OpenFileDialog的filter属性
-			ofdPicture.Filter = "JPG|*.JPG;*.JPEG|TIFF|*.TIFF;*.TIF|所有文件|*.*";
+			ofdPicture.Filter = StringResourceManager.OpenImageFilterText;
 
 			//设置图片列表框的DisplayMember和ValueMember属性
 			lbxImages.DisplayMember = "Text";
@@ -101,8 +101,8 @@ namespace SFY_OCR
 
 
 			//设置backgroundWorker的属性
-			backgroundWorkerInvokeCommand.WorkerReportsProgress = true;
-			backgroundWorkerInvokeCommand.WorkerSupportsCancellation = true;
+			bgwImageRecognition.WorkerReportsProgress = true;
+			bgwImageRecognition.WorkerSupportsCancellation = true;
 
 			//设置“取消”按钮为不可用
 			btnCancel.Enabled = false;
@@ -172,9 +172,9 @@ namespace SFY_OCR
 					//语言包类型
 					arguments.Add(langType);
 
-					if (backgroundWorkerInvokeCommand.IsBusy == false)
+					if (bgwImageRecognition.IsBusy == false)
 					{
-						backgroundWorkerInvokeCommand.RunWorkerAsync(arguments);
+						bgwImageRecognition.RunWorkerAsync(arguments);
 					}
 
 
@@ -185,7 +185,7 @@ namespace SFY_OCR
 					throw new Exception(exception.Message);
 				}
 			}
-			
+
 		}
 
 		private void CheckoutputResultFileStatus()
@@ -205,7 +205,7 @@ namespace SFY_OCR
 			}
 		}
 
-		private void backgroundWorkerInvokeCommand_DoWork(object sender, DoWorkEventArgs e)
+		private void bgwImageRecognition_DoWork(object sender, DoWorkEventArgs e)
 		{
 			//将各参数拆箱
 			string tesseractOcrDir = ((List<object>)e.Argument)[0].ToString();
@@ -219,12 +219,12 @@ namespace SFY_OCR
 			int afterSpan = 10;
 
 			//先显示一点进度条
-			backgroundWorkerInvokeCommand.ReportProgress(beforeSpan);
+			bgwImageRecognition.ReportProgress(beforeSpan);
 
 			for (int i = 0; i < imageFilePaths.Count; i++)
 			{
 				//取消当前操作
-				if (backgroundWorkerInvokeCommand.CancellationPending)
+				if (bgwImageRecognition.CancellationPending)
 				{
 					e.Cancel = true;
 
@@ -239,21 +239,21 @@ namespace SFY_OCR
 				Common.InvokeOcrCommandLine(tesseractOcrDir, imageFilePath, outputResultFilePath, langType);
 
 				//报告进度
-				backgroundWorkerInvokeCommand.ReportProgress(beforeSpan + (i + 1) * (100 - beforeSpan - afterSpan) / imageFilePaths.Count);
+				bgwImageRecognition.ReportProgress(beforeSpan + (i + 1) * (100 - beforeSpan - afterSpan) / imageFilePaths.Count);
 			}
 
-			backgroundWorkerInvokeCommand.ReportProgress(100 - afterSpan);
+			bgwImageRecognition.ReportProgress(100 - afterSpan);
 			//稍微暂停一下，以表现满格前最后一步动作
 			Thread.Sleep(1000);
 
 			//进度条满格
-			backgroundWorkerInvokeCommand.ReportProgress(100);
+			bgwImageRecognition.ReportProgress(100);
 			//稍微暂停一下，以表现满格
 			Thread.Sleep(500);
 		}
 
 
-		
+
 		private void 退出XToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			//退出程序
@@ -267,7 +267,7 @@ namespace SFY_OCR
 
 			frmMyAboutBox.ShowDialog();
 		}
-		private void backgroundWorkerInvokeCommand_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		private void bgwImageRecognition_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			//进度条进度清零
 			progressBarOcr.Value = 0;
@@ -325,10 +325,10 @@ namespace SFY_OCR
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
 			//取消BackgroundWorker当前操作
-			backgroundWorkerInvokeCommand.CancelAsync();
+			bgwImageRecognition.CancelAsync();
 		}
 
-		private void backgroundWorkerInvokeCommand_ProgressChanged(object sender, ProgressChangedEventArgs e)
+		private void bgwImageRecognition_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
 			progressBarOcr.Value = e.ProgressPercentage;
 		}
@@ -360,9 +360,9 @@ namespace SFY_OCR
 				string trainedDataFileName = trainedDataFilePath.Substring(trainedDataFilePath.LastIndexOf("\\") + 1);
 
 				//如果文件扩展名是 .traineddata
-				if (extName == "traineddata")
+				if (extName == StringResourceManager.TrainedDataExtName)
 				{
-					cbxLanguageType.Items.Add(trainedDataFileName.Replace(".traineddata", ""));
+					cbxLanguageType.Items.Add(trainedDataFileName.Replace("." + StringResourceManager.TrainedDataExtName, ""));
 				}
 			}
 
