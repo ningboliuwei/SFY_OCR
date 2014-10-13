@@ -196,6 +196,7 @@
 			// 
 			resources.ApplyResources(this.txtResult, "txtResult");
 			this.txtResult.Name = "txtResult";
+			this.txtResult.MouseMove += new System.Windows.Forms.MouseEventHandler(this.txtResult_MouseMove);
 			// 
 			// tableLayoutPanel3
 			// 

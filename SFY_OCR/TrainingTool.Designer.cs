@@ -37,16 +37,16 @@
 			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.cmbPreProcess = new System.Windows.Forms.ComboBox();
+			this.chkToTiff = new System.Windows.Forms.CheckBox();
+			this.chkDenoise = new System.Windows.Forms.CheckBox();
+			this.trackBar1 = new System.Windows.Forms.TrackBar();
+			this.button2 = new System.Windows.Forms.Button();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.button1 = new System.Windows.Forms.Button();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.pbxExample = new System.Windows.Forms.PictureBox();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
-			this.chkToTiff = new System.Windows.Forms.CheckBox();
-			this.chkDenoise = new System.Windows.Forms.CheckBox();
-			this.trackBar1 = new System.Windows.Forms.TrackBar();
-			this.button2 = new System.Windows.Forms.Button();
 			this.bgwProcessImage = new System.ComponentModel.BackgroundWorker();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -56,10 +56,10 @@
 			this.tableLayoutPanel1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -168,64 +168,6 @@
 			this.cmbPreProcess.Size = new System.Drawing.Size(121, 25);
 			this.cmbPreProcess.TabIndex = 0;
 			// 
-			// tableLayoutPanel2
-			// 
-			this.tableLayoutPanel2.ColumnCount = 1;
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel2.Controls.Add(this.button1, 0, 0);
-			this.tableLayoutPanel2.Controls.Add(this.panel1, 0, 1);
-			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-			this.tableLayoutPanel2.RowCount = 2;
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.557377F));
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.44262F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(510, 486);
-			this.tableLayoutPanel2.TabIndex = 1;
-			// 
-			// button1
-			// 
-			this.button1.Location = new System.Drawing.Point(3, 3);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 24);
-			this.button1.TabIndex = 1;
-			this.button1.Text = "button1";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
-			// 
-			// panel1
-			// 
-			this.panel1.Controls.Add(this.pbxExample);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(3, 34);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(504, 449);
-			this.panel1.TabIndex = 2;
-			// 
-			// pbxExample
-			// 
-			this.pbxExample.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.pbxExample.Location = new System.Drawing.Point(0, 0);
-			this.pbxExample.Name = "pbxExample";
-			this.pbxExample.Size = new System.Drawing.Size(504, 449);
-			this.pbxExample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-			this.pbxExample.TabIndex = 1;
-			this.pbxExample.TabStop = false;
-			// 
-			// tabPage2
-			// 
-			this.tabPage2.Location = new System.Drawing.Point(4, 26);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(776, 492);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "tabPage2";
-			this.tabPage2.UseVisualStyleBackColor = true;
-			// 
-			// ofdFile
-			// 
-			this.ofdFile.FileName = "openFileDialog1";
-			// 
 			// chkToTiff
 			// 
 			this.chkToTiff.AutoSize = true;
@@ -268,6 +210,68 @@
 			this.button2.UseVisualStyleBackColor = true;
 			this.button2.Click += new System.EventHandler(this.button2_Click);
 			// 
+			// tableLayoutPanel2
+			// 
+			this.tableLayoutPanel2.ColumnCount = 1;
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel2.Controls.Add(this.button1, 0, 0);
+			this.tableLayoutPanel2.Controls.Add(this.panel1, 0, 1);
+			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+			this.tableLayoutPanel2.RowCount = 2;
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.557377F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.44262F));
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(510, 486);
+			this.tableLayoutPanel2.TabIndex = 1;
+			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(3, 3);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(183, 24);
+			this.button1.TabIndex = 1;
+			this.button1.Text = "button1";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
+			// 
+			// panel1
+			// 
+			this.panel1.Controls.Add(this.pbxExample);
+			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel1.Location = new System.Drawing.Point(3, 34);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(504, 449);
+			this.panel1.TabIndex = 2;
+			// 
+			// pbxExample
+			// 
+			this.pbxExample.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.pbxExample.Location = new System.Drawing.Point(0, 0);
+			this.pbxExample.Name = "pbxExample";
+			this.pbxExample.Size = new System.Drawing.Size(504, 449);
+			this.pbxExample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+			this.pbxExample.TabIndex = 1;
+			this.pbxExample.TabStop = false;
+			this.pbxExample.Paint += new System.Windows.Forms.PaintEventHandler(this.pbxExample_Paint);
+			this.pbxExample.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseDown);
+			this.pbxExample.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseMove);
+			this.pbxExample.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseUp);
+			// 
+			// tabPage2
+			// 
+			this.tabPage2.Location = new System.Drawing.Point(4, 26);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(776, 492);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "tabPage2";
+			this.tabPage2.UseVisualStyleBackColor = true;
+			// 
+			// ofdFile
+			// 
+			this.ofdFile.FileName = "openFileDialog1";
+			// 
 			// bgwProcessImage
 			// 
 			this.bgwProcessImage.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProcessImage_DoWork);
@@ -279,6 +283,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(784, 522);
 			this.Controls.Add(this.tabControl1);
+			this.DoubleBuffered = true;
 			this.Font = new System.Drawing.Font("微软雅黑", 9F);
 			this.Name = "TrainingTool";
 			this.Text = "训练工具";
@@ -296,11 +301,11 @@
 			this.toolStrip1.PerformLayout();
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
 			this.ResumeLayout(false);
 
 		}

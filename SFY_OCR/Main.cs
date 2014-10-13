@@ -383,5 +383,10 @@ namespace SFY_OCR
 
 			frmTraining.ShowDialog();
 		}
+
+		private void txtResult_MouseMove(object sender, MouseEventArgs e)
+		{
+			
+		}
 	}
 }

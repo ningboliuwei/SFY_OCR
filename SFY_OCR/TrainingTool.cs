@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Windows.Forms;
 using SFY_OCR.Properties;
@@ -9,8 +11,20 @@ namespace SFY_OCR
 {
 	public partial class TrainingTool : Form
 	{
+		//当前显示的图片OcrImage对象
 		private OcrImage displayingImage;
+		//原本的图片OcrImage对象
 		private OcrImage originalImage;
+
+		//矩形开始点
+		private Point boxStartPoint;
+		//矩形结束点
+		private Point boxEndPoint;
+		//画矩形的状态
+		private bool boxIsDrawing;
+
+		Graphics g ;
+		private GraphicsState state;
 
 		public TrainingTool()
 		{
@@ -127,6 +141,15 @@ namespace SFY_OCR
 
 			cmbPreProcess.DataSource = options;
 			cmbPreProcess.SelectedIndex = 0;
+
+
+			this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+			this.SetStyle(ControlStyles.UserPaint, true);
+			this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+
+
+
+
 		}
 
 		//private void ConvertToTiff(OcrImage sourceImage)
@@ -214,7 +237,10 @@ namespace SFY_OCR
 
 		private void button1_Click(object sender, EventArgs e)
 		{
+			//恢复为最初的图片（副本）
 			ResetImage();
+
+
 		}
 
 		/// <summary>
@@ -235,5 +261,127 @@ namespace SFY_OCR
 			//当背景线程处理完毕后，显示处理完的图像
 			pbxExample.ImageLocation = displayingImage.FilePath;
 		}
+
+		private void pbxExample_MouseDown(object sender, MouseEventArgs e)
+		{
+
+			//开始进入画矩形状态
+			boxStartPoint = new Point(e.X, e.Y);
+			boxEndPoint = new Point(e.X, e.Y);
+			boxIsDrawing = true;
+			g = pbxExample.CreateGraphics();
+			
+		}
+
+
+		/// <summary>
+		/// 要分拖动的方向
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void pbxExample_MouseMove(object sender, MouseEventArgs e)
+		{
+			
+			
+			if (e.Button == MouseButtons.Left)
+			{
+				if (boxIsDrawing)
+				{
+					// 初始化画板
+					Bitmap image = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
+
+					// 获取背景层
+					//Bitmap bg = (Bitmap)pbxExample.Image;
+
+					// 初始化画布
+					//Bitmap canvas = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
+
+					// 初始化图形面板
+					//Graphics g = Graphics.FromImage(image);
+					//Graphics gb = Graphics.FromImage(canvas);
+
+					// 绘图部分 Begin
+
+					//得到拖动结束点坐标
+					boxEndPoint.X = e.X;
+					boxEndPoint.Y = e.Y;
+
+					//判断矩形左上角的点的位置
+					Point boxLeftTopPoint = new Point();
+
+					if (boxEndPoint.X > boxStartPoint.X)
+					{
+						boxLeftTopPoint.X = boxStartPoint.X;
+					}
+					else
+					{
+						boxLeftTopPoint.X = boxEndPoint.X;
+					}
+
+					if (boxEndPoint.Y > boxStartPoint.Y)
+					{
+						boxLeftTopPoint.Y = boxStartPoint.Y;
+					}
+					else
+					{
+						boxLeftTopPoint.Y = boxEndPoint.Y;
+					}
+
+					//绘制矩形
+					Graphics.FromImage(image).DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y, Math.Abs(boxEndPoint.X - boxStartPoint.X),
+				Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
+
+					//显示当前鼠标坐标
+					button1.Text = boxStartPoint.X + "," + boxStartPoint.Y + "," + Math.Abs(boxEndPoint.X - boxStartPoint.X) + "," +
+								   Math.Abs(boxEndPoint.Y - boxStartPoint.Y);
+					
+					g.SmoothingMode = SmoothingMode.HighSpeed;
+
+
+					//pbxExample.Invalidate();
+					//g.SmoothingMode = SmoothingMode.AntiAlias;//消除锯齿  
+					//g.DrawEllipse(new Pen(Color.Red),e.X,e.Y,10,10 );
+					//state = g.Save();
+					//pbxExample.Refresh();
+					// 绘图部分 End
+
+					//gb.DrawImage(bg, 0, 0); // 先绘制背景层
+					//gb.DrawImage(image, 0, 0); // 再绘制绘画层
+
+					//pbxExample.BackgroundImage = canvas; // 设置为背景层
+
+					//pbxExample.Refresh();
+					//pbxExample.CreateGraphics().DrawImage(canvas, 0, 0);
+
+					pbxExample.Image = image;
+
+
+
+
+				}
+
+			}
+		}
+
+		private void DrawBox(Point boxLeftTopPoint)
+		{
+			
+		}
+
+		private void pbxExample_MouseUp(object sender, MouseEventArgs e)
+		{
+			boxIsDrawing = false;
+			
+
+		}
+
+		private void pbxExample_Paint(object sender, PaintEventArgs e)
+		{
+			//state = e.Graphics.Save();
+			//Invalidate();
+			//e.Graphics.Clear(Color.White);
+		}
+
+
 	}
 }
