@@ -61,7 +61,7 @@ namespace SFY_OCR {
         }
         
         /// <summary>
-        ///   查找类似 BMP|*.BMP|JPG|*.JPG;*.JPEG|TIFF|*.TIFF;*.TIF|所有文件|*.* 的本地化字符串。
+        ///   查找类似 JPG|*.JPG;*.JPEG|TIFF|*.TIFF;*.TIF|BMP|*.BMP|所有文件|*.* 的本地化字符串。
         /// </summary>
         internal static string OpenImageFilterText {
             get {

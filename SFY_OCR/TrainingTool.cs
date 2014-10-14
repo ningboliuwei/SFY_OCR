@@ -10,6 +10,8 @@ using Timer = System.Threading.Timer;
 
 namespace SFY_OCR
 {
+	using System.Threading;
+
 	public partial class TrainingTool : Form
 	{
 		//当前显示的图片OcrImage对象
@@ -23,11 +25,10 @@ namespace SFY_OCR
 		private Point boxEndPoint;
 		//画矩形的状态
 		private bool boxIsDrawing;
-
-		Graphics g;
-		private GraphicsState state;
-
+		//矩形图层
 		private Bitmap boxesImage;
+		//当前鼠标是否在移动
+		private bool isDrawingAndMoving = false;
 
 		public TrainingTool()
 		{
@@ -150,11 +151,7 @@ namespace SFY_OCR
 			this.SetStyle(ControlStyles.UserPaint, true);
 			this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 
-
-			//设置Panel为背景透明
-			//pbxBoxes.BackColor = Color.Transparent;
-			//pbxBoxes.Parent = pbxExample;
-
+			//设置用于清除之前画的矩形的定时器间隔（ms）
 			tmrClearBox.Interval = 10;
 
 
@@ -247,8 +244,6 @@ namespace SFY_OCR
 		{
 			//恢复为最初的图片（副本）
 			ResetImage();
-
-
 		}
 
 		/// <summary>
@@ -277,14 +272,10 @@ namespace SFY_OCR
 			boxStartPoint = new Point(e.X, e.Y);
 			boxEndPoint = new Point(e.X, e.Y);
 			boxIsDrawing = true;
-			g = pbxExample.CreateGraphics();
-
-			tmrClearBox.Start();
-
 		}
 
 
-		private bool isMoving = false;
+
 		/// <summary>
 		/// 在图片上绘制用于识别的矩形
 		/// </summary>
@@ -292,155 +283,120 @@ namespace SFY_OCR
 		/// <param name="e"></param>
 		private void pbxExample_MouseMove(object sender, MouseEventArgs e)
 		{
-
-
 			if (e.Button == MouseButtons.Left)
 			{
 				if (boxIsDrawing)
 				{
-					//previousImage = (Bitmap)pbxExample.Image;
-					//pbxExample.Image = previousImage;
-					//pbxExample.Invalidate();
-					// 初始化box图层
-
+					//将当前鼠标坐标与之前记录下的鼠标坐标作比较
 					if (e.X == boxEndPoint.X && e.Y == boxEndPoint.Y)
 					{
-						isMoving = false;
+						this.isDrawingAndMoving = false;
 					}
 					else
 					{
-						isMoving = true;
+						this.isDrawingAndMoving = true;
 					}
 
 					//得到拖动结束点坐标
 					boxEndPoint.X = e.X;
 					boxEndPoint.Y = e.Y;
-
-					tmrClearBox.Start();
-
-					boxesImage = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
-
-					//判断矩形左上角的点的位置
-					Point boxLeftTopPoint = new Point();
-
-					if (boxEndPoint.X > boxStartPoint.X)
-					{
-						boxLeftTopPoint.X = boxStartPoint.X;
-					}
-					else
-					{
-						boxLeftTopPoint.X = boxEndPoint.X;
-					}
-
-					if (boxEndPoint.Y > boxStartPoint.Y)
-					{
-						boxLeftTopPoint.Y = boxStartPoint.Y;
-					}
-					else
-					{
-						boxLeftTopPoint.Y = boxEndPoint.Y;
-					}
-
-
-					g.SmoothingMode = SmoothingMode.HighSpeed;
-					boxesImage.MakeTransparent();
-					//绘制矩形
-
-					//Graphics.FromImage(boxesImage).DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y, Math.Abs(boxEndPoint.X - boxStartPoint.X),
-					//Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
-
-					if (isMoving == false)
-					{
-
-					}
-					else
-					{
-						g = Graphics.FromImage(boxesImage);
-						g.DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y,
-							Math.Abs(boxEndPoint.X - boxStartPoint.X),
-							Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
-						pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
-
-
-						//	Graphics.FromImage(boxesImage).DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y, Math.Abs(boxEndPoint.X - boxStartPoint.X),
-						//Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
-						//	pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
-
-
-						//显示当前鼠标坐标
-						button1.Text = boxStartPoint.X + "," + boxStartPoint.Y + "," + Math.Abs(boxEndPoint.X - boxStartPoint.X) + "," +
-									   Math.Abs(boxEndPoint.Y - boxStartPoint.Y);
-
-						//Graphics.FromImage(boxesImage).Clear(Color.Transparent);
-						previousImage = (Bitmap)pbxExample.Image;
-						pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
-
-						pbxExample.Image = previousImage;
-						clearcount++;
-						button3.Text = clearcount.ToString();
-
-					}
-
-
 				}
-
 			}
+
+			//只有在拖动矩形情况下才需要画矩形（并不断清除）
+			if (isDrawingAndMoving)
+			{
+				tmrClearBox.Start();
+			}
+			else
+			{
+				tmrClearBox.Stop();
+			}
+
+
 		}
 
-		private void DrawBox(Point boxLeftTopPoint)
-		{
-
-		}
 
 		private void pbxExample_MouseUp(object sender, MouseEventArgs e)
 		{
 			boxIsDrawing = false;
-			//if (boxesImage != null)
-				//pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
 
+			if (boxesImage != null)
+			{
+				pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
+
+			}
 			tmrClearBox.Stop();
 
 		}
 
-		private void pbxExample_Paint(object sender, PaintEventArgs e)
-		{
-			//state = e.Graphics.Save();
-			//Invalidate();
-			//e.Graphics.Clear(Color.White);
-			//pbxExample.Image = previousImage;
-		}
 
-		private int clearcount = 0;
 		private void tmrClearBox_Tick(object sender, EventArgs e)
 		{
-			
+
+
+			//判断矩形左上角的点的位置
+			Point boxLeftTopPoint = new Point();
+
+			if (boxEndPoint.X > boxStartPoint.X)
+			{
+				boxLeftTopPoint.X = boxStartPoint.X;
+			}
+			else
+			{
+				boxLeftTopPoint.X = boxEndPoint.X;
+			}
+
+			if (boxEndPoint.Y > boxStartPoint.Y)
+			{
+				boxLeftTopPoint.Y = boxStartPoint.Y;
+			}
+			else
+			{
+				boxLeftTopPoint.Y = boxEndPoint.Y;
+			}
+
+			Graphics g = pbxExample.CreateGraphics();
+
+			g.SmoothingMode = SmoothingMode.HighSpeed;
+
+			//只有在绘图且移动情况下才画新的矩形
+			if (this.isDrawingAndMoving == true)
+			{
+				boxesImage = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
+				g = Graphics.FromImage(boxesImage);
+				g.SmoothingMode = SmoothingMode.HighSpeed;
+				g.DrawRectangle(
+					new Pen(Color.Red, 3),
+					boxLeftTopPoint.X,
+					boxLeftTopPoint.Y,
+					Math.Abs(boxEndPoint.X - boxStartPoint.X),
+					Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
+				pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
+
+				//显示当前鼠标坐标
+				button1.Text = boxStartPoint.X + "," + boxStartPoint.Y + "," + Math.Abs(boxEndPoint.X - boxStartPoint.X) + ","
+							   + Math.Abs(boxEndPoint.Y - boxStartPoint.Y);
+
+				//获取画矩形之前的图片（以便擦除）
+				previousImage = (Bitmap)pbxExample.Image;
+				
+				//将矩形真正画到picturebox上
+				pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
+
+				Thread.Sleep(10);
+
+				//只有在拖动矩形前提下，才清除
+				if (isDrawingAndMoving)
+				{
+					pbxExample.Image = previousImage;
+				}
+			}
 
 		}
 
 		private Bitmap previousImage;
 
-		private void button3_Click(object sender, EventArgs e)
-		{
-			boxesImage = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
-			boxesImage.MakeTransparent();
-			//绘制矩形
-			//Graphics.FromImage(boxesImage).DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y, Math.Abs(boxEndPoint.X - boxStartPoint.X),
-			//Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
-
-			previousImage = (Bitmap) pbxExample.Image;
-
-			g = Graphics.FromImage(boxesImage);
-			g.DrawRectangle(new Pen(Color.Red, 3), 50, 50, 50, 50);
-			pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
-
-		}
-
-		private void button4_Click(object sender, EventArgs e)
-		{
-			//Graphics.FromImage(boxesImage).Clear(Color.Transparent);
-			//pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
-			pbxExample.Image = previousImage;
-		}
 
 
 	}

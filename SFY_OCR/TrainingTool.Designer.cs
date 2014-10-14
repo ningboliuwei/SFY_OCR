@@ -50,8 +50,6 @@
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcessImage = new System.ComponentModel.BackgroundWorker();
 			this.tmrClearBox = new System.Windows.Forms.Timer(this.components);
-			this.button3 = new System.Windows.Forms.Button();
-			this.button4 = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -241,8 +239,6 @@
 			// 
 			// panel1
 			// 
-			this.panel1.Controls.Add(this.button4);
-			this.panel1.Controls.Add(this.button3);
 			this.panel1.Controls.Add(this.pbxExample);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel1.Location = new System.Drawing.Point(3, 34);
@@ -259,7 +255,6 @@
 			this.pbxExample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
 			this.pbxExample.TabIndex = 1;
 			this.pbxExample.TabStop = false;
-			this.pbxExample.Paint += new System.Windows.Forms.PaintEventHandler(this.pbxExample_Paint);
 			this.pbxExample.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseDown);
 			this.pbxExample.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseMove);
 			this.pbxExample.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseUp);
@@ -282,26 +277,6 @@
 			// tmrClearBox
 			// 
 			this.tmrClearBox.Tick += new System.EventHandler(this.tmrClearBox_Tick);
-			// 
-			// button3
-			// 
-			this.button3.Location = new System.Drawing.Point(193, 23);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(42, 59);
-			this.button3.TabIndex = 2;
-			this.button3.Text = "button3";
-			this.button3.UseVisualStyleBackColor = true;
-			this.button3.Click += new System.EventHandler(this.button3_Click);
-			// 
-			// button4
-			// 
-			this.button4.Location = new System.Drawing.Point(309, 50);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(59, 72);
-			this.button4.TabIndex = 3;
-			this.button4.Text = "button4";
-			this.button4.UseVisualStyleBackColor = true;
-			this.button4.Click += new System.EventHandler(this.button4_Click);
 			// 
 			// TrainingTool
 			// 
@@ -358,7 +333,5 @@
 		private System.Windows.Forms.Button button2;
 		private System.ComponentModel.BackgroundWorker bgwProcessImage;
 		private System.Windows.Forms.Timer tmrClearBox;
-		private System.Windows.Forms.Button button4;
-		private System.Windows.Forms.Button button3;
 	}
 }

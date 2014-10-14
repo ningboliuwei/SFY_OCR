@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="OpenImageFilterText" xml:space="preserve">
-    <value>BMP|*.BMP|JPG|*.JPG;*.JPEG|TIFF|*.TIFF;*.TIF|所有文件|*.*</value>
+    <value>JPG|*.JPG;*.JPEG|TIFF|*.TIFF;*.TIF|BMP|*.BMP|所有文件|*.*</value>
     <comment>打开图片对话框的Filter文本</comment>
   </data>
   <data name="TessdataDirName" xml:space="preserve">
