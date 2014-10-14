@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TrainingTool));
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -48,6 +49,9 @@
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcessImage = new System.ComponentModel.BackgroundWorker();
+			this.tmrClearBox = new System.Windows.Forms.Timer(this.components);
+			this.button3 = new System.Windows.Forms.Button();
+			this.button4 = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -237,6 +241,8 @@
 			// 
 			// panel1
 			// 
+			this.panel1.Controls.Add(this.button4);
+			this.panel1.Controls.Add(this.button3);
 			this.panel1.Controls.Add(this.pbxExample);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel1.Location = new System.Drawing.Point(3, 34);
@@ -268,14 +274,34 @@
 			this.tabPage2.Text = "tabPage2";
 			this.tabPage2.UseVisualStyleBackColor = true;
 			// 
-			// ofdFile
-			// 
-			this.ofdFile.FileName = "openFileDialog1";
-			// 
 			// bgwProcessImage
 			// 
 			this.bgwProcessImage.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProcessImage_DoWork);
 			this.bgwProcessImage.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwProcessImage_RunWorkerCompleted);
+			// 
+			// tmrClearBox
+			// 
+			this.tmrClearBox.Tick += new System.EventHandler(this.tmrClearBox_Tick);
+			// 
+			// button3
+			// 
+			this.button3.Location = new System.Drawing.Point(193, 23);
+			this.button3.Name = "button3";
+			this.button3.Size = new System.Drawing.Size(42, 59);
+			this.button3.TabIndex = 2;
+			this.button3.Text = "button3";
+			this.button3.UseVisualStyleBackColor = true;
+			this.button3.Click += new System.EventHandler(this.button3_Click);
+			// 
+			// button4
+			// 
+			this.button4.Location = new System.Drawing.Point(309, 50);
+			this.button4.Name = "button4";
+			this.button4.Size = new System.Drawing.Size(59, 72);
+			this.button4.TabIndex = 3;
+			this.button4.Text = "button4";
+			this.button4.UseVisualStyleBackColor = true;
+			this.button4.Click += new System.EventHandler(this.button4_Click);
 			// 
 			// TrainingTool
 			// 
@@ -331,5 +357,8 @@
 		private System.Windows.Forms.TrackBar trackBar1;
 		private System.Windows.Forms.Button button2;
 		private System.ComponentModel.BackgroundWorker bgwProcessImage;
+		private System.Windows.Forms.Timer tmrClearBox;
+		private System.Windows.Forms.Button button4;
+		private System.Windows.Forms.Button button3;
 	}
 }

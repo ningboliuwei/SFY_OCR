@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using SFY_OCR.Properties;
 using SFY_OCR.Untilities;
+using Timer = System.Threading.Timer;
 
 namespace SFY_OCR
 {
@@ -23,8 +24,10 @@ namespace SFY_OCR
 		//画矩形的状态
 		private bool boxIsDrawing;
 
-		Graphics g ;
+		Graphics g;
 		private GraphicsState state;
+
+		private Bitmap boxesImage;
 
 		public TrainingTool()
 		{
@@ -142,12 +145,17 @@ namespace SFY_OCR
 			cmbPreProcess.DataSource = options;
 			cmbPreProcess.SelectedIndex = 0;
 
-
+			//双缓存，防绘图闪烁
 			this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 			this.SetStyle(ControlStyles.UserPaint, true);
 			this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 
 
+			//设置Panel为背景透明
+			//pbxBoxes.BackColor = Color.Transparent;
+			//pbxBoxes.Parent = pbxExample;
+
+			tmrClearBox.Interval = 10;
 
 
 		}
@@ -270,41 +278,47 @@ namespace SFY_OCR
 			boxEndPoint = new Point(e.X, e.Y);
 			boxIsDrawing = true;
 			g = pbxExample.CreateGraphics();
-			
+
+			tmrClearBox.Start();
+
 		}
 
 
+		private bool isMoving = false;
 		/// <summary>
-		/// 要分拖动的方向
+		/// 在图片上绘制用于识别的矩形
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void pbxExample_MouseMove(object sender, MouseEventArgs e)
 		{
-			
-			
+
+
 			if (e.Button == MouseButtons.Left)
 			{
 				if (boxIsDrawing)
 				{
-					// 初始化画板
-					Bitmap image = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
+					//previousImage = (Bitmap)pbxExample.Image;
+					//pbxExample.Image = previousImage;
+					//pbxExample.Invalidate();
+					// 初始化box图层
 
-					// 获取背景层
-					//Bitmap bg = (Bitmap)pbxExample.Image;
-
-					// 初始化画布
-					//Bitmap canvas = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
-
-					// 初始化图形面板
-					//Graphics g = Graphics.FromImage(image);
-					//Graphics gb = Graphics.FromImage(canvas);
-
-					// 绘图部分 Begin
+					if (e.X == boxEndPoint.X && e.Y == boxEndPoint.Y)
+					{
+						isMoving = false;
+					}
+					else
+					{
+						isMoving = true;
+					}
 
 					//得到拖动结束点坐标
 					boxEndPoint.X = e.X;
 					boxEndPoint.Y = e.Y;
+
+					tmrClearBox.Start();
+
+					boxesImage = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
 
 					//判断矩形左上角的点的位置
 					Point boxLeftTopPoint = new Point();
@@ -327,35 +341,45 @@ namespace SFY_OCR
 						boxLeftTopPoint.Y = boxEndPoint.Y;
 					}
 
-					//绘制矩形
-					Graphics.FromImage(image).DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y, Math.Abs(boxEndPoint.X - boxStartPoint.X),
-				Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
 
-					//显示当前鼠标坐标
-					button1.Text = boxStartPoint.X + "," + boxStartPoint.Y + "," + Math.Abs(boxEndPoint.X - boxStartPoint.X) + "," +
-								   Math.Abs(boxEndPoint.Y - boxStartPoint.Y);
-					
 					g.SmoothingMode = SmoothingMode.HighSpeed;
+					boxesImage.MakeTransparent();
+					//绘制矩形
+
+					//Graphics.FromImage(boxesImage).DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y, Math.Abs(boxEndPoint.X - boxStartPoint.X),
+					//Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
+
+					if (isMoving == false)
+					{
+
+					}
+					else
+					{
+						g = Graphics.FromImage(boxesImage);
+						g.DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y,
+							Math.Abs(boxEndPoint.X - boxStartPoint.X),
+							Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
+						pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
 
 
-					//pbxExample.Invalidate();
-					//g.SmoothingMode = SmoothingMode.AntiAlias;//消除锯齿  
-					//g.DrawEllipse(new Pen(Color.Red),e.X,e.Y,10,10 );
-					//state = g.Save();
-					//pbxExample.Refresh();
-					// 绘图部分 End
-
-					//gb.DrawImage(bg, 0, 0); // 先绘制背景层
-					//gb.DrawImage(image, 0, 0); // 再绘制绘画层
-
-					//pbxExample.BackgroundImage = canvas; // 设置为背景层
-
-					//pbxExample.Refresh();
-					//pbxExample.CreateGraphics().DrawImage(canvas, 0, 0);
-
-					pbxExample.Image = image;
+						//	Graphics.FromImage(boxesImage).DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y, Math.Abs(boxEndPoint.X - boxStartPoint.X),
+						//Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
+						//	pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
 
 
+						//显示当前鼠标坐标
+						button1.Text = boxStartPoint.X + "," + boxStartPoint.Y + "," + Math.Abs(boxEndPoint.X - boxStartPoint.X) + "," +
+									   Math.Abs(boxEndPoint.Y - boxStartPoint.Y);
+
+						//Graphics.FromImage(boxesImage).Clear(Color.Transparent);
+						previousImage = (Bitmap)pbxExample.Image;
+						pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
+
+						pbxExample.Image = previousImage;
+						clearcount++;
+						button3.Text = clearcount.ToString();
+
+					}
 
 
 				}
@@ -365,13 +389,16 @@ namespace SFY_OCR
 
 		private void DrawBox(Point boxLeftTopPoint)
 		{
-			
+
 		}
 
 		private void pbxExample_MouseUp(object sender, MouseEventArgs e)
 		{
 			boxIsDrawing = false;
-			
+			//if (boxesImage != null)
+				//pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
+
+			tmrClearBox.Stop();
 
 		}
 
@@ -380,6 +407,39 @@ namespace SFY_OCR
 			//state = e.Graphics.Save();
 			//Invalidate();
 			//e.Graphics.Clear(Color.White);
+			//pbxExample.Image = previousImage;
+		}
+
+		private int clearcount = 0;
+		private void tmrClearBox_Tick(object sender, EventArgs e)
+		{
+			
+
+		}
+
+		private Bitmap previousImage;
+
+		private void button3_Click(object sender, EventArgs e)
+		{
+			boxesImage = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
+			boxesImage.MakeTransparent();
+			//绘制矩形
+			//Graphics.FromImage(boxesImage).DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y, Math.Abs(boxEndPoint.X - boxStartPoint.X),
+			//Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
+
+			previousImage = (Bitmap) pbxExample.Image;
+
+			g = Graphics.FromImage(boxesImage);
+			g.DrawRectangle(new Pen(Color.Red, 3), 50, 50, 50, 50);
+			pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
+
+		}
+
+		private void button4_Click(object sender, EventArgs e)
+		{
+			//Graphics.FromImage(boxesImage).Clear(Color.Transparent);
+			//pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
+			pbxExample.Image = previousImage;
 		}
 
 
