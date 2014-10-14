@@ -121,6 +121,10 @@
     <value>BMP|*.BMP|JPG|*.JPG;*.JPEG|TIFF|*.TIFF;*.TIF|所有文件|*.*</value>
     <comment>打开图片对话框的Filter文本</comment>
   </data>
+  <data name="TessdataDirName" xml:space="preserve">
+    <value>tessdata</value>
+    <comment>语言训练文件所在文件夹名称</comment>
+  </data>
   <data name="TrainedDataExtName" xml:space="preserve">
     <value>traineddata</value>
     <comment>语言训练文件后缀名</comment>

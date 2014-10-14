@@ -352,28 +352,40 @@ namespace SFY_OCR
 		/// </summary>
 		private void ShowLanguageType()
 		{
-			string[] trainedDataFilePaths = Directory.GetFiles(Settings.Default.TesseractOcrDir + "\\tessdata");
+			string tessdataDirPath = Settings.Default.TesseractOcrDir + "\\" + StringResourceManager.TessdataDirName;
 
-			foreach (string trainedDataFilePath in trainedDataFilePaths)
+			//若语言训练文件夹路径存在，显示语言训练文件
+			if (Directory.Exists(tessdataDirPath))
 			{
-				string extName = trainedDataFilePath.Substring(trainedDataFilePath.LastIndexOf(".") + 1);
-				string trainedDataFileName = trainedDataFilePath.Substring(trainedDataFilePath.LastIndexOf("\\") + 1);
+				//得到语言文件夹下所有语言文件路径
+				string[] trainedDataFilePaths = Directory.GetFiles(tessdataDirPath);
 
-				//如果文件扩展名是 .traineddata
-				if (extName == StringResourceManager.TrainedDataExtName)
+				foreach (string trainedDataFilePath in trainedDataFilePaths)
 				{
-					cbxLanguageType.Items.Add(trainedDataFileName.Replace("." + StringResourceManager.TrainedDataExtName, ""));
+					string extName = trainedDataFilePath.Substring(trainedDataFilePath.LastIndexOf(".") + 1);
+					string trainedDataFileName = trainedDataFilePath.Substring(trainedDataFilePath.LastIndexOf("\\") + 1);
+
+					//如果文件扩展名是 .traineddata
+					if (extName == StringResourceManager.TrainedDataExtName)
+					{
+						cbxLanguageType.Items.Add(trainedDataFileName.Replace("." + StringResourceManager.TrainedDataExtName, ""));
+					}
 				}
+
+
+				//若无语言文件，显示“无语言文件”
+				if (cbxLanguageType.Items.Count == 0)
+				{
+					cbxLanguageType.Items.Add(NO_LANGUAGE_DATA_COMBOBOX_TEXT);
+				}
+				//选中第一项（可能是“无语言文件那项”）
+				cbxLanguageType.SelectedIndex = 0;
 			}
-
-
-			//若无语言文件，显示“无语言文件”
-			if (cbxLanguageType.Items.Count == 0)
+			else
 			{
-				cbxLanguageType.Items.Add(NO_LANGUAGE_DATA_COMBOBOX_TEXT);
+				MessageBox.Show("语言文件夹不存在，可能是Tesseract-OCR文件夹路径不正确，请到“选项”对话框进行设置。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
-			//选中第一项（可能是“无语言文件那项”）
-			cbxLanguageType.SelectedIndex = 0;
+			
 		}
 
 		private void 训练TToolStripMenuItem_Click(object sender, EventArgs e)
@@ -386,7 +398,7 @@ namespace SFY_OCR
 
 		private void txtResult_MouseMove(object sender, MouseEventArgs e)
 		{
-			
+
 		}
 	}
 }
