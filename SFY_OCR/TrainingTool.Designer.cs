@@ -45,6 +45,8 @@
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.button1 = new System.Windows.Forms.Button();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.button4 = new System.Windows.Forms.Button();
+			this.button3 = new System.Windows.Forms.Button();
 			this.pbxExample = new System.Windows.Forms.PictureBox();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
@@ -246,6 +248,26 @@
 			this.panel1.Size = new System.Drawing.Size(504, 449);
 			this.panel1.TabIndex = 2;
 			// 
+			// button4
+			// 
+			this.button4.Location = new System.Drawing.Point(309, 50);
+			this.button4.Name = "button4";
+			this.button4.Size = new System.Drawing.Size(59, 72);
+			this.button4.TabIndex = 3;
+			this.button4.Text = "button4";
+			this.button4.UseVisualStyleBackColor = true;
+			this.button4.Click += new System.EventHandler(this.button4_Click);
+			// 
+			// button3
+			// 
+			this.button3.Location = new System.Drawing.Point(193, 23);
+			this.button3.Name = "button3";
+			this.button3.Size = new System.Drawing.Size(42, 59);
+			this.button3.TabIndex = 2;
+			this.button3.Text = "button3";
+			this.button3.UseVisualStyleBackColor = true;
+			this.button3.Click += new System.EventHandler(this.button3_Click);
+			// 
 			// pbxExample
 			// 
 			this.pbxExample.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -333,5 +355,6 @@
 		private System.Windows.Forms.Button button2;
 		private System.ComponentModel.BackgroundWorker bgwProcessImage;
 		private System.Windows.Forms.Timer tmrClearBox;
+		private System.Windows.Forms.Timer tmrCheckMovement;
 	}
 }

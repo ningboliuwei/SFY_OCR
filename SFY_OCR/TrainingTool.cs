@@ -275,7 +275,7 @@ namespace SFY_OCR
 		}
 
 
-
+		private Point currentPoint;
 		/// <summary>
 		/// 在图片上绘制用于识别的矩形
 		/// </summary>
@@ -288,6 +288,8 @@ namespace SFY_OCR
 				if (boxIsDrawing)
 				{
 					//将当前鼠标坐标与之前记录下的鼠标坐标作比较
+					currentPoint = new Point(e.X, e.Y);
+
 					if (e.X == boxEndPoint.X && e.Y == boxEndPoint.Y)
 					{
 						this.isDrawingAndMoving = false;
@@ -382,7 +384,6 @@ namespace SFY_OCR
 				previousImage = (Bitmap)pbxExample.Image;
 				
 				//将矩形真正画到picturebox上
-				pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
 
 				Thread.Sleep(10);
 
@@ -397,6 +398,8 @@ namespace SFY_OCR
 
 		private Bitmap previousImage;
 
+
+		
 
 
 	}
