@@ -1,53 +1,41 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
-using System.Threading;
 using System.Windows.Forms;
 using SFY_OCR.Properties;
 using SFY_OCR.Untilities;
-
-#endregion
+using Timer = System.Threading.Timer;
 
 namespace SFY_OCR
 {
+	using System.Threading;
+
 	public partial class TrainingTool : Form
 	{
 		//当前显示的图片OcrImage对象
+		private OcrImage displayingImage;
+		//原本的图片OcrImage对象
+		private OcrImage originalImage;
+
+		//矩形开始点
+		private Point boxStartPoint;
 		//矩形结束点
-		private readonly BoxList boxList = new BoxList();
 		private Point boxEndPoint;
 		//画矩形的状态
 		private bool boxIsDrawing;
-		private Point boxLeftTopPoint;
-		private Point boxStartPoint;
 		//矩形图层
 		private Bitmap boxesImage;
-		private Point currentPoint;
-		private OcrImage displayingImage;
-		//之前的图层（用于擦除矩形）
-
 		//当前鼠标是否在移动
-		private bool isDrawingAndMoving;
-		private OcrImage originalImage;
-		private Bitmap previousImage;
-
-		//保存所有Box对象
+		private bool isDrawingAndMoving = false;
 
 		public TrainingTool()
 		{
 			InitializeComponent();
 		}
 
-		/// <summary>
-		/// 关闭窗体前的处理
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
+
 		private void TrainingTool_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			//关闭窗体
@@ -70,33 +58,18 @@ namespace SFY_OCR
 				originalImage = new OcrImage(ofdFile.FileName);
 				OpenImage(originalImage);
 
-				//得到样本图片文件的去掉后缀名的部分，再去掉 “_temp”后缀，并加上.box 后缀，得到对应的box文件的路径
-				string boxFilePath = displayingImage.FilePath.Substring(0, displayingImage.FilePath.LastIndexOf(StringResourceManager.TempImageSuffix)) + "." + displayingImage.FilePath.Substring(displayingImage.FilePath.LastIndexOf(".")+ 1) + ".box";
-				//如果存在图片对应的box文件
-				if (File.Exists(boxFilePath))
-				{
-					//将Box文件载入到BoxList对象中（窗体局部变量）
-					//boxList.LoadFromFile(boxFilePath);
-					//刷新，以显示图片
-					//pbxExample.Refresh();
-					//boxList.Display((Bitmap)pbxExample.Image);
-					//pbxExample.Refresh();
-					//pbxExample.Refresh();
-					//pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
-					//pbxExample.Image = boxList.Display((Bitmap)pbxExample.Image);
-				}
 			}
 		}
 
 
+
 		/// <summary>
-		///     打开样本图片，自动复制一份到输出目录，并将该副本显示在文本框中。
+		/// 打开样本图片，自动复制一份到输出目录，并将该副本显示在文本框中。
 		/// </summary>
 		/// <param name="sourceImage">原本（被打开）的图片（OcrImage）对象</param>
 		private void OpenImage(OcrImage sourceImage)
 		{
-			string displayingImagePath = Settings.Default.OutputDir + sourceImage.MainFileName + StringResourceManager.TempImageSuffix + "." +
-										 sourceImage.ExtFileName;
+			string displayingImagePath = Settings.Default.OutputDir + sourceImage.MainFileName + "_temp." + sourceImage.ExtFileName;
 
 			//将原本复制一份副本到输出目录
 			File.Copy(sourceImage.FilePath, displayingImagePath, true);
@@ -174,12 +147,14 @@ namespace SFY_OCR
 			cmbPreProcess.SelectedIndex = 0;
 
 			//双缓存，防绘图闪烁
-			SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-			SetStyle(ControlStyles.UserPaint, true);
-			SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+			this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+			this.SetStyle(ControlStyles.UserPaint, true);
+			this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 
 			//设置用于清除之前画的矩形的定时器间隔（ms）
 			tmrClearBox.Interval = 10;
+
+
 		}
 
 		//private void ConvertToTiff(OcrImage sourceImage)
@@ -204,7 +179,7 @@ namespace SFY_OCR
 		//}
 
 		/// <summary>
-		///     使用TextCleaner效果，放到背景线程调用
+		/// 使用TextCleaner效果，放到背景线程调用
 		/// </summary>
 		/// <param name="sourceImage">要处理的OcrImage对象</param>
 		/// <param name="convertArgs">效果处理参数</param>
@@ -213,8 +188,7 @@ namespace SFY_OCR
 			string commandLineArgs =
 				string.Format(
 					"( {0} -colorspace gray -type grayscale -contrast-stretch 0 ) ( -clone 0 -colorspace gray -negate -lat {1}x{1}+{2}% -contrast-stretch 0 ) -compose copy_opacity -composite -fill \"{3}\" -opaque none +matte -deskew {4}% -sharpen 0x1  {5}",
-					sourceImage.FilePath, convertArgs["filter_size"], convertArgs["off_set"], convertArgs["bgcolor"],
-					convertArgs["deskew"], sourceImage.FilePath);
+					sourceImage.FilePath, convertArgs["filter_size"], convertArgs["off_set"], convertArgs["bgcolor"], convertArgs["deskew"], sourceImage.FilePath);
 
 			Common.InvokeImageMagickConvertCommandLine(commandLineArgs);
 		}
@@ -225,7 +199,7 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		///     进行文本降噪黑白高对比度操作
+		/// 进行文本降噪黑白高对比度操作
 		/// </summary>
 		private void TextCleanerProcess()
 		{
@@ -254,11 +228,11 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		///     背景线程处理图像
+		/// 背景线程处理图像
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void bgwProcessImage_DoWork(object sender, DoWorkEventArgs e)
+		private void bgwProcessImage_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
 		{
 			//拆箱，还原出delegate和hashtable形式的参数列表
 			ConvertDelegatePackage package = (ConvertDelegatePackage)e.Argument;
@@ -273,7 +247,7 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		///     复原到样本图片（重新进行一次打开图片处理）
+		/// 复原到样本图片（重新进行一次打开图片处理）
 		/// </summary>
 		private void ResetImage()
 		{
@@ -281,11 +255,11 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		///     背景线程处理完毕
+		/// 背景线程处理完毕
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void bgwProcessImage_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		private void bgwProcessImage_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
 		{
 			//当背景线程处理完毕后，显示处理完的图像
 			pbxExample.ImageLocation = displayingImage.FilePath;
@@ -293,6 +267,7 @@ namespace SFY_OCR
 
 		private void pbxExample_MouseDown(object sender, MouseEventArgs e)
 		{
+
 			//开始进入画矩形状态
 			boxStartPoint = new Point(e.X, e.Y);
 			boxEndPoint = new Point(e.X, e.Y);
@@ -300,8 +275,14 @@ namespace SFY_OCR
 		}
 
 
+<<<<<<< Updated upstream
+
+=======
+		private Point currentPoint;
+		private bool isMoving = false;
+>>>>>>> Stashed changes
 		/// <summary>
-		///     在图片上绘制用于识别的矩形
+		/// 在图片上绘制用于识别的矩形
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -311,21 +292,98 @@ namespace SFY_OCR
 			{
 				if (boxIsDrawing)
 				{
+<<<<<<< Updated upstream
 					//将当前鼠标坐标与之前记录下的鼠标坐标作比较
+=======
+					//previousImage = (Bitmap)pbxExample.Image;
+					//pbxExample.Image = previousImage;
+					//pbxExample.Invalidate();
+					// 初始化box图层
+
 					currentPoint = new Point(e.X, e.Y);
 
+>>>>>>> Stashed changes
 					if (e.X == boxEndPoint.X && e.Y == boxEndPoint.Y)
 					{
-						isDrawingAndMoving = false;
+						this.isDrawingAndMoving = false;
 					}
 					else
 					{
-						isDrawingAndMoving = true;
+						this.isDrawingAndMoving = true;
 					}
 
 					//得到拖动结束点坐标
 					boxEndPoint.X = e.X;
 					boxEndPoint.Y = e.Y;
+<<<<<<< Updated upstream
+=======
+
+					tmrClearBox.Start();
+
+					boxesImage = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
+
+					//判断矩形左上角的点的位置
+					Point boxLeftTopPoint = new Point();
+
+					if (boxEndPoint.X > boxStartPoint.X)
+					{
+						boxLeftTopPoint.X = boxStartPoint.X;
+					}
+					else
+					{
+						boxLeftTopPoint.X = boxEndPoint.X;
+					}
+
+					if (boxEndPoint.Y > boxStartPoint.Y)
+					{
+						boxLeftTopPoint.Y = boxStartPoint.Y;
+					}
+					else
+					{
+						boxLeftTopPoint.Y = boxEndPoint.Y;
+					}
+
+
+					g.SmoothingMode = SmoothingMode.HighSpeed;
+					boxesImage.MakeTransparent();
+					//绘制矩形
+
+					//Graphics.FromImage(boxesImage).DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y, Math.Abs(boxEndPoint.X - boxStartPoint.X),
+					//Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
+
+					if (isMoving == false)
+					{
+
+					}
+					else
+					{
+						g = Graphics.FromImage(boxesImage);
+						g.DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y,
+							Math.Abs(boxEndPoint.X - boxStartPoint.X),
+							Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
+						pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
+
+
+						//	Graphics.FromImage(boxesImage).DrawRectangle(new Pen(Color.Red, 3), boxLeftTopPoint.X, boxLeftTopPoint.Y, Math.Abs(boxEndPoint.X - boxStartPoint.X),
+						//Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
+						//	pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
+
+
+						//显示当前鼠标坐标
+						button1.Text = boxStartPoint.X + "," + boxStartPoint.Y + "," + Math.Abs(boxEndPoint.X - boxStartPoint.X) + "," +
+									   Math.Abs(boxEndPoint.Y - boxStartPoint.Y);
+
+						//Graphics.FromImage(boxesImage).Clear(Color.Transparent);
+						previousImage = (Bitmap)pbxExample.Image;
+						pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
+
+						pbxExample.Image = previousImage;
+						button3.Text = clearcount.ToString();
+
+					}
+
+
+>>>>>>> Stashed changes
 				}
 			}
 
@@ -338,6 +396,8 @@ namespace SFY_OCR
 			{
 				tmrClearBox.Stop();
 			}
+
+
 		}
 
 
@@ -345,33 +405,22 @@ namespace SFY_OCR
 		{
 			boxIsDrawing = false;
 
-			//假如放松的是鼠标左键，停止清除矩形
-			if (e.Button == MouseButtons.Left)
-			{
-				tmrClearBox.Stop();
-			}
-
 			if (boxesImage != null)
 			{
 				pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
+
 			}
+			tmrClearBox.Stop();
 
-
-			//根据当前 创建一个Box对象
-			Box box = new Box("未指定", new Point(boxLeftTopPoint.X,
-				boxLeftTopPoint.Y),
-				Math.Abs(boxEndPoint.X - boxStartPoint.X),
-				Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
-
-			boxList.Add(box);
-			boxList.Display((Bitmap)pbxExample.Image);
 		}
 
 
 		private void tmrClearBox_Tick(object sender, EventArgs e)
 		{
+
+
 			//判断矩形左上角的点的位置
-			boxLeftTopPoint = new Point();
+			Point boxLeftTopPoint = new Point();
 
 			if (boxEndPoint.X > boxStartPoint.X)
 			{
@@ -396,18 +445,18 @@ namespace SFY_OCR
 			g.SmoothingMode = SmoothingMode.HighSpeed;
 
 			//只有在绘图且移动情况下才画新的矩形
-			if (isDrawingAndMoving)
+			if (this.isDrawingAndMoving == true)
 			{
 				boxesImage = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
 				g = Graphics.FromImage(boxesImage);
 				g.SmoothingMode = SmoothingMode.HighSpeed;
 				g.DrawRectangle(
-					new Pen(Color.Red, Convert.ToInt32(StringResourceManager.BoxBorderWidth)),
+					new Pen(Color.Red, 3),
 					boxLeftTopPoint.X,
 					boxLeftTopPoint.Y,
 					Math.Abs(boxEndPoint.X - boxStartPoint.X),
 					Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
-
+				pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
 
 				//显示当前鼠标坐标
 				button1.Text = boxStartPoint.X + "," + boxStartPoint.Y + "," + Math.Abs(boxEndPoint.X - boxStartPoint.X) + ","
@@ -415,6 +464,7 @@ namespace SFY_OCR
 
 				//获取画矩形之前的图片（以便擦除）
 				previousImage = (Bitmap)pbxExample.Image;
+				
 				//将矩形真正画到picturebox上
 				pbxExample.CreateGraphics().DrawImage(boxesImage, 0, 0);
 
@@ -426,29 +476,16 @@ namespace SFY_OCR
 					pbxExample.Image = previousImage;
 				}
 			}
+
 		}
 
+<<<<<<< Updated upstream
+		private Bitmap previousImage;
 
-		private void pbxExample_MouseClick(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Left)
-			{
-				foreach (Box box in boxList.Boxes)
-				{
-					box.IsSelected = false;
+=======
+		
+>>>>>>> Stashed changes
 
-					if (box.Contains(e.X, e.Y))
-					{
-						box.IsSelected = true;
-					}
-				}
-			}
 
-			boxList.Display((Bitmap)pbxExample.Image);
-		}
-
-		private void btnInsert_Click(object sender, EventArgs e)
-		{
-		}
 	}
 }
