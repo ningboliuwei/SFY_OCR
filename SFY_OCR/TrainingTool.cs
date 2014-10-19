@@ -19,7 +19,7 @@ namespace SFY_OCR
 	{
 		//当前显示的图片OcrImage对象
 		//矩形结束点
-		private readonly BoxList boxList = new BoxList();
+		private readonly BoxList boxList;
 		private Point boxEndPoint;
 		//画矩形的状态
 		private bool boxIsDrawing;
@@ -71,7 +71,7 @@ namespace SFY_OCR
 				OpenImage(originalImage);
 
 				//得到样本图片文件的去掉后缀名的部分，再去掉 “_temp”后缀，并加上.box 后缀，得到对应的box文件的路径
-				string boxFilePath = displayingImage.FilePath.Substring(0, displayingImage.FilePath.LastIndexOf(StringResourceManager.TempImageSuffix)) + "." + displayingImage.FilePath.Substring(displayingImage.FilePath.LastIndexOf(".")+ 1) + ".box";
+				string boxFilePath = displayingImage.FilePath.Substring(0, displayingImage.FilePath.LastIndexOf(StringResourceManager.TempImageSuffix)) + "." + displayingImage.FilePath.Substring(displayingImage.FilePath.LastIndexOf(".") + 1) + ".box";
 				//如果存在图片对应的box文件
 				if (File.Exists(boxFilePath))
 				{
@@ -245,12 +245,13 @@ namespace SFY_OCR
 
 		private void trackBar1_Scroll(object sender, EventArgs e)
 		{
+			button1.Text = trackBar1.Value.ToString();
 			//ConvertToTextCleaner(pbxExample.ImageLocation, pbxExample.ImageLocation, trackBar1.Value, 10, "white");
 
-			if (File.Exists(pbxExample.ImageLocation))
-			{
-				pbxExample.ImageLocation = pbxExample.ImageLocation;
-			}
+			//if (File.Exists(pbxExample.ImageLocation))
+			//{
+			//	pbxExample.ImageLocation = pbxExample.ImageLocation;
+			//}
 		}
 
 		/// <summary>
@@ -358,13 +359,12 @@ namespace SFY_OCR
 
 
 			//根据当前 创建一个Box对象
-			Box box = new Box("未指定", new Point(boxLeftTopPoint.X,
-				boxLeftTopPoint.Y),
+			Box box = new Box("", boxLeftTopPoint.X, boxLeftTopPoint.Y, boxesImage.Height - boxLeftTopPoint.Y,
 				Math.Abs(boxEndPoint.X - boxStartPoint.X),
 				Math.Abs(boxEndPoint.Y - boxStartPoint.Y));
 
 			boxList.Add(box);
-			boxList.Display((Bitmap)pbxExample.Image);
+			//boxList.Display((Bitmap)pbxExample.Image);
 		}
 
 
