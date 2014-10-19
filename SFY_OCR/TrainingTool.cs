@@ -450,5 +450,7 @@ namespace SFY_OCR
 		private void btnInsert_Click(object sender, EventArgs e)
 		{
 		}
+
+
 	}
 }

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 #endregion
@@ -205,7 +204,19 @@ namespace SFY_OCR.Untilities
 					streamWriter.Close();
 				}
 			}
+		}
 
+		/// <summary>
+		/// 若图片对应的Box文件（.box）不存在，则根据路径创建
+		/// </summary>
+		/// <param name="filePath"></param>
+		public void CreateFile(string filePath)
+		{
+			
+			if (!File.Exists(filePath))
+			{
+				File.Create(filePath);
+			}
 		}
 	}
 }
