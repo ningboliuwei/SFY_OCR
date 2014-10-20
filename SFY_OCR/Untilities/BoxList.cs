@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using SFY_OCR.Properties;
 
 #endregion
 
@@ -12,7 +13,10 @@ namespace SFY_OCR.Untilities
 {
 	internal class BoxList
 	{
-		// 所有的Box对象
+		/// <summary>
+		/// .box 文件的路径
+		/// </summary>
+		public string BoxFilePath { get; private set; }
 		/// <summary>
 		///     构造函数，采用聚合方式拥有List<Box>对象
 		/// </summary>
@@ -20,14 +24,27 @@ namespace SFY_OCR.Untilities
 		{
 			Boxes = new List<Box>();
 			ImageFilePath = imageFilePath;
+
+			//得到图片文件的文件名
+			string imageFileName = imageFilePath.Substring(imageFilePath.LastIndexOf("\\", System.StringComparison.Ordinal) + 1);
+			//生成图片文件对应的.box文件的文件路径
+			BoxFilePath = Settings.Default.OutputDir + imageFileName.Substring(0, imageFileName.LastIndexOf(".", System.StringComparison.Ordinal)) + "." + StringResourceManager.BoxFileExtName;
+
+			if (!File.Exists(BoxFilePath))
+			{
+				CreateBoxFile();
+			}
 		}
 
 		/// <summary>
 		///     该Box列表对应的图片文件的路径
 		/// </summary>
-		public string ImageFilePath { get; set; }
+		public string ImageFilePath { get; private set; }
 
-		public List<Box> Boxes { get; set; }
+		/// <summary>
+		/// 存放所有的 Box 对象
+		/// </summary>
+		public List<Box> Boxes { get; private set; }
 
 		/// <summary>
 		///     获得BoxList中所有被选中的Box对象
@@ -60,16 +77,8 @@ namespace SFY_OCR.Untilities
 		{
 			foreach (Box box in Boxes)
 			{
-				Color borderColor;
-				//若当前矩形框被选中
-				if (box.IsSelected)
-				{
-					borderColor = Color.Blue;
-				}
-				else
-				{
-					borderColor = Color.Red;
-				}
+				//若当前矩形框被选中，使用红色，否则使用蓝色
+				Color borderColor = box.IsSelected ? Color.Red : Color.Blue;
 				//在传入的BitMap上画矩形
 				Graphics.FromImage(image)
 					.DrawRectangle(new Pen(borderColor, Convert.ToInt32(StringResourceManager.BoxBorderWidth)), box.X,
@@ -89,7 +98,7 @@ namespace SFY_OCR.Untilities
 		}
 
 		/// <summary>
-		///     删除某个Box对象
+		///     删除某个Box
 		/// </summary>
 		/// <param name="box"></param>
 		public void Delete(Box box)
@@ -135,7 +144,7 @@ namespace SFY_OCR.Untilities
 		///     从Box文件加载所有的Box数据
 		/// </summary>
 		/// <param name="filePath"></param>
-		public void LoadFromFile(string filePath)
+		public void LoadFromBoxFile()
 		{
 			//清空之前所有的Box
 			Boxes.Clear();
@@ -143,18 +152,22 @@ namespace SFY_OCR.Untilities
 
 			try
 			{
-				streamReader = new StreamReader(filePath, Encoding.UTF8);
+				streamReader = new StreamReader(BoxFilePath, Encoding.UTF8);
 				while (!streamReader.EndOfStream)
 				{
 					//一次读取Box文件中的一行
 					//注意，这里读取的Y坐标是BOX文件Y坐标
-					string[] items = streamReader.ReadLine().Split(' ');
+					string currentLine = streamReader.ReadLine();
+					if (currentLine != null)
+					{
+						string[] items = currentLine.Split(' ');
 
-					//字符、左上角点X坐标（与左边界距离），左上角点的Y坐标（与上边界距离）、左上角点的BOX文件Y坐标（高度减去Y）、宽度、高度
-					Boxes.Add(new Box(items[0], Convert.ToInt32(items[1]), new Bitmap(ImageFilePath).Height - Convert.ToInt32(items[2]),
-						Convert.ToInt32(items[2]),
-						Convert.ToInt32(items[3]),
-						Convert.ToInt32(items[4])));
+						//字符、左上角点X坐标（与左边界距离），左上角点的Y坐标（与上边界距离）、左上角点的BOX文件Y坐标（高度减去Y）、宽度、高度
+						//文件中的最后一个 0 省略（因不知道何用）
+						Boxes.Add(new Box(items[0], Convert.ToInt32(items[1]), new Bitmap(ImageFilePath).Height - Convert.ToInt32(items[2]),
+							Convert.ToInt32(items[3]),
+							Convert.ToInt32(items[4])));
+					}
 				}
 			}
 			catch (Exception exception)
@@ -174,19 +187,20 @@ namespace SFY_OCR.Untilities
 		///     将所有的Box数据保存到文件中
 		/// </summary>
 		/// <param name="filePath"></param>
-		public void SaveToFile(string filePath)
+		public void SaveToBoxFile()
 		{
 			StreamWriter streamWriter = null;
 			try
 			{
-				streamWriter = new StreamWriter(filePath, false, Encoding.UTF8);
+				streamWriter = new StreamWriter(BoxFilePath, false, Encoding.UTF8);
 
 				foreach (Box box in Boxes)
 				{
 					//保存到文件中：字符，左上角点X坐标，左上角点.BOX Y坐标（图片高度减去离上边界的距离），宽度，高度
 					string[] items =
 					{
-						box.Character, box.X.ToString(), box.BoxFileY.ToString(), box.Width.ToString(),
+						box.Character, box.X.ToString(), (new Bitmap(ImageFilePath).Height - Convert.ToInt32(box.Y)).ToString(),
+						box.Width.ToString(),
 						box.Height.ToString(), "0"
 					};
 
@@ -207,15 +221,14 @@ namespace SFY_OCR.Untilities
 		}
 
 		/// <summary>
-		/// 若图片对应的Box文件（.box）不存在，则根据路径创建
+		///     若图片对应的Box文件（.box）不存在，则根据路径创建
 		/// </summary>
 		/// <param name="filePath"></param>
-		public void CreateFile(string filePath)
+		public void CreateBoxFile()
 		{
-			
-			if (!File.Exists(filePath))
+			if (!File.Exists(BoxFilePath))
 			{
-				File.Create(filePath);
+				File.Create(BoxFilePath);
 			}
 		}
 	}

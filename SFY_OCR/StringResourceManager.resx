@@ -121,6 +121,10 @@
     <value>2</value>
     <comment>识别字符矩形框宽度</comment>
   </data>
+  <data name="BoxFileExtName" xml:space="preserve">
+    <value>box</value>
+    <comment>box文件后缀名</comment>
+  </data>
   <data name="OpenImageFilterText" xml:space="preserve">
     <value>JPG|*.JPG;*.JPEG|TIFF|*.TIFF;*.TIF|BMP|*.BMP|所有文件|*.*</value>
     <comment>打开图片对话框的Filter文本</comment>

@@ -70,6 +70,15 @@ namespace SFY_OCR {
         }
         
         /// <summary>
+        ///   查找类似 box 的本地化字符串。
+        /// </summary>
+        internal static string BoxFileExtName {
+            get {
+                return ResourceManager.GetString("BoxFileExtName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 JPG|*.JPG;*.JPEG|TIFF|*.TIFF;*.TIF|BMP|*.BMP|所有文件|*.* 的本地化字符串。
         /// </summary>
         internal static string OpenImageFilterText {

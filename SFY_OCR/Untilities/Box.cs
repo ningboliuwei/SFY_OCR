@@ -1,20 +1,13 @@
-﻿#region
-
-using System.Drawing;
-
-#endregion
-
-namespace SFY_OCR.Untilities
+﻿namespace SFY_OCR.Untilities
 {
 	internal class Box
 	{
 		//Box对应的字符
-		public Box(string character, int x, int y, int boxFileY, int width, int height)
+		public Box(string character, int x, int y, int width, int height)
 		{
 			Character = character;
 			X = x;
 			Y = y;
-			BoxFileY = boxFileY;
 			Width = width;
 			Height = height;
 		}
@@ -24,8 +17,6 @@ namespace SFY_OCR.Untilities
 		public int X { get; set; }
 		//Box的左上角点的Y坐标（离上边界的距离）
 		public int Y { get; set; }
-		//Box的左上角点的Box文件Y坐标（图片高度减去Y坐标以后的值），专存放于.Box文件（争取有一天优化掉）
-		public int BoxFileY { get; set; }
 		//Box宽度
 		public int Width { get; set; }
 		//Box高度
@@ -50,6 +41,7 @@ namespace SFY_OCR.Untilities
 			{
 				return true;
 			}
+
 			return false;
 		}
 	}
