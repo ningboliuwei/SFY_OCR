@@ -27,7 +27,6 @@ namespace SFY_OCR.Untilities
 				                 StringResourceManager.BoxFileExtName);
 			//创建BoxList对象
 			ImageBoxList = new BoxList();
-			
 		}
 
 		/// <summary>
@@ -92,16 +91,16 @@ namespace SFY_OCR.Untilities
 					{
 						string[] items = currentLine.Split(' ');
 
-						//字符、左上角点X坐标（与左边界距离），左上角点的Y坐标（与上边界距离）、左上角点的BOX文件Y坐标（高度减去Y）、宽度、高度
+						//从文件中载入：字符，BOX左边界离图像左边界距离，BOX下边界离图像下边界距离，BOX右边界离图像左边界距离，BOX上边界离图像下边界距离
 						//文件中的最后一个 0 省略（因不知道何用）
 						Bitmap bitmap = new Bitmap(TempImageInfo.FilePath);
-						int height = bitmap.Height;
+						int imageHeight = bitmap.Height;
 						bitmap.Dispose();
-
+						//FIX Y坐标不对，如
 						ImageBoxList.Boxes.Add(new Box(items[0], Convert.ToInt32(items[1]),
-							height - Convert.ToInt32(items[2]),
-							Convert.ToInt32(items[3]),
-							Convert.ToInt32(items[4])));
+							imageHeight - Convert.ToInt32(items[4]),
+							Convert.ToInt32(items[3]) - Convert.ToInt32(items[1]),
+							Convert.ToInt32(items[4]) - Convert.ToInt32(items[2])));
 					}
 				}
 			}
@@ -130,15 +129,18 @@ namespace SFY_OCR.Untilities
 			try
 			{
 				streamWriter = new StreamWriter(BoxFileInfo.FilePath, false, Encoding.UTF8);
+				Bitmap bitmap = new Bitmap(TempImageInfo.FilePath);
+				int imageHeight = bitmap.Height;
+				bitmap.Dispose();
 
 				foreach (Box box in ImageBoxList.Boxes)
 				{
-					//保存到文件中：字符，左上角点X坐标，左上角点.BOX Y坐标（图片高度减去离上边界的距离），宽度，高度
+					//保存到文件中：字符，BOX左边界离图像左边界距离，BOX下边界离图像下边界距离，BOX右边界离图像左边界距离，BOX上边界离图像下边界距离
 					string[] items =
 					{
-						box.Character, box.X.ToString(), (new Bitmap(TempImageInfo.FilePath).Height - Convert.ToInt32(box.Y)).ToString(),
-						box.Width.ToString(),
-						box.Height.ToString(), fifthColumnValue
+						box.Character, box.X.ToString(), (imageHeight - box.Y - box.Height).ToString(),
+						(box.X + box.Width).ToString(),
+						(imageHeight - box.Y).ToString(), fifthColumnValue
 					};
 
 					streamWriter.WriteLine(string.Join(" ", items));

@@ -69,6 +69,7 @@
 			this.bgwProcessImage = new System.ComponentModel.BackgroundWorker();
 			this.tmrClearBox = new System.Windows.Forms.Timer(this.components);
 			this.button3 = new System.Windows.Forms.Button();
+			this.dgvBoxes = new System.Windows.Forms.DataGridView();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -83,6 +84,7 @@
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).BeginInit();
 			this.flowLayoutPanel2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dgvBoxes)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -132,6 +134,7 @@
 			this.tableLayoutPanel1.Controls.Add(this.toolStrip1, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.btnSave, 0, 3);
+			this.tableLayoutPanel1.Controls.Add(this.dgvBoxes, 0, 4);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -397,6 +400,7 @@
 			// 
 			// pbxExample
 			// 
+			this.pbxExample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.pbxExample.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pbxExample.Location = new System.Drawing.Point(0, 0);
 			this.pbxExample.Name = "pbxExample";
@@ -489,6 +493,16 @@
 			this.button3.UseVisualStyleBackColor = true;
 			this.button3.Click += new System.EventHandler(this.button3_Click);
 			// 
+			// dgvBoxes
+			// 
+			this.dgvBoxes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dgvBoxes.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.dgvBoxes.Location = new System.Drawing.Point(3, 319);
+			this.dgvBoxes.Name = "dgvBoxes";
+			this.dgvBoxes.RowTemplate.Height = 24;
+			this.dgvBoxes.Size = new System.Drawing.Size(250, 164);
+			this.dgvBoxes.TabIndex = 3;
+			// 
 			// TrainingTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -521,6 +535,7 @@
 			this.panel1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).EndInit();
 			this.flowLayoutPanel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.dgvBoxes)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -567,5 +582,6 @@
 		private System.Windows.Forms.TextBox txtChar;
 		private System.Windows.Forms.ToolStripButton toolStripButton2;
 		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.DataGridView dgvBoxes;
 	}
 }
