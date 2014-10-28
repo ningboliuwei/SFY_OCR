@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SFY_OCR.Untilities
+﻿namespace SFY_OCR.Untilities
 {
 	/// <summary>
-	/// 用于存放ListBox项目
+	///     用于存放ListBox项目
 	/// </summary>
 	public class ListItem
 	{

@@ -1,24 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region
+
+using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Forms;
+
+#endregion
 
 namespace SFY_OCR
 {
-	static class Program
+	internal static class Program
 	{
 		/// <summary>
-		/// 应用程序的主入口点。
+		///     应用程序的主入口点。
 		/// </summary>
 		[STAThread]
-		static void Main()
+		private static void Main()
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
 			//只允许运行一个实例
-			#region 
+
+			#region
 
 			Process pr = Process.GetCurrentProcess();
 			Process[] prlist = Process.GetProcessesByName(pr.ProcessName);
@@ -27,10 +30,9 @@ namespace SFY_OCR
 			{
 				return;
 			}
-			
 
 			#endregion
-			
+
 			Application.Run(new Main());
 		}
 	}

@@ -1,23 +1,39 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using SFY_OCR.Properties;
+
+#endregion
 
 namespace SFY_OCR
 {
 	public partial class Main : Form
 	{
 		//用于保存所有选中的图片文件
-		private List<string> imageFilePaths = new List<string>();
 		private const string NO_LANGUAGE_DATA_COMBOBOX_TEXT = "无语言文件";
+		private readonly List<string> imageFilePaths = new List<string>();
 
 		public Main()
 		{
 			InitializeComponent();
+		}
+
+		/// <summary>
+		///     重写方法，改善闪烁
+		/// </summary>
+		protected override CreateParams CreateParams
+		{
+			get
+			{
+				CreateParams cp = base.CreateParams;
+				cp.ExStyle |= 0x02000000; ////用双缓冲绘制窗口的所有子控件
+				return cp;
+			}
 		}
 
 
@@ -43,7 +59,6 @@ namespace SFY_OCR
 
 				//导入图片后马上检测结果文件状态
 				CheckoutputResultFileStatus();
-
 			}
 		}
 
@@ -68,7 +83,7 @@ namespace SFY_OCR
 
 
 		/// <summary>
-		/// 在更改选中的图片同时显示图片及对应的结果文件
+		///     在更改选中的图片同时显示图片及对应的结果文件
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -82,11 +97,10 @@ namespace SFY_OCR
 				ShowImage(imageFilePath);
 
 				string resultFilePath = Settings.Default.OutputDir + imageFilePath.Substring(imageFilePath.LastIndexOf("\\") + 1) +
-										".txt";
+				                        ".txt";
 				//显示结果文件的内容
 				ShowResultFile(resultFilePath);
 			}
-
 		}
 
 		private void Main_Load(object sender, EventArgs e)
@@ -97,7 +111,6 @@ namespace SFY_OCR
 			//设置图片列表框的DisplayMember和ValueMember属性
 			lbxImages.DisplayMember = "Text";
 			lbxImages.ValueMember = "Value";
-
 
 
 			//设置backgroundWorker的属性
@@ -114,13 +127,12 @@ namespace SFY_OCR
 			//lblPictureBoxError.Text = "";
 
 			//设置主窗体双缓冲，减少闪烁
-			this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
-				  ControlStyles.ResizeRedraw |
-				  ControlStyles.AllPaintingInWmPaint, true);
+			SetStyle(ControlStyles.OptimizedDoubleBuffer |
+			         ControlStyles.ResizeRedraw |
+			         ControlStyles.AllPaintingInWmPaint, true);
 
 			//显示语言文件
 			ShowLanguageType();
-
 		}
 
 
@@ -185,7 +197,6 @@ namespace SFY_OCR
 					throw new Exception(ex.Message);
 				}
 			}
-
 		}
 
 		private void CheckoutputResultFileStatus()
@@ -193,7 +204,7 @@ namespace SFY_OCR
 			for (int i = 0; i < imageFilePaths.Count; i++)
 			{
 				string resultFilePath = Settings.Default.OutputDir +
-										imageFilePaths[i].Substring(imageFilePaths[i].LastIndexOf("\\") + 1) + ".txt";
+				                        imageFilePaths[i].Substring(imageFilePaths[i].LastIndexOf("\\") + 1) + ".txt";
 				if (File.Exists(resultFilePath))
 				{
 					//避免再次显示“已识别”
@@ -208,10 +219,10 @@ namespace SFY_OCR
 		private void bgwImageRecognition_DoWork(object sender, DoWorkEventArgs e)
 		{
 			//将各参数拆箱
-			string tesseractOcrDir = ((List<object>)e.Argument)[0].ToString();
-			string outputDir = ((List<object>)e.Argument)[1].ToString();
-			List<string> imageFilePaths = (List<string>)((List<object>)e.Argument)[2];
-			string langType = ((List<object>)e.Argument)[3].ToString();
+			string tesseractOcrDir = ((List<object>) e.Argument)[0].ToString();
+			string outputDir = ((List<object>) e.Argument)[1].ToString();
+			List<string> imageFilePaths = (List<string>) ((List<object>) e.Argument)[2];
+			string langType = ((List<object>) e.Argument)[3].ToString();
 
 			//进度条前期空
 			int beforeSpan = 10;
@@ -239,7 +250,7 @@ namespace SFY_OCR
 				Common.InvokeOcrCommandLine(imageFilePath, outputResultFilePath, langType);
 
 				//报告进度
-				bgwImageRecognition.ReportProgress(beforeSpan + (i + 1) * (100 - beforeSpan - afterSpan) / imageFilePaths.Count);
+				bgwImageRecognition.ReportProgress(beforeSpan + (i + 1)*(100 - beforeSpan - afterSpan)/imageFilePaths.Count);
 			}
 
 			bgwImageRecognition.ReportProgress(100 - afterSpan);
@@ -251,7 +262,6 @@ namespace SFY_OCR
 			//稍微暂停一下，以表现满格
 			Thread.Sleep(500);
 		}
-
 
 
 		private void 退出XToolStripMenuItem_Click(object sender, EventArgs e)
@@ -267,6 +277,7 @@ namespace SFY_OCR
 
 			frmMyAboutBox.ShowDialog();
 		}
+
 		private void bgwImageRecognition_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			//进度条进度清零
@@ -286,7 +297,7 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		/// 用于在图片框中显示指定路径的图片
+		///     用于在图片框中显示指定路径的图片
 		/// </summary>
 		/// <param name="resultFilePath">要显示的图片路径</param>
 		private void ShowResultFile(string resultFilePath)
@@ -304,7 +315,7 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		/// 用于在文本框中显示指定路径的图片
+		///     用于在文本框中显示指定路径的图片
 		/// </summary>
 		/// <param name="imageFilePath">要显示的识别结果路径</param>
 		private void ShowImage(string imageFilePath)
@@ -319,7 +330,6 @@ namespace SFY_OCR
 				pbxForOcr.ImageLocation = null;
 				lblPictureBoxError.Visible = true;
 			}
-
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
@@ -335,20 +345,7 @@ namespace SFY_OCR
 
 
 		/// <summary>
-		/// 重写方法，改善闪烁
-		/// </summary>
-		protected override CreateParams CreateParams
-		{
-			get
-			{
-				CreateParams cp = base.CreateParams;
-				cp.ExStyle |= 0x02000000;////用双缓冲绘制窗口的所有子控件
-				return cp;
-			}
-		}
-
-		/// <summary>
-		/// 在下拉菜单中显示语言
+		///     在下拉菜单中显示语言
 		/// </summary>
 		private void ShowLanguageType()
 		{
@@ -385,7 +382,6 @@ namespace SFY_OCR
 			{
 				MessageBox.Show("语言文件夹不存在，可能是Tesseract-OCR文件夹路径不正确，请到“选项”对话框进行设置。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
-			
 		}
 
 		private void 训练TToolStripMenuItem_Click(object sender, EventArgs e)
@@ -398,7 +394,6 @@ namespace SFY_OCR
 
 		private void txtResult_MouseMove(object sender, MouseEventArgs e)
 		{
-
 		}
 	}
 }

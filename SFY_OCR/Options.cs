@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+﻿#region
+
+using System;
 using System.Windows.Forms;
 using SFY_OCR.Properties;
+
+#endregion
 
 namespace SFY_OCR
 {
@@ -19,7 +17,7 @@ namespace SFY_OCR
 
 
 		/// <summary>
-		/// 点击“默认”按钮
+		///     点击“默认”按钮
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -36,7 +34,7 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		/// 点击“确定”按钮
+		///     点击“确定”按钮
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -47,7 +45,7 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		/// 加载当前窗体（选项对话框）
+		///     加载当前窗体（选项对话框）
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -57,7 +55,7 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		/// 点击“取消”按钮
+		///     点击“取消”按钮
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -67,7 +65,7 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		/// 保存当前设置
+		///     保存当前设置
 		/// </summary>
 		private void SaveSettings()
 		{
@@ -81,7 +79,7 @@ namespace SFY_OCR
 		}
 
 		/// <summary>
-		/// 载入当前设置
+		///     载入当前设置
 		/// </summary>
 		private void LoadSettings()
 		{

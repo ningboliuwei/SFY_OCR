@@ -6,13 +6,13 @@ using System;
 
 namespace SFY_OCR.Untilities
 {
-	public class FileNamePackage
+	public class FileNameInfo
 	{
-		public FileNamePackage(string filePath)
+		public FileNameInfo(string filePath)
 		{
 			FilePath = filePath;
-			Dir = filePath.Substring(0, filePath.LastIndexOf("\\", System.StringComparison.Ordinal));
-			FullFileName = filePath.Substring(filePath.LastIndexOf("\\", System.StringComparison.Ordinal));
+			Dir = filePath.Substring(0, filePath.LastIndexOf("\\", StringComparison.Ordinal) + 1);
+			FullFileName = filePath.Substring(filePath.LastIndexOf("\\", StringComparison.Ordinal) + 1);
 			MainFileName = FullFileName.Substring(0, FullFileName.LastIndexOf(".", StringComparison.Ordinal));
 			ExtFileName = FullFileName.Substring(FullFileName.LastIndexOf(".", StringComparison.Ordinal) + 1);
 		}

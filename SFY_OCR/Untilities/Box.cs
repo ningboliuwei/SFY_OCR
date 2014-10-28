@@ -3,7 +3,7 @@
 	public class Box
 	{
 		public Box(string character, int x, int y, int width, int height)
-		//构造函数
+			//构造函数
 		{
 			Character = character;
 			X = x;

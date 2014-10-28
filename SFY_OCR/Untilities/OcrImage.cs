@@ -14,59 +14,57 @@ namespace SFY_OCR.Untilities
 	{
 		public OcrImage(string imageFilePath)
 		{
-			//原始文件
-			OriginalImage = new FileNamePackage(imageFilePath);
-			//临时文件
-			TempImage =
-				new FileNamePackage(Settings.Default.OutputDir + OriginalImage.FullFileName + StringResourceManager.TempImageSuffix +
-				                    "." +
-				                    OriginalImage.ExtFileName);
-			//对应的Box文件
-			BoxFile =
-				new FileNamePackage(TempImage.Dir + TempImage.MainFileName + "." +
-				                    StringResourceManager.BoxFileExtName);
+			//原始文件（如：D:\images\a.tiff）
+			OriginalImageInfo = new FileNameInfo(imageFilePath);
+			//临时文件（如： R:\a_temp.tiff）
+			TempImageInfo =
+				new FileNameInfo(Settings.Default.OutputDir + OriginalImageInfo.FullFileName + StringResourceManager.TempImageSuffix +
+				                 "." +
+				                 OriginalImageInfo.ExtFileName);
+			//对应的Box文件（如 R:\a.tiff.box）
+			BoxFileInfo =
+				new FileNameInfo(TempImageInfo.Dir + OriginalImageInfo.MainFileName + "." +
+				                 StringResourceManager.BoxFileExtName);
 			//创建BoxList对象
-			BoxList = new BoxList();
+			ImageBoxList = new BoxList();
+			
 		}
 
 		/// <summary>
 		///     Box列表
 		/// </summary>
-		public BoxList BoxList{ get; set; }
+		public BoxList ImageBoxList { get; private set; }
 
 		/// <summary>
 		///     原始图片文件路径
 		/// </summary>
-		public FileNamePackage OriginalImage { get; set; }
+		public FileNameInfo OriginalImageInfo { get; private set; }
 
 		/// <summary>
 		///     临时图片路径（供降噪处理等）
 		/// </summary>
-		public FileNamePackage TempImage { get; set; }
+		public FileNameInfo TempImageInfo { get; private set; }
 
 		/// <summary>
 		///     Box文件路径
 		/// </summary>
-		public FileNamePackage BoxFile { get; set; }
+		public FileNameInfo BoxFileInfo { get; private set; }
 
-		/// <summary>
-		///     对应的Box列表
-		/// </summary>
-		public BoxList ImageBoxList { get; set; }
 
 		/// <summary>
 		///     在一个BitMap对象中画上矩形
 		/// </summary>
 		/// <param name="image">需要画矩形的BitMap对象（如PictureBox.Image）</param>
+		/// <param name="bitmap"></param>
 		/// <returns>画毕的BitMap对象</returns>
-		public void DisplayBoxes(Bitmap image)
+		public void DisplayBoxes(Bitmap bitmap)
 		{
-			foreach (Box box in BoxList.Boxes)
+			foreach (Box box in ImageBoxList.Boxes)
 			{
 				//若当前矩形框被选中，使用红色，否则使用蓝色
 				Color borderColor = box.IsSelected ? Color.Red : Color.Blue;
 				//在传入的BitMap上画矩形
-				Graphics.FromImage(image)
+				Graphics.FromImage(bitmap)
 					.DrawRectangle(new Pen(borderColor, Convert.ToInt32(StringResourceManager.BoxBorderWidth)), box.X,
 						box.Y, box.Width, box.Height);
 			}
@@ -79,12 +77,12 @@ namespace SFY_OCR.Untilities
 		public void LoadFromBoxFile()
 		{
 			//清空之前所有的Box
-			BoxList.Boxes.Clear();
+			ImageBoxList.Boxes.Clear();
 			StreamReader streamReader = null;
 
 			try
 			{
-				streamReader = new StreamReader(BoxFile.FilePath, Encoding.UTF8);
+				streamReader = new StreamReader(BoxFileInfo.FilePath, Encoding.UTF8);
 				while (!streamReader.EndOfStream)
 				{
 					//一次读取Box文件中的一行
@@ -96,8 +94,12 @@ namespace SFY_OCR.Untilities
 
 						//字符、左上角点X坐标（与左边界距离），左上角点的Y坐标（与上边界距离）、左上角点的BOX文件Y坐标（高度减去Y）、宽度、高度
 						//文件中的最后一个 0 省略（因不知道何用）
-						BoxList.Boxes.Add(new Box(items[0], Convert.ToInt32(items[1]),
-							new Bitmap(TempImage.FilePath).Height - Convert.ToInt32(items[2]),
+						Bitmap bitmap = new Bitmap(TempImageInfo.FilePath);
+						int height = bitmap.Height;
+						bitmap.Dispose();
+
+						ImageBoxList.Boxes.Add(new Box(items[0], Convert.ToInt32(items[1]),
+							height - Convert.ToInt32(items[2]),
 							Convert.ToInt32(items[3]),
 							Convert.ToInt32(items[4])));
 					}
@@ -127,14 +129,14 @@ namespace SFY_OCR.Untilities
 			StreamWriter streamWriter = null;
 			try
 			{
-				streamWriter = new StreamWriter(BoxFile.FilePath, false, Encoding.UTF8);
+				streamWriter = new StreamWriter(BoxFileInfo.FilePath, false, Encoding.UTF8);
 
-				foreach (Box box in BoxList.Boxes)
+				foreach (Box box in ImageBoxList.Boxes)
 				{
 					//保存到文件中：字符，左上角点X坐标，左上角点.BOX Y坐标（图片高度减去离上边界的距离），宽度，高度
 					string[] items =
 					{
-						box.Character, box.X.ToString(), (new Bitmap(BoxFile.FilePath).Height - Convert.ToInt32(box.Y)).ToString(),
+						box.Character, box.X.ToString(), (new Bitmap(TempImageInfo.FilePath).Height - Convert.ToInt32(box.Y)).ToString(),
 						box.Width.ToString(),
 						box.Height.ToString(), fifthColumnValue
 					};
@@ -161,9 +163,9 @@ namespace SFY_OCR.Untilities
 		/// <param name="filePath"></param>
 		public void CreateBoxFile()
 		{
-			if (!File.Exists(BoxFile.FilePath))
+			if (!File.Exists(BoxFileInfo.FilePath))
 			{
-				File.Create(BoxFile.FilePath);
+				File.Create(BoxFileInfo.FilePath);
 			}
 		}
 	}

@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region
+
+using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using SFY_OCR.Properties;
+
+#endregion
 
 namespace SFY_OCR
 {
 	internal class Common
 	{
 		/// <summary>
-		/// 调用Tesseract-OCR 命令行
+		///     调用Tesseract-OCR 命令行
 		/// </summary>
 		/// <param name="sourceImagePath">要识别的图片的路径</param>
 		/// <param name="outputPath">输出识别结果路径</param>
@@ -35,11 +36,10 @@ namespace SFY_OCR
 			{
 				throw new Exception(ex.Message);
 			}
-			
 		}
 
 		/// <summary>
-		/// 调用ImageMagick图片处理程序
+		///     调用ImageMagick图片处理程序
 		/// </summary>
 		/// <param name="args">转换参数</param>
 		public static void InvokeImageMagickConvertCommandLine(string args)
@@ -61,11 +61,10 @@ namespace SFY_OCR
 			{
 				throw new Exception(ex.Message);
 			}
-			
 		}
 
 		/// <summary>
-		/// 读取指定路径的文件内容
+		///     读取指定路径的文件内容
 		/// </summary>
 		/// <param name="filePath">要读取的文件的路径</param>
 		/// <returns>文件内容</returns>
@@ -87,13 +86,8 @@ namespace SFY_OCR
 			}
 			catch (Exception ex)
 			{
-
 				throw new Exception(ex.Message);
 			}
-
 		}
-
-
-
 	}
 }

@@ -34,23 +34,21 @@
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.button1 = new System.Windows.Forms.Button();
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.cmbPreProcess = new System.Windows.Forms.ComboBox();
 			this.chkToTiff = new System.Windows.Forms.CheckBox();
 			this.chkDenoise = new System.Windows.Forms.CheckBox();
 			this.trackBar1 = new System.Windows.Forms.TrackBar();
 			this.button2 = new System.Windows.Forms.Button();
+			this.btnSave = new System.Windows.Forms.Button();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-			this.button1 = new System.Windows.Forms.Button();
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.pbxExample = new System.Windows.Forms.PictureBox();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
-			this.bgwProcessImage = new System.ComponentModel.BackgroundWorker();
-			this.tmrClearBox = new System.Windows.Forms.Timer(this.components);
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+			this.label5 = new System.Windows.Forms.Label();
+			this.txtChar = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.dudX = new System.Windows.Forms.DomainUpDown();
 			this.label2 = new System.Windows.Forms.Label();
@@ -59,14 +57,18 @@
 			this.domainUpDown3 = new System.Windows.Forms.DomainUpDown();
 			this.label4 = new System.Windows.Forms.Label();
 			this.domainUpDown4 = new System.Windows.Forms.DomainUpDown();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.pbxExample = new System.Windows.Forms.PictureBox();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
 			this.btnInsert = new System.Windows.Forms.Button();
 			this.btnMerge = new System.Windows.Forms.Button();
 			this.btnSplit = new System.Windows.Forms.Button();
 			this.btnDelete = new System.Windows.Forms.Button();
-			this.btnSave = new System.Windows.Forms.Button();
-			this.txtChar = new System.Windows.Forms.TextBox();
-			this.label5 = new System.Windows.Forms.Label();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
+			this.bgwProcessImage = new System.ComponentModel.BackgroundWorker();
+			this.tmrClearBox = new System.Windows.Forms.Timer(this.components);
+			this.button3 = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -77,9 +79,9 @@
 			this.tableLayoutPanel3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
 			this.tableLayoutPanel2.SuspendLayout();
+			this.flowLayoutPanel1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).BeginInit();
-			this.flowLayoutPanel1.SuspendLayout();
 			this.flowLayoutPanel2.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -142,11 +144,22 @@
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(256, 486);
 			this.tableLayoutPanel1.TabIndex = 0;
 			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(3, 230);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(183, 33);
+			this.button1.TabIndex = 1;
+			this.button1.Text = "button1";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
+			// 
 			// toolStrip1
 			// 
 			this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1});
+            this.toolStripButton1,
+            this.toolStripButton2});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Size = new System.Drawing.Size(256, 30);
@@ -162,6 +175,16 @@
 			this.toolStripButton1.Size = new System.Drawing.Size(23, 27);
 			this.toolStripButton1.Text = "打开图片";
 			this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+			// 
+			// toolStripButton2
+			// 
+			this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton2.Name = "toolStripButton2";
+			this.toolStripButton2.Size = new System.Drawing.Size(23, 27);
+			this.toolStripButton2.Text = "toolStripButton2";
+			this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
 			// 
 			// tableLayoutPanel3
 			// 
@@ -235,6 +258,15 @@
 			this.button2.UseVisualStyleBackColor = true;
 			this.button2.Click += new System.EventHandler(this.button2_Click);
 			// 
+			// btnSave
+			// 
+			this.btnSave.Location = new System.Drawing.Point(3, 274);
+			this.btnSave.Name = "btnSave";
+			this.btnSave.Size = new System.Drawing.Size(75, 23);
+			this.btnSave.TabIndex = 2;
+			this.btnSave.Text = "保存";
+			this.btnSave.UseVisualStyleBackColor = true;
+			// 
 			// tableLayoutPanel2
 			// 
 			this.tableLayoutPanel2.ColumnCount = 1;
@@ -251,58 +283,6 @@
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.56379F));
 			this.tableLayoutPanel2.Size = new System.Drawing.Size(510, 486);
 			this.tableLayoutPanel2.TabIndex = 1;
-			// 
-			// button1
-			// 
-			this.button1.Location = new System.Drawing.Point(3, 230);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(183, 33);
-			this.button1.TabIndex = 1;
-			this.button1.Text = "button1";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
-			// 
-			// panel1
-			// 
-			this.panel1.Controls.Add(this.pbxExample);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(3, 76);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(504, 407);
-			this.panel1.TabIndex = 2;
-			// 
-			// pbxExample
-			// 
-			this.pbxExample.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.pbxExample.Location = new System.Drawing.Point(0, 0);
-			this.pbxExample.Name = "pbxExample";
-			this.pbxExample.Size = new System.Drawing.Size(504, 407);
-			this.pbxExample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-			this.pbxExample.TabIndex = 1;
-			this.pbxExample.TabStop = false;
-			this.pbxExample.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseClick);
-			this.pbxExample.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseDown);
-			this.pbxExample.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseMove);
-			this.pbxExample.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseUp);
-			// 
-			// tabPage2
-			// 
-			this.tabPage2.Location = new System.Drawing.Point(4, 26);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(776, 492);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "tabPage2";
-			this.tabPage2.UseVisualStyleBackColor = true;
-			// 
-			// bgwProcessImage
-			// 
-			this.bgwProcessImage.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProcessImage_DoWork);
-			this.bgwProcessImage.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwProcessImage_RunWorkerCompleted);
-			// 
-			// tmrClearBox
-			// 
-			this.tmrClearBox.Tick += new System.EventHandler(this.tmrClearBox_Tick);
 			// 
 			// flowLayoutPanel1
 			// 
@@ -321,6 +301,22 @@
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
 			this.flowLayoutPanel1.Size = new System.Drawing.Size(504, 29);
 			this.flowLayoutPanel1.TabIndex = 4;
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(3, 0);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(32, 17);
+			this.label5.TabIndex = 9;
+			this.label5.Text = "字符";
+			// 
+			// txtChar
+			// 
+			this.txtChar.Location = new System.Drawing.Point(41, 3);
+			this.txtChar.Name = "txtChar";
+			this.txtChar.Size = new System.Drawing.Size(62, 23);
+			this.txtChar.TabIndex = 8;
 			// 
 			// label1
 			// 
@@ -390,12 +386,37 @@
 			this.domainUpDown4.TabIndex = 6;
 			this.domainUpDown4.Text = "0";
 			// 
+			// panel1
+			// 
+			this.panel1.Controls.Add(this.pbxExample);
+			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel1.Location = new System.Drawing.Point(3, 76);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(504, 407);
+			this.panel1.TabIndex = 2;
+			// 
+			// pbxExample
+			// 
+			this.pbxExample.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.pbxExample.Location = new System.Drawing.Point(0, 0);
+			this.pbxExample.Name = "pbxExample";
+			this.pbxExample.Size = new System.Drawing.Size(504, 407);
+			this.pbxExample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+			this.pbxExample.TabIndex = 1;
+			this.pbxExample.TabStop = false;
+			this.pbxExample.Paint += new System.Windows.Forms.PaintEventHandler(this.pbxExample_Paint);
+			this.pbxExample.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseClick);
+			this.pbxExample.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseDown);
+			this.pbxExample.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseMove);
+			this.pbxExample.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseUp);
+			// 
 			// flowLayoutPanel2
 			// 
 			this.flowLayoutPanel2.Controls.Add(this.btnInsert);
 			this.flowLayoutPanel2.Controls.Add(this.btnMerge);
 			this.flowLayoutPanel2.Controls.Add(this.btnSplit);
 			this.flowLayoutPanel2.Controls.Add(this.btnDelete);
+			this.flowLayoutPanel2.Controls.Add(this.button3);
 			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 38);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
@@ -439,30 +460,34 @@
 			this.btnDelete.Text = "删除";
 			this.btnDelete.UseVisualStyleBackColor = true;
 			// 
-			// btnSave
+			// tabPage2
 			// 
-			this.btnSave.Location = new System.Drawing.Point(3, 274);
-			this.btnSave.Name = "btnSave";
-			this.btnSave.Size = new System.Drawing.Size(75, 23);
-			this.btnSave.TabIndex = 2;
-			this.btnSave.Text = "保存";
-			this.btnSave.UseVisualStyleBackColor = true;
+			this.tabPage2.Location = new System.Drawing.Point(4, 26);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(776, 492);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "tabPage2";
+			this.tabPage2.UseVisualStyleBackColor = true;
 			// 
-			// txtChar
+			// bgwProcessImage
 			// 
-			this.txtChar.Location = new System.Drawing.Point(41, 3);
-			this.txtChar.Name = "txtChar";
-			this.txtChar.Size = new System.Drawing.Size(62, 23);
-			this.txtChar.TabIndex = 8;
+			this.bgwProcessImage.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProcessImage_DoWork);
+			this.bgwProcessImage.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwProcessImage_RunWorkerCompleted);
 			// 
-			// label5
+			// tmrClearBox
 			// 
-			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(3, 0);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(32, 17);
-			this.label5.TabIndex = 9;
-			this.label5.Text = "字符";
+			this.tmrClearBox.Tick += new System.EventHandler(this.tmrClearBox_Tick);
+			// 
+			// button3
+			// 
+			this.button3.Location = new System.Drawing.Point(327, 3);
+			this.button3.Name = "button3";
+			this.button3.Size = new System.Drawing.Size(75, 23);
+			this.button3.TabIndex = 4;
+			this.button3.Text = "button3";
+			this.button3.UseVisualStyleBackColor = true;
+			this.button3.Click += new System.EventHandler(this.button3_Click);
 			// 
 			// TrainingTool
 			// 
@@ -490,11 +515,11 @@
 			this.tableLayoutPanel3.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
 			this.tableLayoutPanel2.ResumeLayout(false);
+			this.flowLayoutPanel1.ResumeLayout(false);
+			this.flowLayoutPanel1.PerformLayout();
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).EndInit();
-			this.flowLayoutPanel1.ResumeLayout(false);
-			this.flowLayoutPanel1.PerformLayout();
 			this.flowLayoutPanel2.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -540,5 +565,7 @@
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.TextBox txtChar;
+		private System.Windows.Forms.ToolStripButton toolStripButton2;
+		private System.Windows.Forms.Button button3;
 	}
 }
