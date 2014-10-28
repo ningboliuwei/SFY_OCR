@@ -97,6 +97,7 @@
     <Compile Include="Untilities\BoxList.cs" />
     <Compile Include="Untilities\ConvertDelegatePackage.cs" />
     <Compile Include="Untilities\ConvertImageDelegate.cs" />
+    <Compile Include="Untilities\FileNamePackage.cs" />
     <Compile Include="Untilities\OcrImage.cs" />
     <Compile Include="Untilities\ListItem.cs" />
     <Compile Include="Untilities\Common.cs" />

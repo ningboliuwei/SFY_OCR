@@ -27,12 +27,11 @@ namespace SFY_OCR
 		//矩形图层
 		private Bitmap _boxesImage;
 		private Point _currentPoint;
-		private OcrImage _displayingImage;
 		//之前的图层（用于擦除矩形）
 
 		//当前鼠标是否在移动
 		private bool _isDrawingAndMoving;
-		private OcrImage _originalImage;
+		private OcrImage _ocrImage;
 		private Bitmap _previousImage;
 		private BoxList boxList;
 
@@ -67,13 +66,13 @@ namespace SFY_OCR
 			if (ofdFile.ShowDialog() == DialogResult.OK)
 			{
 				//创建一个原本OcrImage对象（用于恢复）
-				_originalImage = new OcrImage(ofdFile.FileName);
-				OpenImage(_originalImage);
+				_ocrImage = new OcrImage(ofdFile.FileName);
+				OpenImage(_ocrImage);
 
 				//得到样本图片文件的去掉后缀名的部分，再去掉 “_temp”后缀，并加上.box 后缀，得到对应的box文件的路径
 				//string boxFilePath = _displayingImage.FilePath.Substring(0, _displayingImage.FilePath.LastIndexOf(StringResourceManager.TempImageSuffix)) + "." + _displayingImage.FilePath.Substring(_displayingImage.FilePath.LastIndexOf(".") + 1) + ".box";
 
-				boxList = new BoxList(_originalImage.FilePath);
+				//boxList = new BoxList(_ocrImage.TempImage.FilePath);
 
 				//如果存在图片对应的box文件
 				//if (File.Exists(boxFilePath))
@@ -98,20 +97,11 @@ namespace SFY_OCR
 		/// <param name="sourceImage">原本（被打开）的图片（OcrImage）对象</param>
 		private void OpenImage(OcrImage sourceImage)
 		{
-			string displayingImagePath = Settings.Default.OutputDir + sourceImage.MainFileName +
-			                             StringResourceManager.TempImageSuffix + "." +
-			                             sourceImage.ExtFileName;
-
 			//将原本复制一份副本到输出目录
-			File.Copy(sourceImage.FilePath, displayingImagePath, true);
-
-			if (File.Exists(displayingImagePath))
-			{
-				_displayingImage = new OcrImage(displayingImagePath);
-			}
+			File.Copy(sourceImage.OriginalImage.FilePath, sourceImage.TempImage.FilePath, true);
 
 			//显示该副本图片
-			pbxExample.ImageLocation = _displayingImage.FilePath;
+			pbxExample.ImageLocation = _ocrImage.TempImage.FilePath;
 		}
 
 
@@ -217,8 +207,8 @@ namespace SFY_OCR
 			string commandLineArgs =
 				string.Format(
 					"( {0} -colorspace gray -type grayscale -contrast-stretch 0 ) ( -clone 0 -colorspace gray -negate -lat {1}x{1}+{2}% -contrast-stretch 0 ) -compose copy_opacity -composite -fill \"{3}\" -opaque none +matte -deskew {4}% -sharpen 0x1  {5}",
-					sourceImage.FilePath, convertArgs["filter_size"], convertArgs["off_set"], convertArgs["bgcolor"],
-					convertArgs["deskew"], sourceImage.FilePath);
+					sourceImage.TempImage.FilePath, convertArgs["filter_size"], convertArgs["off_set"], convertArgs["bgcolor"],
+					convertArgs["deskew"], sourceImage.TempImage.FilePath);
 
 			Common.InvokeImageMagickConvertCommandLine(commandLineArgs);
 		}
@@ -268,7 +258,7 @@ namespace SFY_OCR
 			//拆箱，还原出delegate和hashtable形式的参数列表
 			ConvertDelegatePackage package = (ConvertDelegatePackage) e.Argument;
 
-			package.ConvertImageDelegate.Invoke(_displayingImage, package.ConvertImageArgs);
+			package.ConvertImageDelegate.Invoke(_ocrImage, package.ConvertImageArgs);
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -282,7 +272,7 @@ namespace SFY_OCR
 		/// </summary>
 		private void ResetImage()
 		{
-			OpenImage(_originalImage);
+			OpenImage(_ocrImage);
 		}
 
 		/// <summary>
@@ -293,7 +283,7 @@ namespace SFY_OCR
 		private void bgwProcessImage_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			//当背景线程处理完毕后，显示处理完的图像
-			pbxExample.ImageLocation = _displayingImage.FilePath;
+			pbxExample.ImageLocation = _ocrImage.TempImage.FilePath;
 		}
 
 		private void pbxExample_MouseDown(object sender, MouseEventArgs e)
@@ -448,7 +438,7 @@ namespace SFY_OCR
 				}
 			}
 
-			boxList.Display((Bitmap) pbxExample.Image);
+			_ocrImage.DisplayBoxes((Bitmap) pbxExample.Image);
 		}
 
 		private void btnInsert_Click(object sender, EventArgs e)

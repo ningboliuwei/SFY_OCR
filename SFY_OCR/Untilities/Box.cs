@@ -1,9 +1,9 @@
 ﻿namespace SFY_OCR.Untilities
 {
-	internal class Box
+	public class Box
 	{
-		//Box对应的字符
 		public Box(string character, int x, int y, int width, int height)
+		//构造函数
 		{
 			Character = character;
 			X = x;
@@ -13,16 +13,19 @@
 		}
 
 		public string Character { get; set; }
-		//Box的左上角点的X坐标（离左边界的距离）
-		public int X { get; set; }
-		//Box的左上角点的Y坐标（离上边界的距离）
-		public int Y { get; set; }
-		//Box宽度
-		public int Width { get; set; }
-		//Box高度
-		public int Height { get; set; }
+		//Box对应的字符
 
-		//构造函数
+		public int X { get; set; }
+		//Box的左上角点的X坐标（离左边界的距离）
+
+		public int Y { get; set; }
+		//Box的左上角点的Y坐标（离上边界的距离）
+
+		public int Width { get; set; }
+		//Box宽度
+
+		public int Height { get; set; }
+		//Box高度
 
 		/// <summary>
 		///     该Box是否被选中

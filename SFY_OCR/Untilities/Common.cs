@@ -31,9 +31,9 @@ namespace SFY_OCR
 					process.WaitForExit();
 				}
 			}
-			catch (Exception exception)
+			catch (Exception ex)
 			{
-				throw new Exception(exception.Message);
+				throw new Exception(ex.Message);
 			}
 			
 		}
@@ -57,9 +57,9 @@ namespace SFY_OCR
 					process.WaitForExit();
 				}
 			}
-			catch (Exception exception)
+			catch (Exception ex)
 			{
-				throw new Exception(exception.Message);
+				throw new Exception(ex.Message);
 			}
 			
 		}
@@ -85,10 +85,10 @@ namespace SFY_OCR
 
 				return "";
 			}
-			catch (Exception exception)
+			catch (Exception ex)
 			{
 
-				throw new Exception(exception.Message);
+				throw new Exception(ex.Message);
 			}
 
 		}

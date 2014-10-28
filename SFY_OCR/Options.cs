@@ -101,9 +101,9 @@ namespace SFY_OCR
 				{
 					txtTesseractOcrDir.Text = fbdChooseDir.SelectedPath;
 				}
-				catch (Exception exception)
+				catch (Exception ex)
 				{
-					throw new Exception(exception.Message);
+					throw new Exception(ex.Message);
 				}
 			}
 		}
@@ -117,9 +117,9 @@ namespace SFY_OCR
 				{
 					txtOutputDir.Text = fbdChooseDir.SelectedPath;
 				}
-				catch (Exception exception)
+				catch (Exception ex)
 				{
-					throw new Exception(exception.Message);
+					throw new Exception(ex.Message);
 				}
 			}
 		}
@@ -133,9 +133,9 @@ namespace SFY_OCR
 				{
 					txtImageMagickDir.Text = fbdChooseDir.SelectedPath;
 				}
-				catch (Exception exception)
+				catch (Exception ex)
 				{
-					throw new Exception(exception.Message);
+					throw new Exception(ex.Message);
 				}
 			}
 		}

@@ -180,9 +180,9 @@ namespace SFY_OCR
 
 					//lbxImages.SelectedIndex = 0;
 				}
-				catch (Exception exception)
+				catch (Exception ex)
 				{
-					throw new Exception(exception.Message);
+					throw new Exception(ex.Message);
 				}
 			}
 
