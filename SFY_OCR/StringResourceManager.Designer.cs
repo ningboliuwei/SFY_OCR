@@ -61,7 +61,7 @@ namespace SFY_OCR {
         }
         
         /// <summary>
-        ///   查找类似 2 的本地化字符串。
+        ///   查找类似 1 的本地化字符串。
         /// </summary>
         internal static string BoxBorderWidth {
             get {
@@ -84,6 +84,15 @@ namespace SFY_OCR {
         internal static string OpenImageFilterText {
             get {
                 return ResourceManager.GetString("OpenImageFilterText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 3 的本地化字符串。
+        /// </summary>
+        internal static string SelectedBoxBorderWidth {
+            get {
+                return ResourceManager.GetString("SelectedBoxBorderWidth", resourceCulture);
             }
         }
         

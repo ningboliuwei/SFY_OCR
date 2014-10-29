@@ -56,15 +56,18 @@ namespace SFY_OCR.Untilities
 		/// <param name="image">需要画矩形的BitMap对象（如PictureBox.Image）</param>
 		/// <param name="bitmap"></param>
 		/// <returns>画毕的BitMap对象</returns>
-		public void DisplayBoxes(Bitmap bitmap)
+		public void DrawBoxesOnBitmap(Bitmap bitmap)
 		{
 			foreach (Box box in ImageBoxList.Boxes)
 			{
 				//若当前矩形框被选中，使用红色，否则使用蓝色
-				Color borderColor = box.IsSelected ? Color.Red : Color.Blue;
+				Color borderColor = box.Selected ? Color.Red : Color.Blue;
+				int borderWidth = box.Selected
+					? Convert.ToInt32(StringResourceManager.SelectedBoxBorderWidth)
+					: Convert.ToInt32(StringResourceManager.BoxBorderWidth);
 				//在传入的BitMap上画矩形
 				Graphics.FromImage(bitmap)
-					.DrawRectangle(new Pen(borderColor, Convert.ToInt32(StringResourceManager.BoxBorderWidth)), box.X,
+					.DrawRectangle(new Pen(borderColor, borderWidth), box.X,
 						box.Y, box.Width, box.Height);
 			}
 		}
@@ -96,7 +99,7 @@ namespace SFY_OCR.Untilities
 						Bitmap bitmap = new Bitmap(TempImageInfo.FilePath);
 						int imageHeight = bitmap.Height;
 						bitmap.Dispose();
-						//FIX Y坐标不对，如
+
 						ImageBoxList.Boxes.Add(new Box(items[0], Convert.ToInt32(items[1]),
 							imageHeight - Convert.ToInt32(items[4]),
 							Convert.ToInt32(items[3]) - Convert.ToInt32(items[1]),

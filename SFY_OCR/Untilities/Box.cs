@@ -1,7 +1,10 @@
-﻿namespace SFY_OCR.Untilities
+﻿using System;
+
+namespace SFY_OCR.Untilities
 {
 	public class Box
 	{
+		private bool _selected = false;
 		public Box(string character, int x, int y, int width, int height)
 			//构造函数
 		{
@@ -30,7 +33,11 @@
 		/// <summary>
 		///     该Box是否被选中
 		/// </summary>
-		public bool IsSelected { get; set; }
+		public bool Selected
+		{
+			get { return _selected; }
+			set { _selected = value;OnSelectedChanged(new EventArgs()); } 
+		}
 
 		/// <summary>
 		///     当前Box是否包含了指定坐标的点
@@ -40,12 +47,20 @@
 		/// <returns>true表示某点在当前box范围之内</returns>
 		public bool Contains(int x, int y)
 		{
-			if (x >= X && x < X + Width && y >= X && y <= X + Height)
+			if (x >= X && x <= X + Width && y >= Y && y <= Y + Height)
 			{
 				return true;
 			}
 
 			return false;
+		}
+
+		public event EventHandler SelectedChanged;
+
+		protected virtual void OnSelectedChanged(EventArgs eventArgs)
+		{
+			EventHandler handler = SelectedChanged;
+			if (handler != null) handler(this, EventArgs.Empty);
 		}
 	}
 }

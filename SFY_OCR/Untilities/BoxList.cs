@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Collections.Generic;
+using System.Linq;
 
 #endregion
 
@@ -32,7 +33,7 @@ namespace SFY_OCR.Untilities
 
 				foreach (Box box in Boxes)
 				{
-					if (box.IsSelected)
+					if (box.Selected)
 					{
 						selectedBoxes.Add(box);
 					}
@@ -95,6 +96,28 @@ namespace SFY_OCR.Untilities
 		/// <param name="box"></param>
 		public void Split(Box box)
 		{
+		}
+		/// <summary>
+		/// 根据坐标系得到Box对象
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="width"></param>
+		/// <param name="height"></param>
+		/// <returns></returns>
+		public Box GetBoxByCoordinate(int x, int y, int width, int height)
+		{
+			return Boxes.FirstOrDefault(box => box.X == x && box.Y == y && box.Width == width && box.Height == height);
+		}
+		/// <summary>
+		/// 清除所有Box对象的选中状态
+		/// </summary>
+		public void UnSelectAll()
+		{
+			foreach (Box box in Boxes)
+			{
+				box.Selected = false;
+			}
 		}
 	}
 }

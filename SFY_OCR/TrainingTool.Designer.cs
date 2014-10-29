@@ -45,18 +45,15 @@
 			this.trackBar1 = new System.Windows.Forms.TrackBar();
 			this.button2 = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
+			this.dgvBoxes = new System.Windows.Forms.DataGridView();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.label5 = new System.Windows.Forms.Label();
-			this.txtChar = new System.Windows.Forms.TextBox();
+			this.txtCharacter = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
-			this.dudX = new System.Windows.Forms.DomainUpDown();
 			this.label2 = new System.Windows.Forms.Label();
-			this.domainUpDown2 = new System.Windows.Forms.DomainUpDown();
 			this.label3 = new System.Windows.Forms.Label();
-			this.domainUpDown3 = new System.Windows.Forms.DomainUpDown();
 			this.label4 = new System.Windows.Forms.Label();
-			this.domainUpDown4 = new System.Windows.Forms.DomainUpDown();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.pbxExample = new System.Windows.Forms.PictureBox();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
@@ -64,12 +61,15 @@
 			this.btnMerge = new System.Windows.Forms.Button();
 			this.btnSplit = new System.Windows.Forms.Button();
 			this.btnDelete = new System.Windows.Forms.Button();
+			this.button3 = new System.Windows.Forms.Button();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcessImage = new System.ComponentModel.BackgroundWorker();
 			this.tmrClearBox = new System.Windows.Forms.Timer(this.components);
-			this.button3 = new System.Windows.Forms.Button();
-			this.dgvBoxes = new System.Windows.Forms.DataGridView();
+			this.nudX = new System.Windows.Forms.NumericUpDown();
+			this.nudY = new System.Windows.Forms.NumericUpDown();
+			this.nudWidth = new System.Windows.Forms.NumericUpDown();
+			this.nudHeight = new System.Windows.Forms.NumericUpDown();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -79,12 +79,16 @@
 			this.toolStrip1.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvBoxes)).BeginInit();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).BeginInit();
 			this.flowLayoutPanel2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.dgvBoxes)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudX)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudY)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudWidth)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudHeight)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -270,6 +274,18 @@
 			this.btnSave.Text = "保存";
 			this.btnSave.UseVisualStyleBackColor = true;
 			// 
+			// dgvBoxes
+			// 
+			this.dgvBoxes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dgvBoxes.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.dgvBoxes.Location = new System.Drawing.Point(3, 319);
+			this.dgvBoxes.Name = "dgvBoxes";
+			this.dgvBoxes.RowTemplate.Height = 24;
+			this.dgvBoxes.Size = new System.Drawing.Size(250, 164);
+			this.dgvBoxes.TabIndex = 3;
+			this.dgvBoxes.SelectionChanged += new System.EventHandler(this.dgvBoxes_SelectionChanged);
+			this.dgvBoxes.Click += new System.EventHandler(this.dgvBoxes_Click);
+			// 
 			// tableLayoutPanel2
 			// 
 			this.tableLayoutPanel2.ColumnCount = 1;
@@ -290,15 +306,15 @@
 			// flowLayoutPanel1
 			// 
 			this.flowLayoutPanel1.Controls.Add(this.label5);
-			this.flowLayoutPanel1.Controls.Add(this.txtChar);
+			this.flowLayoutPanel1.Controls.Add(this.txtCharacter);
 			this.flowLayoutPanel1.Controls.Add(this.label1);
-			this.flowLayoutPanel1.Controls.Add(this.dudX);
+			this.flowLayoutPanel1.Controls.Add(this.nudX);
 			this.flowLayoutPanel1.Controls.Add(this.label2);
-			this.flowLayoutPanel1.Controls.Add(this.domainUpDown2);
+			this.flowLayoutPanel1.Controls.Add(this.nudY);
 			this.flowLayoutPanel1.Controls.Add(this.label3);
-			this.flowLayoutPanel1.Controls.Add(this.domainUpDown3);
+			this.flowLayoutPanel1.Controls.Add(this.nudWidth);
 			this.flowLayoutPanel1.Controls.Add(this.label4);
-			this.flowLayoutPanel1.Controls.Add(this.domainUpDown4);
+			this.flowLayoutPanel1.Controls.Add(this.nudHeight);
 			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -314,12 +330,13 @@
 			this.label5.TabIndex = 9;
 			this.label5.Text = "字符";
 			// 
-			// txtChar
+			// txtCharacter
 			// 
-			this.txtChar.Location = new System.Drawing.Point(41, 3);
-			this.txtChar.Name = "txtChar";
-			this.txtChar.Size = new System.Drawing.Size(62, 23);
-			this.txtChar.TabIndex = 8;
+			this.txtCharacter.Location = new System.Drawing.Point(41, 3);
+			this.txtCharacter.Name = "txtCharacter";
+			this.txtCharacter.Size = new System.Drawing.Size(62, 23);
+			this.txtCharacter.TabIndex = 8;
+			this.txtCharacter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCharacter_KeyPress);
 			// 
 			// label1
 			// 
@@ -330,64 +347,32 @@
 			this.label1.TabIndex = 1;
 			this.label1.Text = "X";
 			// 
-			// dudX
-			// 
-			this.dudX.Location = new System.Drawing.Point(131, 3);
-			this.dudX.Name = "dudX";
-			this.dudX.Size = new System.Drawing.Size(40, 23);
-			this.dudX.TabIndex = 0;
-			this.dudX.Text = "0";
-			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(177, 0);
+			this.label2.Location = new System.Drawing.Point(182, 0);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(15, 17);
 			this.label2.TabIndex = 3;
 			this.label2.Text = "Y";
 			// 
-			// domainUpDown2
-			// 
-			this.domainUpDown2.Location = new System.Drawing.Point(198, 3);
-			this.domainUpDown2.Name = "domainUpDown2";
-			this.domainUpDown2.Size = new System.Drawing.Size(40, 23);
-			this.domainUpDown2.TabIndex = 2;
-			this.domainUpDown2.Text = "0";
-			// 
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(244, 0);
+			this.label3.Location = new System.Drawing.Point(254, 0);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(32, 17);
 			this.label3.TabIndex = 5;
 			this.label3.Text = "宽度";
 			// 
-			// domainUpDown3
-			// 
-			this.domainUpDown3.Location = new System.Drawing.Point(282, 3);
-			this.domainUpDown3.Name = "domainUpDown3";
-			this.domainUpDown3.Size = new System.Drawing.Size(40, 23);
-			this.domainUpDown3.TabIndex = 4;
-			this.domainUpDown3.Text = "0";
-			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(328, 0);
+			this.label4.Location = new System.Drawing.Point(343, 0);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(32, 17);
 			this.label4.TabIndex = 7;
 			this.label4.Text = "高度";
-			// 
-			// domainUpDown4
-			// 
-			this.domainUpDown4.Location = new System.Drawing.Point(366, 3);
-			this.domainUpDown4.Name = "domainUpDown4";
-			this.domainUpDown4.Size = new System.Drawing.Size(40, 23);
-			this.domainUpDown4.TabIndex = 6;
-			this.domainUpDown4.Text = "0";
 			// 
 			// panel1
 			// 
@@ -463,6 +448,17 @@
 			this.btnDelete.TabIndex = 3;
 			this.btnDelete.Text = "删除";
 			this.btnDelete.UseVisualStyleBackColor = true;
+			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+			// 
+			// button3
+			// 
+			this.button3.Location = new System.Drawing.Point(327, 3);
+			this.button3.Name = "button3";
+			this.button3.Size = new System.Drawing.Size(75, 23);
+			this.button3.TabIndex = 4;
+			this.button3.Text = "button3";
+			this.button3.UseVisualStyleBackColor = true;
+			this.button3.Click += new System.EventHandler(this.button3_Click);
 			// 
 			// tabPage2
 			// 
@@ -483,25 +479,37 @@
 			// 
 			this.tmrClearBox.Tick += new System.EventHandler(this.tmrClearBox_Tick);
 			// 
-			// button3
+			// nudX
 			// 
-			this.button3.Location = new System.Drawing.Point(327, 3);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(75, 23);
-			this.button3.TabIndex = 4;
-			this.button3.Text = "button3";
-			this.button3.UseVisualStyleBackColor = true;
-			this.button3.Click += new System.EventHandler(this.button3_Click);
+			this.nudX.Location = new System.Drawing.Point(131, 3);
+			this.nudX.Name = "nudX";
+			this.nudX.Size = new System.Drawing.Size(45, 23);
+			this.nudX.TabIndex = 10;
+			this.nudX.ValueChanged += new System.EventHandler(this.nudX_ValueChanged);
 			// 
-			// dgvBoxes
+			// nudY
 			// 
-			this.dgvBoxes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvBoxes.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dgvBoxes.Location = new System.Drawing.Point(3, 319);
-			this.dgvBoxes.Name = "dgvBoxes";
-			this.dgvBoxes.RowTemplate.Height = 24;
-			this.dgvBoxes.Size = new System.Drawing.Size(250, 164);
-			this.dgvBoxes.TabIndex = 3;
+			this.nudY.Location = new System.Drawing.Point(203, 3);
+			this.nudY.Name = "nudY";
+			this.nudY.Size = new System.Drawing.Size(45, 23);
+			this.nudY.TabIndex = 11;
+			this.nudY.ValueChanged += new System.EventHandler(this.nudY_ValueChanged);
+			// 
+			// nudWidth
+			// 
+			this.nudWidth.Location = new System.Drawing.Point(292, 3);
+			this.nudWidth.Name = "nudWidth";
+			this.nudWidth.Size = new System.Drawing.Size(45, 23);
+			this.nudWidth.TabIndex = 12;
+			this.nudWidth.ValueChanged += new System.EventHandler(this.nudWidth_ValueChanged);
+			// 
+			// nudHeight
+			// 
+			this.nudHeight.Location = new System.Drawing.Point(381, 3);
+			this.nudHeight.Name = "nudHeight";
+			this.nudHeight.Size = new System.Drawing.Size(45, 23);
+			this.nudHeight.TabIndex = 13;
+			this.nudHeight.ValueChanged += new System.EventHandler(this.nudHeight_ValueChanged);
 			// 
 			// TrainingTool
 			// 
@@ -528,6 +536,7 @@
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvBoxes)).EndInit();
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.flowLayoutPanel1.ResumeLayout(false);
 			this.flowLayoutPanel1.PerformLayout();
@@ -535,7 +544,10 @@
 			this.panel1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).EndInit();
 			this.flowLayoutPanel2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.dgvBoxes)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudX)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudY)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudWidth)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudHeight)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -565,13 +577,9 @@
 		private System.Windows.Forms.Timer tmrCheckMovement;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.DomainUpDown dudX;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.DomainUpDown domainUpDown2;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.DomainUpDown domainUpDown3;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.DomainUpDown domainUpDown4;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
 		private System.Windows.Forms.Button btnInsert;
 		private System.Windows.Forms.Button btnMerge;
@@ -579,9 +587,13 @@
 		private System.Windows.Forms.Button btnDelete;
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.TextBox txtChar;
+		private System.Windows.Forms.TextBox txtCharacter;
 		private System.Windows.Forms.ToolStripButton toolStripButton2;
 		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.DataGridView dgvBoxes;
+		private System.Windows.Forms.NumericUpDown nudX;
+		private System.Windows.Forms.NumericUpDown nudY;
+		private System.Windows.Forms.NumericUpDown nudWidth;
+		private System.Windows.Forms.NumericUpDown nudHeight;
 	}
 }

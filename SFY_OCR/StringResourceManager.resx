@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BoxBorderWidth" xml:space="preserve">
-    <value>2</value>
+    <value>1</value>
     <comment>识别字符矩形框宽度</comment>
   </data>
   <data name="BoxFileExtName" xml:space="preserve">
@@ -128,6 +128,10 @@
   <data name="OpenImageFilterText" xml:space="preserve">
     <value>JPG|*.JPG;*.JPEG|TIFF|*.TIFF;*.TIF|BMP|*.BMP|所有文件|*.*</value>
     <comment>打开图片对话框的Filter文本</comment>
+  </data>
+  <data name="SelectedBoxBorderWidth" xml:space="preserve">
+    <value>3</value>
+    <comment>选中的识别字符矩形框宽度</comment>
   </data>
   <data name="TempImageSuffix" xml:space="preserve">
     <value>_temp</value>
