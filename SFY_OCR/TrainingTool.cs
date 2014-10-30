@@ -33,9 +33,12 @@ namespace SFY_OCR
 		//之前的图层（用于擦除矩形）
 		private Bitmap _previousImage;
 		//是否在移动 Box
-		private bool isMovingBox;
+		private bool _isMovingBox;
 		//是否在改变 Box 大小
-		private bool isSizingBox;
+		private bool _isSizingBox;
+		//按下鼠标左键之前的光标形状
+		private Cursor _cursor;
+
 		//拖动的是哪个锚点的枚举类
 		enum AnchorPositionType {None, TopLeft, TopMiddle, TopRight, MiddleLeft, MiddleMiddle, MiddleRight, BottomLeft, BottomMiddle, BottomRight }
 
@@ -58,6 +61,10 @@ namespace SFY_OCR
 				MessageBoxDefaultButton.Button2) == DialogResult.No)
 			{
 				e.Cancel = true;
+			}
+			else
+			{
+				GC.Collect();
 			}
 		}
 
@@ -325,7 +332,7 @@ namespace SFY_OCR
 
 				if (anchorPosition == AnchorPositionType.MiddleMiddle)
 				{
-					isMovingBox = true;
+					_isMovingBox = true;
 				}
 				else if (anchorPosition == AnchorPositionType.None)
 				{
@@ -333,7 +340,8 @@ namespace SFY_OCR
 				}
 				else
 				{
-					isSizingBox = true;
+					_isSizingBox = true;
+					_cursor = pbxExample.Cursor;
 				}
 			}
 
@@ -348,12 +356,16 @@ namespace SFY_OCR
 		/// <param name="e"></param>
 		private void pbxExample_MouseMove(object sender, MouseEventArgs e)
 		{
-			ChangeBoxCursor(e.X, e.Y);
+			//不处于拖动 Box 大小情况下才改变光标
+			if (!_isSizingBox)
+			{
+				ChangeBoxCursor(e.X, e.Y);
+			}
 			//FIXME 多Box被选中情况下
 			Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
 
 			//处于拖动状态
-			if (isMovingBox)
+			if (_isMovingBox)
 			{
 				Pen dashPen = new Pen(Color.DarkRed, 1);
 				dashPen.DashStyle = DashStyle.Dash;
@@ -547,30 +559,72 @@ namespace SFY_OCR
 				Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
 				_boxEndPoint = new Point(e.X, e.Y);
 
-				if (isMovingBox)
+				if (_isMovingBox)
 				{
-					isMovingBox = false;
+					_isMovingBox = false;
 					box.X += (_boxEndPoint.X - _boxStartPoint.X);
 					box.Y += (_boxEndPoint.Y - _boxStartPoint.Y);
 				}
-				else if (isSizingBox)
+				else if (_isSizingBox)
 				{
 					//FIXME 按下鼠标左键后，移动到其他位置，又不能拖动了
-					isSizingBox = false;
+					_isSizingBox = false;
 
-					//if (anchorPosition == AnchorPositionType.TopLeft)
-					//{
+					if (anchorPosition == AnchorPositionType.TopLeft)
+					{
 						box.X = _boxEndPoint.X;
 						box.Y = _boxEndPoint.Y;
 						box.Width -= _boxEndPoint.X - _boxStartPoint.X;
 						box.Height -= _boxEndPoint.Y - _boxStartPoint.Y;
 
-					//}
+					}
+					else if (anchorPosition == AnchorPositionType.TopMiddle)
+					{
+						box.Y = _boxEndPoint.Y;
+						box.Height -= _boxEndPoint.Y - _boxStartPoint.Y;
+					}
+					else if (anchorPosition == AnchorPositionType.TopRight)
+					{
+						box.Y = _boxEndPoint.Y;
+						box.Width += _boxEndPoint.X - _boxStartPoint.X;
+						box.Height -= _boxEndPoint.Y - _boxStartPoint.Y;
+
+					}
+					else if (anchorPosition == AnchorPositionType.MiddleLeft)
+					{
+						box.X = _boxEndPoint.X;
+						box.Width -= _boxEndPoint.X - _boxStartPoint.X;
+
+					}
+					else if (anchorPosition == AnchorPositionType.MiddleRight)
+					{
+						box.Width += _boxEndPoint.X - _boxStartPoint.X;
+
+					}
+					else if (anchorPosition == AnchorPositionType.BottomLeft)
+					{
+						box.X = _boxEndPoint.X;
+						box.Width += _boxStartPoint.X - _boxEndPoint.X;
+						box.Height += _boxEndPoint.Y - _boxStartPoint.Y;
+
+					}
+					else if (anchorPosition == AnchorPositionType.BottomMiddle)
+					{
+						box.Y = _boxEndPoint.Y;
+						box.Height += _boxEndPoint.Y - _boxStartPoint.Y;
+
+					}
+					else if (anchorPosition == AnchorPositionType.BottomRight)
+					{
+						box.Width += _boxEndPoint.X - _boxStartPoint.X;
+						box.Height += _boxEndPoint.Y - _boxStartPoint.Y;
+
+					}
 				}
 				
 				//结束移动 Box 后显示新的 Box 位置
 				RefreshBoxesInPictureBox();
-				RefreshBoxesInfoInGridView();
+				//RefreshBoxesInfoInGridView();
 
 
 
