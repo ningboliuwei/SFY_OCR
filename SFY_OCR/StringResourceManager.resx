@@ -130,7 +130,7 @@
     <comment>打开图片对话框的Filter文本</comment>
   </data>
   <data name="SelectedBoxBorderWidth" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
     <comment>选中的识别字符矩形框宽度</comment>
   </data>
   <data name="TempImageSuffix" xml:space="preserve">

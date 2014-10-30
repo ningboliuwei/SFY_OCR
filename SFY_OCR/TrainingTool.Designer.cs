@@ -51,9 +51,13 @@
 			this.label5 = new System.Windows.Forms.Label();
 			this.txtCharacter = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
+			this.nudX = new System.Windows.Forms.NumericUpDown();
 			this.label2 = new System.Windows.Forms.Label();
+			this.nudY = new System.Windows.Forms.NumericUpDown();
 			this.label3 = new System.Windows.Forms.Label();
+			this.nudWidth = new System.Windows.Forms.NumericUpDown();
 			this.label4 = new System.Windows.Forms.Label();
+			this.nudHeight = new System.Windows.Forms.NumericUpDown();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.pbxExample = new System.Windows.Forms.PictureBox();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
@@ -66,10 +70,6 @@
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcessImage = new System.ComponentModel.BackgroundWorker();
 			this.tmrClearBox = new System.Windows.Forms.Timer(this.components);
-			this.nudX = new System.Windows.Forms.NumericUpDown();
-			this.nudY = new System.Windows.Forms.NumericUpDown();
-			this.nudWidth = new System.Windows.Forms.NumericUpDown();
-			this.nudHeight = new System.Windows.Forms.NumericUpDown();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -82,13 +82,13 @@
 			((System.ComponentModel.ISupportInitialize)(this.dgvBoxes)).BeginInit();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
-			this.panel1.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).BeginInit();
-			this.flowLayoutPanel2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudX)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudY)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudWidth)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudHeight)).BeginInit();
+			this.panel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).BeginInit();
+			this.flowLayoutPanel2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -347,6 +347,14 @@
 			this.label1.TabIndex = 1;
 			this.label1.Text = "X";
 			// 
+			// nudX
+			// 
+			this.nudX.Location = new System.Drawing.Point(131, 3);
+			this.nudX.Name = "nudX";
+			this.nudX.Size = new System.Drawing.Size(45, 23);
+			this.nudX.TabIndex = 10;
+			this.nudX.ValueChanged += new System.EventHandler(this.nudX_ValueChanged);
+			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
@@ -355,6 +363,14 @@
 			this.label2.Size = new System.Drawing.Size(15, 17);
 			this.label2.TabIndex = 3;
 			this.label2.Text = "Y";
+			// 
+			// nudY
+			// 
+			this.nudY.Location = new System.Drawing.Point(203, 3);
+			this.nudY.Name = "nudY";
+			this.nudY.Size = new System.Drawing.Size(45, 23);
+			this.nudY.TabIndex = 11;
+			this.nudY.ValueChanged += new System.EventHandler(this.nudY_ValueChanged);
 			// 
 			// label3
 			// 
@@ -365,6 +381,14 @@
 			this.label3.TabIndex = 5;
 			this.label3.Text = "宽度";
 			// 
+			// nudWidth
+			// 
+			this.nudWidth.Location = new System.Drawing.Point(292, 3);
+			this.nudWidth.Name = "nudWidth";
+			this.nudWidth.Size = new System.Drawing.Size(45, 23);
+			this.nudWidth.TabIndex = 12;
+			this.nudWidth.ValueChanged += new System.EventHandler(this.nudWidth_ValueChanged);
+			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
@@ -373,6 +397,14 @@
 			this.label4.Size = new System.Drawing.Size(32, 17);
 			this.label4.TabIndex = 7;
 			this.label4.Text = "高度";
+			// 
+			// nudHeight
+			// 
+			this.nudHeight.Location = new System.Drawing.Point(381, 3);
+			this.nudHeight.Name = "nudHeight";
+			this.nudHeight.Size = new System.Drawing.Size(45, 23);
+			this.nudHeight.TabIndex = 13;
+			this.nudHeight.ValueChanged += new System.EventHandler(this.nudHeight_ValueChanged);
 			// 
 			// panel1
 			// 
@@ -430,6 +462,7 @@
 			this.btnMerge.TabIndex = 1;
 			this.btnMerge.Text = "合并";
 			this.btnMerge.UseVisualStyleBackColor = true;
+			this.btnMerge.Click += new System.EventHandler(this.btnMerge_Click);
 			// 
 			// btnSplit
 			// 
@@ -479,38 +512,6 @@
 			// 
 			this.tmrClearBox.Tick += new System.EventHandler(this.tmrClearBox_Tick);
 			// 
-			// nudX
-			// 
-			this.nudX.Location = new System.Drawing.Point(131, 3);
-			this.nudX.Name = "nudX";
-			this.nudX.Size = new System.Drawing.Size(45, 23);
-			this.nudX.TabIndex = 10;
-			this.nudX.ValueChanged += new System.EventHandler(this.nudX_ValueChanged);
-			// 
-			// nudY
-			// 
-			this.nudY.Location = new System.Drawing.Point(203, 3);
-			this.nudY.Name = "nudY";
-			this.nudY.Size = new System.Drawing.Size(45, 23);
-			this.nudY.TabIndex = 11;
-			this.nudY.ValueChanged += new System.EventHandler(this.nudY_ValueChanged);
-			// 
-			// nudWidth
-			// 
-			this.nudWidth.Location = new System.Drawing.Point(292, 3);
-			this.nudWidth.Name = "nudWidth";
-			this.nudWidth.Size = new System.Drawing.Size(45, 23);
-			this.nudWidth.TabIndex = 12;
-			this.nudWidth.ValueChanged += new System.EventHandler(this.nudWidth_ValueChanged);
-			// 
-			// nudHeight
-			// 
-			this.nudHeight.Location = new System.Drawing.Point(381, 3);
-			this.nudHeight.Name = "nudHeight";
-			this.nudHeight.Size = new System.Drawing.Size(45, 23);
-			this.nudHeight.TabIndex = 13;
-			this.nudHeight.ValueChanged += new System.EventHandler(this.nudHeight_ValueChanged);
-			// 
 			// TrainingTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -540,14 +541,14 @@
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.flowLayoutPanel1.ResumeLayout(false);
 			this.flowLayoutPanel1.PerformLayout();
-			this.panel1.ResumeLayout(false);
-			this.panel1.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).EndInit();
-			this.flowLayoutPanel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.nudX)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudY)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudWidth)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudHeight)).EndInit();
+			this.panel1.ResumeLayout(false);
+			this.panel1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).EndInit();
+			this.flowLayoutPanel2.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}

@@ -19,12 +19,12 @@ namespace SFY_OCR.Untilities
 			//临时文件（如： R:\a_temp.tiff）
 			TempImageInfo =
 				new FileNameInfo(Settings.Default.OutputDir + OriginalImageInfo.FullFileName + StringResourceManager.TempImageSuffix +
-				                 "." +
-				                 OriginalImageInfo.ExtFileName);
+								 "." +
+								 OriginalImageInfo.ExtFileName);
 			//对应的Box文件（如 R:\a.tiff.box）
 			BoxFileInfo =
 				new FileNameInfo(TempImageInfo.Dir + OriginalImageInfo.MainFileName + "." +
-				                 StringResourceManager.BoxFileExtName);
+								 StringResourceManager.BoxFileExtName);
 			//创建BoxList对象
 			ImageBoxList = new BoxList();
 		}
@@ -60,15 +60,42 @@ namespace SFY_OCR.Untilities
 		{
 			foreach (Box box in ImageBoxList.Boxes)
 			{
+				Graphics g = Graphics.FromImage(bitmap);
 				//若当前矩形框被选中，使用红色，否则使用蓝色
 				Color borderColor = box.Selected ? Color.Red : Color.Blue;
 				int borderWidth = box.Selected
 					? Convert.ToInt32(StringResourceManager.SelectedBoxBorderWidth)
 					: Convert.ToInt32(StringResourceManager.BoxBorderWidth);
 				//在传入的BitMap上画矩形
-				Graphics.FromImage(bitmap)
-					.DrawRectangle(new Pen(borderColor, borderWidth), box.X,
-						box.Y, box.Width, box.Height);
+
+				int offset = borderWidth;
+				g.DrawRectangle(new Pen(borderColor, offset), box.X,
+					box.Y, box.Width, box.Height);
+
+				//画被选中 Box 的锚点
+				//if (box.Selected)
+				//{
+				//	int sideLength = borderWidth * 3;
+				//	SolidBrush solidBrush = new SolidBrush(Color.DarkGreen);
+
+				//	//上左
+				//	g.FillRectangle(solidBrush, box.X, box.Y - offset, sideLength, sideLength);
+				//	//上中
+				//	g.FillRectangle(solidBrush, box.X + (box.Width/2), box.Y, sideLength, sideLength);
+				//	//上右
+				//	g.FillRectangle(solidBrush, box.X + box.Width - offset, box.Y - offset, sideLength, sideLength);
+				//	//中左
+				//	g.FillRectangle(solidBrush, box.X - offset, box.Y + (box.Height / 2) - offset, sideLength, sideLength);
+				//	//中右
+				//	g.FillRectangle(solidBrush, box.X + box.Width - offset, box.Y + (box.Height / 2) - offset, sideLength, sideLength);
+				//	//下左
+				//	g.FillRectangle(solidBrush, box.X - offset, box.Y + box.Height - offset, sideLength, sideLength);
+				//	//下中
+				//	g.FillRectangle(solidBrush, box.X + (box.Width / 2) - offset, box.Y + box.Height - offset, sideLength, sideLength);
+				//	//下右
+				//	g.FillRectangle(solidBrush, box.X + box.Width - offset, box.Y + box.Height - offset, sideLength, sideLength);
+					
+				//}
 			}
 		}
 
@@ -96,10 +123,7 @@ namespace SFY_OCR.Untilities
 
 						//从文件中载入：字符，BOX左边界离图像左边界距离，BOX下边界离图像下边界距离，BOX右边界离图像左边界距离，BOX上边界离图像下边界距离
 						//文件中的最后一个 0 省略（因不知道何用）
-						Bitmap bitmap = new Bitmap(TempImageInfo.FilePath);
-						int imageHeight = bitmap.Height;
-						bitmap.Dispose();
-
+						int imageHeight = GetImageSize(TempImageInfo.FilePath).Height;
 						ImageBoxList.Boxes.Add(new Box(items[0], Convert.ToInt32(items[1]),
 							imageHeight - Convert.ToInt32(items[4]),
 							Convert.ToInt32(items[3]) - Convert.ToInt32(items[1]),
@@ -120,6 +144,15 @@ namespace SFY_OCR.Untilities
 			}
 		}
 
+		public Size GetImageSize(string filePath)
+		{
+			Bitmap bitmap = new Bitmap(TempImageInfo.FilePath);
+			Size imageSize = bitmap.Size;
+			bitmap.Dispose();
+
+			return imageSize;
+		}
+
 		/// <summary>
 		///     将所有的Box数据保存到文件中
 		/// </summary>
@@ -132,12 +165,9 @@ namespace SFY_OCR.Untilities
 			try
 			{
 				streamWriter = new StreamWriter(BoxFileInfo.FilePath, false, Encoding.UTF8);
-				Bitmap bitmap = new Bitmap(TempImageInfo.FilePath);
-				int imageHeight = bitmap.Height;
-				bitmap.Dispose();
-
 				foreach (Box box in ImageBoxList.Boxes)
 				{
+					int imageHeight = GetImageSize(TempImageInfo.FilePath).Height;
 					//保存到文件中：字符，BOX左边界离图像左边界距离，BOX下边界离图像下边界距离，BOX右边界离图像左边界距离，BOX上边界离图像下边界距离
 					string[] items =
 					{

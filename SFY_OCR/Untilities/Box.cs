@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 namespace SFY_OCR.Untilities
 {
@@ -6,7 +7,7 @@ namespace SFY_OCR.Untilities
 	{
 		private bool _selected = false;
 		public Box(string character, int x, int y, int width, int height)
-			//构造函数
+		//构造函数
 		{
 			Character = character;
 			X = x;
@@ -36,7 +37,7 @@ namespace SFY_OCR.Untilities
 		public bool Selected
 		{
 			get { return _selected; }
-			set { _selected = value;OnSelectedChanged(new EventArgs()); } 
+			set { _selected = value; OnSelectedChanged(new EventArgs()); }
 		}
 
 		/// <summary>
@@ -47,7 +48,7 @@ namespace SFY_OCR.Untilities
 		/// <returns>true表示某点在当前box范围之内</returns>
 		public bool Contains(int x, int y)
 		{
-			if (x >= X && x <= X + Width && y >= Y && y <= Y + Height)
+			if (new Rectangle(X, Y, Width, Height).Contains(x, y))
 			{
 				return true;
 			}

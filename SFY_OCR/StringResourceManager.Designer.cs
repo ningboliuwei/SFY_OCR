@@ -88,7 +88,7 @@ namespace SFY_OCR {
         }
         
         /// <summary>
-        ///   查找类似 3 的本地化字符串。
+        ///   查找类似 4 的本地化字符串。
         /// </summary>
         internal static string SelectedBoxBorderWidth {
             get {
