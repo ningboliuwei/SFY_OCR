@@ -40,7 +40,7 @@ namespace SFY_OCR
 		private Cursor _cursor;
 
 		//拖动的是哪个锚点的枚举类
-		enum AnchorPositionType {None, TopLeft, TopMiddle, TopRight, MiddleLeft, MiddleMiddle, MiddleRight, BottomLeft, BottomMiddle, BottomRight }
+		enum AnchorPositionType { None, TopLeft, TopMiddle, TopRight, MiddleLeft, MiddleMiddle, MiddleRight, BottomLeft, BottomMiddle, BottomRight }
 
 		private AnchorPositionType anchorPosition;
 
@@ -336,7 +336,7 @@ namespace SFY_OCR
 				}
 				else if (anchorPosition == AnchorPositionType.None)
 				{
-
+					_isDrawingBox = true;
 				}
 				else
 				{
@@ -357,7 +357,7 @@ namespace SFY_OCR
 		private void pbxExample_MouseMove(object sender, MouseEventArgs e)
 		{
 			//不处于拖动 Box 大小情况下才改变光标
-			if (!_isSizingBox)
+			if (!_isSizingBox && _ocrImage.ImageBoxList.SelectedBoxes.Count == 1)
 			{
 				ChangeBoxCursor(e.X, e.Y);
 			}
@@ -372,6 +372,54 @@ namespace SFY_OCR
 				pbxExample.Invalidate();
 				pbxExample.CreateGraphics().DrawRectangle(dashPen, box.X + (e.X - _boxStartPoint.X), box.Y + (e.Y - _boxStartPoint.Y), box.Width, box.Height);
 
+			}
+
+			if (_isDrawingBox)
+			{
+				Pen dashPen = new Pen(Color.DarkRed, 1);
+				dashPen.DashStyle = DashStyle.Dash;
+				pbxExample.Invalidate();
+				//pbxExample.CreateGraphics().DrawRectangle(dashPen, _boxStartPoint.X, _boxStartPoint.Y, _boxEndPoint.X - _boxStartPoint.X, _boxEndPoint.X - _boxStartPoint.Y);
+
+
+				//得到拖动结束点坐标
+				_boxEndPoint.X = e.X;
+				_boxEndPoint.Y = e.Y;
+
+				_boxLeftTopPoint = new Point();
+
+				//判断不同的拖动方向，并计算画 box 的范围
+				if (_boxEndPoint.X > _boxStartPoint.X)
+				{
+					_boxLeftTopPoint.X = _boxStartPoint.X;
+				}
+				else
+				{
+					_boxLeftTopPoint.X = _boxEndPoint.X;
+				}
+
+				if (_boxEndPoint.Y > _boxStartPoint.Y)
+				{
+					_boxLeftTopPoint.Y = _boxStartPoint.Y;
+				}
+				else
+				{
+					_boxLeftTopPoint.Y = _boxEndPoint.Y;
+				}
+
+				Graphics g = pbxExample.CreateGraphics();
+				//只有在绘图且移动情况下才画新的矩形
+				//_boxesImage = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
+				//g = Graphics.FromImage(_boxesImage);
+
+				//g.SmoothingMode = SmoothingMode.HighSpeed;
+
+				g.DrawRectangle(
+					dashPen,
+					_boxLeftTopPoint.X,
+					_boxLeftTopPoint.Y,
+					Math.Abs(_boxEndPoint.X - _boxStartPoint.X),
+					Math.Abs(_boxEndPoint.Y - _boxStartPoint.Y));
 			}
 
 			//TOFIX
@@ -554,7 +602,7 @@ namespace SFY_OCR
 		private void pbxExample_MouseUp(object sender, MouseEventArgs e)
 		{
 
-			if (e.Button == MouseButtons.Left )
+			if (e.Button == MouseButtons.Left)
 			{
 				Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
 				_boxEndPoint = new Point(e.X, e.Y);
@@ -564,6 +612,10 @@ namespace SFY_OCR
 					_isMovingBox = false;
 					box.X += (_boxEndPoint.X - _boxStartPoint.X);
 					box.Y += (_boxEndPoint.Y - _boxStartPoint.Y);
+				}
+				else if (_isDrawingBox)
+				{
+					_isDrawingBox = false;
 				}
 				else if (_isSizingBox)
 				{
@@ -621,7 +673,7 @@ namespace SFY_OCR
 
 					}
 				}
-				
+
 				//结束移动 Box 后显示新的 Box 位置
 				RefreshBoxesInPictureBox();
 				//RefreshBoxesInfoInGridView();
@@ -1055,7 +1107,7 @@ namespace SFY_OCR
 			}
 
 			RefreshBoxesInPictureBox();
-			RefreshBoxesInfoInGridView();
+			//RefreshBoxesInfoInGridView();
 
 
 		}

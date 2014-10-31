@@ -100,7 +100,7 @@
     <Compile Include="Untilities\FileNameInfo.cs" />
     <Compile Include="Untilities\OcrImage.cs" />
     <Compile Include="Untilities\ListItem.cs" />
-    <Compile Include="Untilities\Common.cs" />
+    <Compile Include="Untilities\CommandLineHelper.cs" />
     <EmbeddedResource Include="Main.zh-CN.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
