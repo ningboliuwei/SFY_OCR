@@ -110,6 +110,15 @@ namespace SFY_OCR.Untilities
 			return Boxes.FirstOrDefault(box => box.X == x && box.Y == y && box.Width == width && box.Height == height);
 		}
 		/// <summary>
+		/// 根据编号得到Box对象
+		/// </summary>
+		/// <param name="sn"></param>
+		/// <returns></returns>
+		public Box GetBoxBySn(int sn)
+		{
+			return Boxes.FirstOrDefault(box => box.Sn == sn);
+		}
+		/// <summary>
 		/// 清除所有Box对象的选中状态
 		/// </summary>
 		public void UnSelectAll()

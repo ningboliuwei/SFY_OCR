@@ -95,12 +95,18 @@
     </Compile>
     <Compile Include="Untilities\Box.cs" />
     <Compile Include="Untilities\BoxList.cs" />
-    <Compile Include="Untilities\ConvertDelegatePackage.cs" />
-    <Compile Include="Untilities\ConvertImageDelegate.cs" />
+    <Compile Include="Untilities\CommandLineProcess.cs" />
     <Compile Include="Untilities\FileNameInfo.cs" />
+    <Compile Include="Untilities\ImageProcess.cs" />
+    <Compile Include="Untilities\MakeBoxTessProcess.cs" />
     <Compile Include="Untilities\OcrImage.cs" />
     <Compile Include="Untilities\ListItem.cs" />
-    <Compile Include="Untilities\CommandLineHelper.cs" />
+    <Compile Include="Untilities\Common.cs" />
+    <Compile Include="Untilities\RotateImageProcess.cs" />
+    <Compile Include="Untilities\RecognitionTessProcess.cs" />
+    <Compile Include="Untilities\TessProcess.cs" />
+    <Compile Include="Untilities\TextCleanerImageProcess.cs" />
+    <Compile Include="Untilities\ToTiffImageProcess.cs" />
     <EmbeddedResource Include="Main.zh-CN.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>

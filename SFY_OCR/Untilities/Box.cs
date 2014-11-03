@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 namespace SFY_OCR.Untilities
 {
 	public class Box
 	{
 		private bool _selected = false;
-		public Box(string character, int x, int y, int width, int height)
+		public Box(int sn, string character, int x, int y, int width, int height)
 		//构造函数
 		{
+			Sn = sn;
 			Character = character;
 			X = x;
 			Y = y;
 			Width = width;
 			Height = height;
 		}
+
+		public int Sn { get; private set; }
 
 		public string Character { get; set; }
 		//Box对应的字符

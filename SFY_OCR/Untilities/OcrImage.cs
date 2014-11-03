@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -16,9 +17,9 @@ namespace SFY_OCR.Untilities
 		{
 			//原始文件（如：D:\images\a.tiff）
 			OriginalImageInfo = new FileNameInfo(imageFilePath);
-			//临时文件（如： R:\a_temp.tiff）
+			//临时文件（如： R:\a.temp.tiff）
 			TempImageInfo =
-				new FileNameInfo(Settings.Default.OutputDir + OriginalImageInfo.FullFileName + StringResourceManager.TempImageSuffix +
+				new FileNameInfo(Settings.Default.OutputDir + OriginalImageInfo.MainFileName + StringResourceManager.TempImageSuffix +
 								 "." +
 								 OriginalImageInfo.ExtFileName);
 			//对应的Box文件（如 R:\a.tiff.box）
@@ -54,13 +55,13 @@ namespace SFY_OCR.Untilities
 		///     在一个BitMap对象中画上矩形
 		/// </summary>
 		/// <param name="image">需要画矩形的BitMap对象（如PictureBox.Image）</param>
-		/// <param name="bitmap"></param>
+		/// <param name="oldBitmap"></param>
 		/// <returns>画毕的BitMap对象</returns>
-		public void DrawBoxesOnBitmap(Bitmap bitmap)
+		public Bitmap GetNewBoxesImage(Bitmap oldBitmap)
 		{
 			foreach (Box box in ImageBoxList.Boxes)
 			{
-				Graphics g = Graphics.FromImage(bitmap);
+				Graphics g = Graphics.FromImage(oldBitmap);
 				//若当前矩形框被选中，使用红色，否则使用蓝色
 				Color borderColor = box.Selected ? Color.Red : Color.Blue;
 				int borderWidth = box.Selected
@@ -72,7 +73,8 @@ namespace SFY_OCR.Untilities
 				g.DrawRectangle(new Pen(borderColor, offset), box.X,
 					box.Y, box.Width, box.Height);
 
-				//画被选中 Box 的锚点
+
+				#region 画被选中 Box 的锚点
 				//if (box.Selected)
 				//{
 				//	int sideLength = borderWidth * 3;
@@ -94,9 +96,11 @@ namespace SFY_OCR.Untilities
 				//	g.FillRectangle(solidBrush, box.X + (box.Width / 2) - offset, box.Y + box.Height - offset, sideLength, sideLength);
 				//	//下右
 				//	g.FillRectangle(solidBrush, box.X + box.Width - offset, box.Y + box.Height - offset, sideLength, sideLength);
-					
+
 				//}
+				#endregion
 			}
+			return oldBitmap;
 		}
 
 		/// <summary>
@@ -112,24 +116,25 @@ namespace SFY_OCR.Untilities
 			try
 			{
 				streamReader = new StreamReader(BoxFileInfo.FilePath, Encoding.UTF8);
-				while (!streamReader.EndOfStream)
+				string fileContent = streamReader.ReadToEnd().Trim();
+				string[] lines = fileContent.Split('\n');
+				//一次读取Box文件中的一行
+				//注意，这里读取的Y坐标是BOX文件Y坐标
+				int imageHeight = GetImageSize(TempImageInfo.FilePath).Height;
+				int index = 1;
+				foreach (string currentLine in lines)
 				{
-					//一次读取Box文件中的一行
-					//注意，这里读取的Y坐标是BOX文件Y坐标
-					string currentLine = streamReader.ReadLine();
-					if (currentLine != null)
-					{
-						string[] items = currentLine.Split(' ');
+					string[] items = currentLine.Split(' ');
 
-						//从文件中载入：字符，BOX左边界离图像左边界距离，BOX下边界离图像下边界距离，BOX右边界离图像左边界距离，BOX上边界离图像下边界距离
-						//文件中的最后一个 0 省略（因不知道何用）
-						int imageHeight = GetImageSize(TempImageInfo.FilePath).Height;
-						ImageBoxList.Boxes.Add(new Box(items[0], Convert.ToInt32(items[1]),
-							imageHeight - Convert.ToInt32(items[4]),
-							Convert.ToInt32(items[3]) - Convert.ToInt32(items[1]),
-							Convert.ToInt32(items[4]) - Convert.ToInt32(items[2])));
-					}
+					//从文件中载入：字符，BOX左边界离图像左边界距离，BOX下边界离图像下边界距离，BOX右边界离图像左边界距离，BOX上边界离图像下边界距离
+					//文件中的最后一个 0 省略（因不知道何用）
+					ImageBoxList.Boxes.Add(new Box(index, items[0], Convert.ToInt32(items[1]),
+						imageHeight - Convert.ToInt32(items[4]),
+						Convert.ToInt32(items[3]) - Convert.ToInt32(items[1]),
+						Convert.ToInt32(items[4]) - Convert.ToInt32(items[2])));
+					index++;
 				}
+
 			}
 			catch (Exception ex)
 			{
@@ -146,11 +151,11 @@ namespace SFY_OCR.Untilities
 
 		public Size GetImageSize(string filePath)
 		{
-			Bitmap bitmap = new Bitmap(TempImageInfo.FilePath);
-			Size imageSize = bitmap.Size;
-			bitmap.Dispose();
-
-			return imageSize;
+			using (Bitmap bitmap = new Bitmap(TempImageInfo.FilePath))
+			{
+				Size imageSize = bitmap.Size;
+				return imageSize;
+			}
 		}
 
 		/// <summary>
@@ -200,7 +205,11 @@ namespace SFY_OCR.Untilities
 		{
 			if (!File.Exists(BoxFileInfo.FilePath))
 			{
-				File.Create(BoxFileInfo.FilePath);
+				//Common.InvokeMakeBoxCommandLine(new Dictionary<string, string>
+				//{
+				//	{"imageFilePath", TempImageInfo.FilePath},
+				//	{"boxFilePath", BoxFileInfo.Dir + BoxFileInfo.MainFileName}
+				//});
 			}
 		}
 	}

@@ -34,16 +34,14 @@
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this.button1 = new System.Windows.Forms.Button();
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.cmbPreProcess = new System.Windows.Forms.ComboBox();
 			this.chkToTiff = new System.Windows.Forms.CheckBox();
-			this.chkDenoise = new System.Windows.Forms.CheckBox();
 			this.trackBar1 = new System.Windows.Forms.TrackBar();
-			this.button2 = new System.Windows.Forms.Button();
+			this.btnTextCleaner = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.dgvBoxes = new System.Windows.Forms.DataGridView();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -66,10 +64,16 @@
 			this.btnSplit = new System.Windows.Forms.Button();
 			this.btnDelete = new System.Windows.Forms.Button();
 			this.button3 = new System.Windows.Forms.Button();
+			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+			this.btnRotateLeft = new System.Windows.Forms.Button();
+			this.btnRotateRight = new System.Windows.Forms.Button();
+			this.btnMakeBox = new System.Windows.Forms.Button();
+			this.button4 = new System.Windows.Forms.Button();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
-			this.bgwProcessImage = new System.ComponentModel.BackgroundWorker();
+			this.bgwProcess = new System.ComponentModel.BackgroundWorker();
 			this.tmrClearBox = new System.Windows.Forms.Timer(this.components);
+			this.btnReset = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -89,6 +93,7 @@
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).BeginInit();
 			this.flowLayoutPanel2.SuspendLayout();
+			this.flowLayoutPanel3.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -134,7 +139,6 @@
 			// 
 			this.tableLayoutPanel1.ColumnCount = 1;
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Controls.Add(this.button1, 0, 2);
 			this.tableLayoutPanel1.Controls.Add(this.toolStrip1, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.btnSave, 0, 3);
@@ -150,16 +154,6 @@
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(256, 486);
 			this.tableLayoutPanel1.TabIndex = 0;
-			// 
-			// button1
-			// 
-			this.button1.Location = new System.Drawing.Point(3, 230);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(183, 33);
-			this.button1.TabIndex = 1;
-			this.button1.Text = "button1";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// toolStrip1
 			// 
@@ -199,9 +193,7 @@
 			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel3.Controls.Add(this.cmbPreProcess, 0, 0);
 			this.tableLayoutPanel3.Controls.Add(this.chkToTiff, 0, 1);
-			this.tableLayoutPanel3.Controls.Add(this.chkDenoise, 0, 2);
 			this.tableLayoutPanel3.Controls.Add(this.trackBar1, 0, 4);
-			this.tableLayoutPanel3.Controls.Add(this.button2, 0, 3);
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 33);
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -233,18 +225,6 @@
 			this.chkToTiff.Text = "转换为无损 TIFF 格式";
 			this.chkToTiff.UseVisualStyleBackColor = true;
 			// 
-			// chkDenoise
-			// 
-			this.chkDenoise.AutoSize = true;
-			this.chkDenoise.Checked = true;
-			this.chkDenoise.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkDenoise.Location = new System.Drawing.Point(3, 84);
-			this.chkDenoise.Name = "chkDenoise";
-			this.chkDenoise.Size = new System.Drawing.Size(51, 21);
-			this.chkDenoise.TabIndex = 2;
-			this.chkDenoise.Text = "降噪";
-			this.chkDenoise.UseVisualStyleBackColor = true;
-			// 
 			// trackBar1
 			// 
 			this.trackBar1.Location = new System.Drawing.Point(3, 143);
@@ -255,15 +235,15 @@
 			this.trackBar1.TickFrequency = 5;
 			this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
 			// 
-			// button2
+			// btnTextCleaner
 			// 
-			this.button2.Location = new System.Drawing.Point(3, 113);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(75, 23);
-			this.button2.TabIndex = 4;
-			this.button2.Text = "降噪";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
+			this.btnTextCleaner.Location = new System.Drawing.Point(408, 3);
+			this.btnTextCleaner.Name = "btnTextCleaner";
+			this.btnTextCleaner.Size = new System.Drawing.Size(75, 23);
+			this.btnTextCleaner.TabIndex = 4;
+			this.btnTextCleaner.Text = "降噪";
+			this.btnTextCleaner.UseVisualStyleBackColor = true;
+			this.btnTextCleaner.Click += new System.EventHandler(this.button2_Click);
 			// 
 			// btnSave
 			// 
@@ -283,23 +263,27 @@
 			this.dgvBoxes.RowTemplate.Height = 24;
 			this.dgvBoxes.Size = new System.Drawing.Size(250, 164);
 			this.dgvBoxes.TabIndex = 3;
+			this.dgvBoxes.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvBoxes_DataBindingComplete);
 			this.dgvBoxes.SelectionChanged += new System.EventHandler(this.dgvBoxes_SelectionChanged);
 			this.dgvBoxes.Click += new System.EventHandler(this.dgvBoxes_Click);
 			// 
 			// tableLayoutPanel2
 			// 
 			this.tableLayoutPanel2.ColumnCount = 1;
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 0);
-			this.tableLayoutPanel2.Controls.Add(this.panel1, 0, 2);
+			this.tableLayoutPanel2.Controls.Add(this.panel1, 0, 3);
 			this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel2, 0, 1);
+			this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel3, 0, 2);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-			this.tableLayoutPanel2.RowCount = 3;
+			this.tableLayoutPanel2.RowCount = 4;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.436214F));
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.56379F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.86475F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.13525F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel2.Size = new System.Drawing.Size(510, 486);
 			this.tableLayoutPanel2.TabIndex = 1;
 			// 
@@ -410,24 +394,23 @@
 			// 
 			this.panel1.Controls.Add(this.pbxExample);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(3, 76);
+			this.panel1.Location = new System.Drawing.Point(3, 118);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(504, 407);
+			this.panel1.Size = new System.Drawing.Size(504, 365);
 			this.panel1.TabIndex = 2;
 			// 
 			// pbxExample
 			// 
-			this.pbxExample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.pbxExample.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pbxExample.Location = new System.Drawing.Point(0, 0);
 			this.pbxExample.Name = "pbxExample";
-			this.pbxExample.Size = new System.Drawing.Size(504, 407);
-			this.pbxExample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+			this.pbxExample.Size = new System.Drawing.Size(504, 365);
 			this.pbxExample.TabIndex = 1;
 			this.pbxExample.TabStop = false;
 			this.pbxExample.Paint += new System.Windows.Forms.PaintEventHandler(this.pbxExample_Paint);
 			this.pbxExample.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseClick);
 			this.pbxExample.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseDown);
+			this.pbxExample.MouseHover += new System.EventHandler(this.pbxExample_MouseHover);
 			this.pbxExample.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseMove);
 			this.pbxExample.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseUp);
 			// 
@@ -441,7 +424,7 @@
 			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 38);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-			this.flowLayoutPanel2.Size = new System.Drawing.Size(504, 32);
+			this.flowLayoutPanel2.Size = new System.Drawing.Size(504, 39);
 			this.flowLayoutPanel2.TabIndex = 5;
 			// 
 			// btnInsert
@@ -493,6 +476,60 @@
 			this.button3.UseVisualStyleBackColor = true;
 			this.button3.Click += new System.EventHandler(this.button3_Click);
 			// 
+			// flowLayoutPanel3
+			// 
+			this.flowLayoutPanel3.Controls.Add(this.btnRotateLeft);
+			this.flowLayoutPanel3.Controls.Add(this.btnRotateRight);
+			this.flowLayoutPanel3.Controls.Add(this.btnMakeBox);
+			this.flowLayoutPanel3.Controls.Add(this.button4);
+			this.flowLayoutPanel3.Controls.Add(this.btnReset);
+			this.flowLayoutPanel3.Controls.Add(this.btnTextCleaner);
+			this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 83);
+			this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+			this.flowLayoutPanel3.Size = new System.Drawing.Size(504, 29);
+			this.flowLayoutPanel3.TabIndex = 6;
+			// 
+			// btnRotateLeft
+			// 
+			this.btnRotateLeft.Location = new System.Drawing.Point(3, 3);
+			this.btnRotateLeft.Name = "btnRotateLeft";
+			this.btnRotateLeft.Size = new System.Drawing.Size(75, 23);
+			this.btnRotateLeft.TabIndex = 0;
+			this.btnRotateLeft.Text = "左转90°";
+			this.btnRotateLeft.UseVisualStyleBackColor = true;
+			this.btnRotateLeft.Click += new System.EventHandler(this.btnRotateLeft_Click);
+			// 
+			// btnRotateRight
+			// 
+			this.btnRotateRight.Location = new System.Drawing.Point(84, 3);
+			this.btnRotateRight.Name = "btnRotateRight";
+			this.btnRotateRight.Size = new System.Drawing.Size(75, 23);
+			this.btnRotateRight.TabIndex = 1;
+			this.btnRotateRight.Text = "右转90°";
+			this.btnRotateRight.UseVisualStyleBackColor = true;
+			this.btnRotateRight.Click += new System.EventHandler(this.btnRotateRight_Click);
+			// 
+			// btnMakeBox
+			// 
+			this.btnMakeBox.Location = new System.Drawing.Point(165, 3);
+			this.btnMakeBox.Name = "btnMakeBox";
+			this.btnMakeBox.Size = new System.Drawing.Size(75, 23);
+			this.btnMakeBox.TabIndex = 2;
+			this.btnMakeBox.Text = "自动识别";
+			this.btnMakeBox.UseVisualStyleBackColor = true;
+			this.btnMakeBox.Click += new System.EventHandler(this.btnMakeBox_Click);
+			// 
+			// button4
+			// 
+			this.button4.Location = new System.Drawing.Point(246, 3);
+			this.button4.Name = "button4";
+			this.button4.Size = new System.Drawing.Size(75, 23);
+			this.button4.TabIndex = 3;
+			this.button4.Text = "TOTIFF";
+			this.button4.UseVisualStyleBackColor = true;
+			this.button4.Click += new System.EventHandler(this.button4_Click);
+			// 
 			// tabPage2
 			// 
 			this.tabPage2.Location = new System.Drawing.Point(4, 26);
@@ -503,14 +540,24 @@
 			this.tabPage2.Text = "tabPage2";
 			this.tabPage2.UseVisualStyleBackColor = true;
 			// 
-			// bgwProcessImage
+			// bgwProcess
 			// 
-			this.bgwProcessImage.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProcessImage_DoWork);
-			this.bgwProcessImage.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwProcessImage_RunWorkerCompleted);
+			this.bgwProcess.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProcess_DoWork);
+			this.bgwProcess.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwProcess_RunWorkerCompleted);
 			// 
 			// tmrClearBox
 			// 
 			this.tmrClearBox.Tick += new System.EventHandler(this.tmrClearBox_Tick);
+			// 
+			// btnReset
+			// 
+			this.btnReset.Location = new System.Drawing.Point(327, 3);
+			this.btnReset.Name = "btnReset";
+			this.btnReset.Size = new System.Drawing.Size(75, 23);
+			this.btnReset.TabIndex = 4;
+			this.btnReset.Text = "复位";
+			this.btnReset.UseVisualStyleBackColor = true;
+			this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
 			// 
 			// TrainingTool
 			// 
@@ -546,9 +593,9 @@
 			((System.ComponentModel.ISupportInitialize)(this.nudWidth)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudHeight)).EndInit();
 			this.panel1.ResumeLayout(false);
-			this.panel1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).EndInit();
 			this.flowLayoutPanel2.ResumeLayout(false);
+			this.flowLayoutPanel3.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -564,16 +611,13 @@
 		private System.Windows.Forms.ToolStripButton toolStripButton1;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.OpenFileDialog ofdFile;
-		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.PictureBox pbxExample;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
 		private System.Windows.Forms.ComboBox cmbPreProcess;
 		private System.Windows.Forms.CheckBox chkToTiff;
-		private System.Windows.Forms.CheckBox chkDenoise;
 		private System.Windows.Forms.TrackBar trackBar1;
-		private System.Windows.Forms.Button button2;
-		private System.ComponentModel.BackgroundWorker bgwProcessImage;
+		private System.Windows.Forms.Button btnTextCleaner;
+		private System.ComponentModel.BackgroundWorker bgwProcess;
 		private System.Windows.Forms.Timer tmrClearBox;
 		private System.Windows.Forms.Timer tmrCheckMovement;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
@@ -596,5 +640,12 @@
 		private System.Windows.Forms.NumericUpDown nudY;
 		private System.Windows.Forms.NumericUpDown nudWidth;
 		private System.Windows.Forms.NumericUpDown nudHeight;
+		private System.Windows.Forms.PictureBox pbxExample;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
+		private System.Windows.Forms.Button btnRotateLeft;
+		private System.Windows.Forms.Button btnRotateRight;
+		private System.Windows.Forms.Button btnMakeBox;
+		private System.Windows.Forms.Button button4;
+		private System.Windows.Forms.Button btnReset;
 	}
 }

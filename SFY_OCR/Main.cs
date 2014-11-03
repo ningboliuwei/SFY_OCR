@@ -242,12 +242,17 @@ namespace SFY_OCR
 					return;
 				}
 
+
 				//获取当前图片路径
 				string imageFilePath = imageFilePaths[i];
 				//获取图片对应的结果文件的文件路径（默认在图片路径后系统自动加.txt)
 				string outputResultFilePath = outputDir + imageFilePath.Substring(imageFilePath.LastIndexOf("\\") + 1);
 
-				Common.InvokeOcrCommandLine(imageFilePath, outputResultFilePath, langType);
+				//Common.InvokeOcrCommandLine(new Dictionary<string, string>
+				//{
+				//	{"sourceImagePath", imageFilePath},
+				//	{"resultFilePath", outputResultFilePath}
+				//});
 
 				//报告进度
 				bgwImageRecognition.ReportProgress(beforeSpan + (i + 1)*(100 - beforeSpan - afterSpan)/imageFilePaths.Count);
