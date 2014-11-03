@@ -1,6 +1,6 @@
 ﻿namespace SFY_OCR
 {
-	partial class Main
+	partial class frmMain
 	{
 		/// <summary>
 		/// 必需的设计器变量。
@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -317,7 +317,7 @@
 			this.bgwImageRecognition.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgwImageRecognition_ProgressChanged);
 			this.bgwImageRecognition.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwImageRecognition_RunWorkerCompleted);
 			// 
-			// Main
+			// frmMain
 			// 
 			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -326,7 +326,7 @@
 			this.Controls.Add(this.menuStrip1);
 			this.DoubleBuffered = true;
 			this.MainMenuStrip = this.menuStrip1;
-			this.Name = "Main";
+			this.Name = "frmMain";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
 			this.Load += new System.EventHandler(this.Main_Load);

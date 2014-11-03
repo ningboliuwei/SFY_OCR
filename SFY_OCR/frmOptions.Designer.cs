@@ -1,6 +1,6 @@
 ﻿namespace SFY_OCR
 {
-	partial class Options
+	partial class frmOptions
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Options));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmOptions));
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.fbdChooseDir = new System.Windows.Forms.FolderBrowserDialog();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();

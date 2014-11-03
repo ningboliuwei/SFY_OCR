@@ -62,42 +62,51 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyAboutBox.cs">
+    <Compile Include="frmMyAboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MyAboutBox.Designer.cs">
-      <DependentUpon>MyAboutBox.cs</DependentUpon>
+    <Compile Include="frmMyAboutBox.Designer.cs">
+      <DependentUpon>frmMyAboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Main.cs">
+    <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Designer.cs">
-      <DependentUpon>Main.cs</DependentUpon>
+    <Compile Include="frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Options.cs">
+    <Compile Include="frmOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Options.Designer.cs">
-      <DependentUpon>Options.cs</DependentUpon>
+    <Compile Include="frmOptions.Designer.cs">
+      <DependentUpon>frmOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="frmProgressBar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmProgressBar.Designer.cs">
+      <DependentUpon>frmProgressBar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringResourceManager.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StringResourceManager.resx</DependentUpon>
     </Compile>
-    <Compile Include="TrainingTool.cs">
+    <Compile Include="frmTrainingTool.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TrainingTool.Designer.cs">
-      <DependentUpon>TrainingTool.cs</DependentUpon>
+    <Compile Include="frmTrainingTool.Designer.cs">
+      <DependentUpon>frmTrainingTool.cs</DependentUpon>
     </Compile>
     <Compile Include="Untilities\Box.cs" />
     <Compile Include="Untilities\BoxList.cs" />
     <Compile Include="Untilities\CommandLineProcess.cs" />
     <Compile Include="Untilities\FileNameInfo.cs" />
     <Compile Include="Untilities\ImageProcess.cs" />
+    <Compile Include="Untilities\LoadingCircle.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Untilities\MakeBoxTessProcess.cs" />
     <Compile Include="Untilities\OcrImage.cs" />
     <Compile Include="Untilities\ListItem.cs" />
@@ -107,19 +116,22 @@
     <Compile Include="Untilities\TessProcess.cs" />
     <Compile Include="Untilities\TextCleanerImageProcess.cs" />
     <Compile Include="Untilities\ToTiffImageProcess.cs" />
-    <EmbeddedResource Include="Main.zh-CN.resx">
-      <DependentUpon>Main.cs</DependentUpon>
+    <EmbeddedResource Include="frmMain.zh-CN.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MyAboutBox.resx">
-      <DependentUpon>MyAboutBox.cs</DependentUpon>
+    <EmbeddedResource Include="frmMyAboutBox.resx">
+      <DependentUpon>frmMyAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Main.resx">
-      <DependentUpon>Main.cs</DependentUpon>
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Options.resx">
-      <DependentUpon>Options.cs</DependentUpon>
+    <EmbeddedResource Include="frmOptions.resx">
+      <DependentUpon>frmOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmProgressBar.resx">
+      <DependentUpon>frmProgressBar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -135,8 +147,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>StringResourceManager.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="TrainingTool.resx">
-      <DependentUpon>TrainingTool.cs</DependentUpon>
+    <EmbeddedResource Include="frmTrainingTool.resx">
+      <DependentUpon>frmTrainingTool.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
@@ -162,8 +174,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icons\image.png" />
+    <Content Include="CNPOPSOFT.Controls.dll" />
+    <Content Include="Icons\image.png" />
     <Content Include="scanner.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dlls\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -55,13 +55,13 @@ namespace SFY_OCR.Untilities
 		///     在一个BitMap对象中画上矩形
 		/// </summary>
 		/// <param name="image">需要画矩形的BitMap对象（如PictureBox.Image）</param>
-		/// <param name="oldBitmap"></param>
+		/// <param name="bitmap"></param>
 		/// <returns>画毕的BitMap对象</returns>
-		public Bitmap GetNewBoxesImage(Bitmap oldBitmap)
+		public void DrawBoxesOnImage(Bitmap bitmap)
 		{
 			foreach (Box box in ImageBoxList.Boxes)
 			{
-				Graphics g = Graphics.FromImage(oldBitmap);
+				Graphics g = Graphics.FromImage(bitmap);
 				//若当前矩形框被选中，使用红色，否则使用蓝色
 				Color borderColor = box.Selected ? Color.Red : Color.Blue;
 				int borderWidth = box.Selected
@@ -100,7 +100,6 @@ namespace SFY_OCR.Untilities
 				//}
 				#endregion
 			}
-			return oldBitmap;
 		}
 
 		/// <summary>

@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace SFY_OCR
 {
-	partial class MyAboutBox : Form
+	partial class frmMyAboutBox : Form
 	{
-		public MyAboutBox()
+		public frmMyAboutBox()
 		{
 			InitializeComponent();
 			Text = String.Format("关于 {0}", AssemblyTitle);

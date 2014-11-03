@@ -12,13 +12,13 @@ using SFY_OCR.Properties;
 
 namespace SFY_OCR
 {
-	public partial class Main : Form
+	public partial class frmMain : Form
 	{
 		//用于保存所有选中的图片文件
 		private const string NO_LANGUAGE_DATA_COMBOBOX_TEXT = "无语言文件";
 		private readonly List<string> imageFilePaths = new List<string>();
 
-		public Main()
+		public frmMain()
 		{
 			InitializeComponent();
 		}
@@ -65,7 +65,7 @@ namespace SFY_OCR
 		private void 选项OToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			//打开选项对话框
-			var frmOptions = new Options();
+			var frmOptions = new frmOptions();
 
 			frmOptions.ShowDialog();
 		}
@@ -278,7 +278,7 @@ namespace SFY_OCR
 		private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			//显示“关于”对话框
-			var frmMyAboutBox = new MyAboutBox();
+			var frmMyAboutBox = new frmMyAboutBox();
 
 			frmMyAboutBox.ShowDialog();
 		}
@@ -392,7 +392,7 @@ namespace SFY_OCR
 		private void 训练TToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			//打开训练对话框
-			var frmTraining = new TrainingTool();
+			var frmTraining = new frmTrainingTool();
 
 			frmTraining.ShowDialog();
 		}

@@ -8,9 +8,9 @@ using SFY_OCR.Properties;
 
 namespace SFY_OCR
 {
-	public partial class Options : Form
+	public partial class frmOptions : Form
 	{
-		public Options()
+		public frmOptions()
 		{
 			InitializeComponent();
 		}

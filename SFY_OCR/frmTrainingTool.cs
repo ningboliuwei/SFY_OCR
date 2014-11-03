@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using SFY_OCR.Untilities;
 
@@ -15,7 +16,7 @@ using SFY_OCR.Untilities;
 
 namespace SFY_OCR
 {
-	public partial class TrainingTool : Form
+	public partial class frmTrainingTool : Form
 	{
 		//当前显示的图片OcrImage对象
 		//矩形结束点
@@ -41,7 +42,9 @@ namespace SFY_OCR
 
 		private AnchorPositionType anchorPosition;
 
-		public TrainingTool()
+		private frmProgressBar progressBar;
+
+		public frmTrainingTool()
 		{
 			InitializeComponent();
 		}
@@ -106,7 +109,7 @@ namespace SFY_OCR
 			if (File.Exists(_ocrImage.BoxFileInfo.FilePath))
 			{
 				_ocrImage.LoadFromBoxFile();
-				pbxExample.Image = _ocrImage.GetNewBoxesImage(pbxExample.Image as Bitmap);
+				_ocrImage.DrawBoxesOnImage(pbxExample.Image as Bitmap);
 				//GetNewBoxesImage();
 				BindBoxesInfoInGridView();
 			}
@@ -212,7 +215,7 @@ namespace SFY_OCR
 		//}
 
 
-		private void button2_Click(object sender, EventArgs e)
+		private void btnTextCleaner_Click(object sender, EventArgs e)
 		{
 			//进行文本降噪黑白高对比度操作
 			Dictionary<string, string> args = new Dictionary<string, string>
@@ -282,6 +285,7 @@ namespace SFY_OCR
 		/// <param name="e"></param>
 		private void bgwProcess_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
+			
 			//当背景线程处理完毕后，显示处理完的（临时）图像
 			//try
 			//{
@@ -296,7 +300,12 @@ namespace SFY_OCR
 			//{
 			//	throw new Exception(ex.Message);
 			//}
-
+			if (progressBar != null)
+			{
+				progressBar.pbMain.Value = 100;
+				Thread.Sleep(1000);
+				progressBar.Close();
+			}
 		}
 
 		private void pbxExample_MouseDown(object sender, MouseEventArgs e)
@@ -821,7 +830,8 @@ namespace SFY_OCR
 						box.Selected = !box.Selected;
 					}
 				}
-				GetNewBoxesImage();
+				//GetNewBoxesImage();
+				//pbxExample.Image = _ocrImage.DrawBoxesOnImage(pbxExample.Image as Bitmap);
 				ChangeBoxSelectionInImageBox();
 			}
 		}
@@ -851,7 +861,7 @@ namespace SFY_OCR
 		{
 			Bitmap bitmap = new Bitmap(_ocrImage.TempImageInfo.FilePath);
 			//将临时文件读取到内存中
-			_ocrImage.GetNewBoxesImage(bitmap);
+			_ocrImage.DrawBoxesOnImage(bitmap);
 			//将内存中的Bitmap（Box图层）绘制到PictureBox控件中
 			return bitmap;
 		}
@@ -1103,6 +1113,10 @@ namespace SFY_OCR
 
 		private void btnMakeBox_Click(object sender, EventArgs e)
 		{
+			progressBar = new frmProgressBar();
+			progressBar.Show();
+			
+			
 			//pbxExample.Image.Dispose();
 			////进行旋转操作
 			Dictionary<string, string> args = new Dictionary<string, string>
@@ -1122,7 +1136,8 @@ namespace SFY_OCR
 			}
 
 			_ocrImage.LoadFromBoxFile();
-			pbxExample.Image = _ocrImage.GetNewBoxesImage(pbxExample.Image as Bitmap);
+			_ocrImage.DrawBoxesOnImage(pbxExample.Image as Bitmap);
+			pbxExample.Refresh();
 
 			//GetNewBoxImageDelegate getNewBoxImageDelegate = new GetNewBoxImageDelegate(_ocrImage.GetNewBoxesImage);
 			//bgwProcess.RunWorkerAsync(new object[]{getNewBoxImageDelegate,new Bitmap(_ocrImage.TempImageInfo.FilePath)});

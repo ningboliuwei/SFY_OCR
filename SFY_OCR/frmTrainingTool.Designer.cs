@@ -1,6 +1,6 @@
 ﻿namespace SFY_OCR
 {
-	partial class TrainingTool
+	partial class frmTrainingTool
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TrainingTool));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTrainingTool));
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -243,7 +243,7 @@
 			this.btnTextCleaner.TabIndex = 4;
 			this.btnTextCleaner.Text = "降噪";
 			this.btnTextCleaner.UseVisualStyleBackColor = true;
-			this.btnTextCleaner.Click += new System.EventHandler(this.button2_Click);
+			this.btnTextCleaner.Click += new System.EventHandler(this.btnTextCleaner_Click);
 			// 
 			// btnSave
 			// 

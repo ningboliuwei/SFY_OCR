@@ -33,7 +33,7 @@ namespace SFY_OCR
 
 			#endregion
 
-			Application.Run(new Main());
+			Application.Run(new frmMain());
 		}
 	}
 }
