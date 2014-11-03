@@ -28,13 +28,23 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.pbMain = new System.Windows.Forms.ProgressBar();
 			this.SuspendLayout();
+			// 
+			// pbMain
+			// 
+			this.pbMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.pbMain.Location = new System.Drawing.Point(0, 0);
+			this.pbMain.Name = "pbMain";
+			this.pbMain.Size = new System.Drawing.Size(284, 31);
+			this.pbMain.TabIndex = 0;
 			// 
 			// frmProgressBar
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(284, 31);
+			this.Controls.Add(this.pbMain);
 			this.Name = "frmProgressBar";
 			this.Text = "ProgressBar";
 			this.Load += new System.EventHandler(this.ProgressBar_Load);
@@ -43,6 +53,9 @@
 		}
 
 		#endregion
+
+		public System.Windows.Forms.ProgressBar pbMain;
+
 
 
 	}

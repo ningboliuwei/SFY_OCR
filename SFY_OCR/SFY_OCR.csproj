@@ -104,9 +104,6 @@
     <Compile Include="Untilities\CommandLineProcess.cs" />
     <Compile Include="Untilities\FileNameInfo.cs" />
     <Compile Include="Untilities\ImageProcess.cs" />
-    <Compile Include="Untilities\LoadingCircle.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Untilities\MakeBoxTessProcess.cs" />
     <Compile Include="Untilities\OcrImage.cs" />
     <Compile Include="Untilities\ListItem.cs" />

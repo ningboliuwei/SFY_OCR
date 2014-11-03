@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using SFY_OCR.Properties;
@@ -50,6 +51,27 @@ namespace SFY_OCR.Untilities
 		/// </summary>
 		public FileNameInfo BoxFileInfo { get; private set; }
 
+		#region 与灰度无法画矩形有关
+		private static PixelFormat[] indexedPixelFormats = { PixelFormat.Undefined, PixelFormat.DontCare,
+PixelFormat.Format16bppArgb1555, PixelFormat.Format1bppIndexed, PixelFormat.Format4bppIndexed,
+PixelFormat.Format8bppIndexed
+    };
+		/// <summary>
+		/// 判断图片的PixelFormat 是否在 引发异常的 PixelFormat 之中
+		/// 无法从带有索引像素格式的图像创建graphics对象
+		/// </summary>
+		/// <param name="imgPixelFormat">原图片的PixelFormat</param>
+		/// <returns></returns>
+		private static bool IsPixelFormatIndexed(PixelFormat imgPixelFormat)
+		{
+			foreach (PixelFormat pf in indexedPixelFormats)
+			{
+				if (pf.Equals(imgPixelFormat)) return true;
+			}
+
+			return false;
+		}
+		#endregion
 
 		/// <summary>
 		///     在一个BitMap对象中画上矩形
@@ -72,8 +94,6 @@ namespace SFY_OCR.Untilities
 				int offset = borderWidth;
 				g.DrawRectangle(new Pen(borderColor, offset), box.X,
 					box.Y, box.Width, box.Height);
-
-
 				#region 画被选中 Box 的锚点
 				//if (box.Selected)
 				//{

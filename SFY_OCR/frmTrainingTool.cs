@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -110,6 +111,7 @@ namespace SFY_OCR
 			{
 				_ocrImage.LoadFromBoxFile();
 				_ocrImage.DrawBoxesOnImage(pbxExample.Image as Bitmap);
+				pbxExample.Refresh();
 				//GetNewBoxesImage();
 				BindBoxesInfoInGridView();
 			}
@@ -217,6 +219,7 @@ namespace SFY_OCR
 
 		private void btnTextCleaner_Click(object sender, EventArgs e)
 		{
+			pbxExample.Image.Dispose();
 			//进行文本降噪黑白高对比度操作
 			Dictionary<string, string> args = new Dictionary<string, string>
 			{
@@ -232,8 +235,17 @@ namespace SFY_OCR
 			//调用指向TextCleaner
 			ImageProcess imageProcess = new TextCleanerImageProcess(args);
 			bgwProcess.RunWorkerAsync(imageProcess);
+
+			while (bgwProcess.IsBusy)
+			{
+				Application.DoEvents();
+			}
+
+			pbxExample.Image = new Bitmap(_ocrImage.TempImageInfo.FilePath);
+			pbxExample.Refresh();
 		}
 
+	
 
 		private void trackBar1_Scroll(object sender, EventArgs e)
 		{
@@ -285,7 +297,7 @@ namespace SFY_OCR
 		/// <param name="e"></param>
 		private void bgwProcess_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			
+
 			//当背景线程处理完毕后，显示处理完的（临时）图像
 			//try
 			//{
@@ -1115,8 +1127,8 @@ namespace SFY_OCR
 		{
 			progressBar = new frmProgressBar();
 			progressBar.Show();
-			
-			
+
+
 			//pbxExample.Image.Dispose();
 			////进行旋转操作
 			Dictionary<string, string> args = new Dictionary<string, string>
@@ -1136,7 +1148,7 @@ namespace SFY_OCR
 			}
 
 			_ocrImage.LoadFromBoxFile();
-			_ocrImage.DrawBoxesOnImage(pbxExample.Image as Bitmap);
+			//_ocrImage.DrawBoxesOnImage(pbxExample.Image as Bitmap);
 			pbxExample.Refresh();
 
 			//GetNewBoxImageDelegate getNewBoxImageDelegate = new GetNewBoxImageDelegate(_ocrImage.GetNewBoxesImage);
@@ -1198,7 +1210,7 @@ namespace SFY_OCR
 
 		private void btnRotateRight_Click(object sender, EventArgs e)
 		{
-			
+
 			//进行顺时针旋转90°操作
 			pbxExample.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
 			pbxExample.Refresh();

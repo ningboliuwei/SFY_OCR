@@ -22,7 +22,7 @@ namespace SFY_OCR
 
 		private void ProgressBar_Load(object sender, EventArgs e)
 		{
-
+			
 		}
 	}
 }
