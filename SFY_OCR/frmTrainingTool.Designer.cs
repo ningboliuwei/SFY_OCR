@@ -74,6 +74,7 @@
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcess = new System.ComponentModel.BackgroundWorker();
 			this.tmrClearBox = new System.Windows.Forms.Timer(this.components);
+			this.button1 = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -195,6 +196,7 @@
 			this.tableLayoutPanel3.Controls.Add(this.cmbPreProcess, 0, 0);
 			this.tableLayoutPanel3.Controls.Add(this.chkToTiff, 0, 1);
 			this.tableLayoutPanel3.Controls.Add(this.trackBar1, 0, 4);
+			this.tableLayoutPanel3.Controls.Add(this.button1, 0, 2);
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 33);
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -505,7 +507,7 @@
 			this.btnMakeBox.Name = "btnMakeBox";
 			this.btnMakeBox.Size = new System.Drawing.Size(75, 23);
 			this.btnMakeBox.TabIndex = 2;
-			this.btnMakeBox.Text = "自动识别";
+			this.btnMakeBox.Text = "重新识别";
 			this.btnMakeBox.UseVisualStyleBackColor = true;
 			this.btnMakeBox.Click += new System.EventHandler(this.btnMakeBox_Click);
 			// 
@@ -558,6 +560,16 @@
 			// 
 			this.tmrClearBox.Tick += new System.EventHandler(this.tmrClearBox_Tick);
 			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(3, 84);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(75, 23);
+			this.button1.TabIndex = 4;
+			this.button1.Text = "button1";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click_1);
+			// 
 			// frmTrainingTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -569,6 +581,7 @@
 			this.Text = "训练工具";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TrainingTool_FormClosing);
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmTrainingTool_FormClosed);
 			this.Load += new System.EventHandler(this.TrainingTool_Load);
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
@@ -646,5 +659,6 @@
 		private System.Windows.Forms.Button btnConvertToTiff;
 		private System.Windows.Forms.Button btnReset;
 		private System.Windows.Forms.PictureBox pbxExample;
+		private System.Windows.Forms.Button button1;
 	}
 }

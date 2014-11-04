@@ -95,7 +95,7 @@ namespace SFY_OCR
 				File.Copy(sourceImage.OriginalImageInfo.FilePath, sourceImage.TempImageInfo.FilePath, true);
 
 				//将要识别的图片作为背景显示到图片框中
-				background = new Bitmap(_ocrImage.TempImageInfo.FilePath);
+				background = Image.FromFile(_ocrImage.TempImageInfo.FilePath) as Bitmap;
 
 				
 			}
@@ -106,6 +106,7 @@ namespace SFY_OCR
 
 			pbxExample.Width = background.Width;
 			pbxExample.Height = background.Height;
+
 			pbxExample.BackgroundImage = background;
 			//建立一个透明的前景图片，用于显示 Box
 			pbxExample.Image = new Bitmap(background.Width, background.Height);
@@ -114,12 +115,21 @@ namespace SFY_OCR
 			if (File.Exists(_ocrImage.BoxFileInfo.FilePath))
 			{
 				//显示 Box
-				_ocrImage.LoadFromBoxFile();
-				pbxExample.Image = _ocrImage.GetBoxesImage(pbxExample.Image as Bitmap);
-				pbxExample.Update();
+				try
+				{
+					_ocrImage.LoadFromBoxFile();
+					pbxExample.Image = _ocrImage.GetBoxesImage(pbxExample.Image as Bitmap);
+					pbxExample.Update();
 
-				//在数据网格中显示 Box 信息
-				BindBoxesInfoInGridView();
+					//在数据网格中显示 Box 信息
+					BindBoxesInfoInGridView();
+
+				}
+				catch (Exception ex)
+				{
+					throw new Exception(ex.Message);
+				}
+			
 			}
 		}
 
@@ -937,7 +947,7 @@ namespace SFY_OCR
 				currentBox.Selected = true;
 			}
 
-			RefreshBoxInfoInHeader();
+			//RefreshBoxInfoInHeader();
 		}
 
 		private void RefreshBoxInfoInHeader()
@@ -1145,7 +1155,11 @@ namespace SFY_OCR
 
 			//生成 BOX 文件
 			TessProcess makeBoxProcess = new MakeBoxTessProcess(args);
-			bgwProcess.RunWorkerAsync(makeBoxProcess);
+
+			if (!bgwProcess.IsBusy)
+			{
+				bgwProcess.RunWorkerAsync(makeBoxProcess);
+			}
 
 			//等待处理完毕
 			while (bgwProcess.IsBusy)
@@ -1160,6 +1174,9 @@ namespace SFY_OCR
 			//pbxExample.Image = _ocrImage.GetBoxesImage(pbxExample.BackgroundImage as Bitmap);
 			pbxExample.Image = _ocrImage.GetBoxesImage(pbxExample.Image as Bitmap);
 			pbxExample.Update();
+
+			//重新显示
+			BindBoxesInfoInGridView();
 
 			//GetNewBoxImageDelegate getNewBoxImageDelegate = new GetNewBoxImageDelegate(_ocrImage.GetNewBoxesImage);
 			//bgwProcess.RunWorkerAsync(new object[]{getNewBoxImageDelegate,new Bitmap(_ocrImage.TempImageInfo.FilePath)});
@@ -1178,35 +1195,38 @@ namespace SFY_OCR
 
 		private void btnRotateLeft_Click(object sender, EventArgs e)
 		{
-			#region 用ImageMagick处理旋转
-
-			//pbxExample.Image.Dispose();
-			//////进行旋转操作
-			//Dictionary<string, string> args = new Dictionary<string, string>
-			//{
-			//	{"degree", 270.ToString()},
-			//	{"sourceImagePath", _ocrImage.TempImageInfo.FilePath},
-			//	{"destImagePath", _ocrImage.TempImageInfo.FilePath},
-			//};
-			////调用指向TextCleaner
-			//ImageProcess imageProcess = new RotateImageProcess(args);
-			//bgwProcess.RunWorkerAsync(imageProcess);
-
-			#endregion
-
 			//进行逆时针旋转90°操作
+			//先不旋转图片，因为会把图片文件方向也改变
 			RotateImage(RotateFlipType.Rotate270FlipNone);
+			_ocrImage.ChangeBoxCoordinates(RotateFlipType.Rotate270FlipNone);
+			
+			BindBoxesInfoInGridView();
+			
 		}
 
 		private void RotateImage(RotateFlipType rotateFilpType)
 		{
+			int previousHeight = pbxExample.BackgroundImage.Height;
+			int previousWidth = pbxExample.BackgroundImage.Width;
+
 			pbxExample.BackgroundImage.RotateFlip(rotateFilpType);
 			pbxExample.Image.RotateFlip(rotateFilpType);
-			pbxExample.Refresh();
 
+			//旋转时，图片框大小也要变化（否则会造成背景图片不对）
+			pbxExample.Height = previousWidth;
+			pbxExample.Width = previousHeight;
+
+			pbxExample.Refresh();
+			
 			try
 			{
-				pbxExample.BackgroundImage.Save(_ocrImage.OriginalImageInfo.FilePath);
+				//保存旋转后的临时文件
+				pbxExample.BackgroundImage.Save(_ocrImage.TempImageInfo.FilePath);
+
+				//将原文件也旋转后保存
+				Bitmap originalBitmap = _ocrImage.GetOriginalImage() as Bitmap;
+				originalBitmap.RotateFlip(rotateFilpType);
+				originalBitmap.Save(_ocrImage.OriginalImageInfo.FilePath);
 			}
 			catch (Exception ex)
 			{
@@ -1229,6 +1249,10 @@ namespace SFY_OCR
 		private void btnRotateRight_Click(object sender, EventArgs e)
 		{
 			RotateImage(RotateFlipType.Rotate90FlipNone);
+			_ocrImage.ChangeBoxCoordinates(RotateFlipType.Rotate90FlipNone);
+			
+			BindBoxesInfoInGridView();
+			
 		}
 
 		private void dgvBoxes_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -1257,6 +1281,8 @@ namespace SFY_OCR
 			//打开样本图片
 			if (ofdFile.ShowDialog() == DialogResult.OK)
 			{
+				DisposeAllResources();
+
 				_ocrImage = new OcrImage(ofdFile.FileName);
 				OpenImage(_ocrImage);
 				dgvBoxes.Focus();
@@ -1277,6 +1303,40 @@ namespace SFY_OCR
 			BottomLeft,
 			BottomMiddle,
 			BottomRight
+		}
+
+		private void frmTrainingTool_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			DisposeAllResources();
+		}
+
+		/// <summary>
+		/// 释放所有占用的资源
+		/// </summary>
+		private void DisposeAllResources()
+		{
+			if (pbxExample.Image != null)
+			{
+				pbxExample.Image.Dispose();
+			}
+
+			if (pbxExample.BackgroundImage != null)
+			{
+				pbxExample.BackgroundImage.Dispose();
+			}
+		}
+
+		
+
+		private void button1_Click_1(object sender, EventArgs e)
+		{
+			foreach (DataGridViewRow row in dgvBoxes.Rows)
+			{
+				foreach (DataGridViewCell cell in row.Cells)
+				{
+					cell.Value = "1";
+				}
+			}
 		}
 	}
 }

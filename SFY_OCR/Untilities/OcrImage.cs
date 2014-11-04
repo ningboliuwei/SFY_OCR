@@ -50,27 +50,6 @@ namespace SFY_OCR.Untilities
 		/// </summary>
 		public FileNameInfo BoxFileInfo { get; private set; }
 
-		#region 与灰度无法画矩形有关
-		private static PixelFormat[] indexedPixelFormats = { PixelFormat.Undefined, PixelFormat.DontCare,
-PixelFormat.Format16bppArgb1555, PixelFormat.Format1bppIndexed, PixelFormat.Format4bppIndexed,
-PixelFormat.Format8bppIndexed
-	};
-		/// <summary>
-		/// 判断图片的PixelFormat 是否在 引发异常的 PixelFormat 之中
-		/// 无法从带有索引像素格式的图像创建graphics对象
-		/// </summary>
-		/// <param name="imgPixelFormat">原图片的PixelFormat</param>
-		/// <returns></returns>
-		private static bool IsPixelFormatIndexed(PixelFormat imgPixelFormat)
-		{
-			foreach (PixelFormat pf in indexedPixelFormats)
-			{
-				if (pf.Equals(imgPixelFormat)) return true;
-			}
-
-			return false;
-		}
-		#endregion
 
 		/// <summary>
 		///     在一个BitMap对象中画上矩形
@@ -94,7 +73,9 @@ PixelFormat.Format8bppIndexed
 				int offset = borderWidth;
 				g.DrawRectangle(new Pen(borderColor, offset), box.X,
 					box.Y, box.Width, box.Height);
+
 				#region 画被选中 Box 的锚点
+
 				//if (box.Selected)
 				//{
 				//	int sideLength = borderWidth * 3;
@@ -118,6 +99,7 @@ PixelFormat.Format8bppIndexed
 				//	g.FillRectangle(solidBrush, box.X + box.Width - offset, box.Y + box.Height - offset, sideLength, sideLength);
 
 				//}
+
 				#endregion
 			}
 			return bitmap;
@@ -133,14 +115,33 @@ PixelFormat.Format8bppIndexed
 			ImageBoxList.Boxes.Clear();
 			StreamReader streamReader = null;
 
+			string fileContent;
+
 			try
 			{
 				streamReader = new StreamReader(BoxFileInfo.FilePath, Encoding.UTF8);
-				string fileContent = streamReader.ReadToEnd().Trim();
+				fileContent = streamReader.ReadToEnd().Trim();
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+			finally
+			{
+				if (streamReader != null)
+				{
+					streamReader.Close();
+				}
+			}
+
+			
+
+			if (fileContent.Length != 0)
+			{
 				string[] lines = fileContent.Split('\n');
 				//一次读取Box文件中的一行
 				//注意，这里读取的Y坐标是BOX文件Y坐标
-				int imageHeight = GetImageSize(TempImageInfo.FilePath).Height;
+				int imageHeight = GetOriginalImage().Height;
 				int index = 1;
 				foreach (string currentLine in lines)
 				{
@@ -154,28 +155,49 @@ PixelFormat.Format8bppIndexed
 						Convert.ToInt32(items[4]) - Convert.ToInt32(items[2])));
 					index++;
 				}
+			}
+			else
+			{
+				throw new Exception("Box文件损坏，请重新识别。");
+			}
+		}
 
+		/// <summary>
+		///     获取原图像
+		/// </summary>
+		/// <returns></returns>
+		public Bitmap GetOriginalImage()
+		{
+			return GetImage(OriginalImageInfo.FilePath);
+		}
+
+		/// <summary>
+		///     获取临时图像
+		/// </summary>
+		/// <returns></returns>
+		public Bitmap GetTempImage()
+		{
+			return GetImage(TempImageInfo.FilePath);
+		}
+
+		/// <summary>
+		///     获取指定路径的 Bitmap 对象
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <returns></returns>
+		private Bitmap GetImage(string filePath)
+		{
+			Bitmap bitmap = null;
+
+			try
+			{
+				bitmap = Image.FromFile(filePath) as Bitmap;
 			}
 			catch (Exception ex)
 			{
 				throw new Exception(ex.Message);
 			}
-			finally
-			{
-				if (streamReader != null)
-				{
-					streamReader.Close();
-				}
-			}
-		}
-
-		public Size GetImageSize(string filePath)
-		{
-			using (Bitmap bitmap = new Bitmap(TempImageInfo.FilePath))
-			{
-				Size imageSize = bitmap.Size;
-				return imageSize;
-			}
+			return bitmap;
 		}
 
 		/// <summary>
@@ -190,9 +212,9 @@ PixelFormat.Format8bppIndexed
 			try
 			{
 				streamWriter = new StreamWriter(BoxFileInfo.FilePath, false, Encoding.UTF8);
+				int imageHeight = GetOriginalImage().Height;
 				foreach (Box box in ImageBoxList.Boxes)
 				{
-					int imageHeight = GetImageSize(TempImageInfo.FilePath).Height;
 					//保存到文件中：字符，BOX左边界离图像左边界距离，BOX下边界离图像下边界距离，BOX右边界离图像左边界距离，BOX上边界离图像下边界距离
 					string[] items =
 					{
@@ -232,5 +254,57 @@ PixelFormat.Format8bppIndexed
 				//});
 			}
 		}
+
+		/// <summary>
+		/// 旋转时改变所有 Box 的坐标
+		/// </summary>
+		/// <param name="rotateFlipType"></param>
+		public void ChangeBoxCoordinates(RotateFlipType rotateFlipType)
+		{
+			//此时文件已经是旋转后的文件，所以宽度和高度需要对调才符合旋转之前的状态
+			Size rotatedSize = new Size(GetOriginalImage().Height, GetOriginalImage().Width);
+
+			switch (rotateFlipType)
+			{
+				case RotateFlipType.Rotate270FlipNone:
+					foreach (Box box in ImageBoxList.Boxes)
+					{
+						//顺序不能搞错
+						//左转90度以后，原先的 Y 变成旋转后的 X
+						//原先图片宽度 - Box 宽度 - X 变成旋转后的 Y
+						int originalY = box.Y;
+						box.Y = rotatedSize.Width - box.Width - box.X;
+						box.X = originalY;
+
+						//左转90度以后，交换 Box 的宽与高
+						int originalHeight = box.Height;
+						box.Height = box.Width;
+						box.Width = originalHeight;
+					}
+					break;
+				case RotateFlipType.Rotate90FlipNone:
+					//右转90度以后，原先的 X 变成新的 Y
+					foreach (Box box in ImageBoxList.Boxes)
+					{
+						//顺序不能搞错
+						//左转90度以后，原先的 Y 变成旋转后的 X
+						//原先图片宽度 - Box 宽度 - X 变成旋转后的 Y
+						int originalX = box.X;
+						box.X = rotatedSize.Height - box.Height - box.Y;
+						box.Y = originalX;
+
+						//转90度以后，交换 Box 的宽与高
+						int originalHeight = box.Height;
+						box.Height = box.Width;
+						box.Width = originalHeight;
+					}
+					break;
+				default:
+					break;
+			}
+
+			SaveToBoxFile();
+		}
+
 	}
 }
