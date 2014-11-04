@@ -1,7 +1,6 @@
 ﻿#region
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -55,7 +54,7 @@ namespace SFY_OCR.Untilities
 		private static PixelFormat[] indexedPixelFormats = { PixelFormat.Undefined, PixelFormat.DontCare,
 PixelFormat.Format16bppArgb1555, PixelFormat.Format1bppIndexed, PixelFormat.Format4bppIndexed,
 PixelFormat.Format8bppIndexed
-    };
+	};
 		/// <summary>
 		/// 判断图片的PixelFormat 是否在 引发异常的 PixelFormat 之中
 		/// 无法从带有索引像素格式的图像创建graphics对象
@@ -79,11 +78,12 @@ PixelFormat.Format8bppIndexed
 		/// <param name="image">需要画矩形的BitMap对象（如PictureBox.Image）</param>
 		/// <param name="bitmap"></param>
 		/// <returns>画毕的BitMap对象</returns>
-		public void DrawBoxesOnImage(Bitmap bitmap)
+		public Bitmap GetBoxesImage(Bitmap bgBitmap)
 		{
+			Bitmap bitmap = new Bitmap(bgBitmap.Width, bgBitmap.Height);
+			Graphics g = Graphics.FromImage(bitmap);
 			foreach (Box box in ImageBoxList.Boxes)
 			{
-				Graphics g = Graphics.FromImage(bitmap);
 				//若当前矩形框被选中，使用红色，否则使用蓝色
 				Color borderColor = box.Selected ? Color.Red : Color.Blue;
 				int borderWidth = box.Selected
@@ -120,6 +120,7 @@ PixelFormat.Format8bppIndexed
 				//}
 				#endregion
 			}
+			return bitmap;
 		}
 
 		/// <summary>

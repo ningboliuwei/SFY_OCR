@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -21,12 +20,22 @@ namespace SFY_OCR
 	{
 		//当前显示的图片OcrImage对象
 		//矩形结束点
-		private Point _boxEndPoint;
+		//private Point _currentPoint;
 		//画矩形的状态
+		public delegate Bitmap GetNewBoxImageDelegate(Bitmap bitmap);
+
+		public enum MouseMoveState
+		{
+			DoNothing,
+			ResizingBox,
+			DrawingBox,
+			MovingBox
+		}
+
 		private Point _boxLeftTopPoint;
-		private Point _boxStartPoint;
 		//矩形图层
 		private Bitmap _boxesImage;
+		private MouseMoveState _currentMouseMoveState = MouseMoveState.DoNothing;
 		private Point _currentPoint;
 		private Cursor _cursor;
 		private bool _isDrawingBox;
@@ -39,11 +48,14 @@ namespace SFY_OCR
 		private OcrImage _ocrImage;
 		//之前的图层（用于擦除矩形）
 		private Bitmap _previousImage;
+		private Point _startPoint;
 		//按下鼠标左键之前的光标形状
 
 		private AnchorPositionType anchorPosition;
+		private Bitmap bitmap;
 
 		private frmProgressBar progressBar;
+
 
 		public frmTrainingTool()
 		{
@@ -69,22 +81,6 @@ namespace SFY_OCR
 			}
 		}
 
-		private void toolStripButton1_Click(object sender, EventArgs e)
-		{
-			//当要打开图片时，设置OpenFileDialog的filter属性
-			ofdFile.Filter = StringResourceManager.OpenImageFilterText;
-
-			//打开样本图片
-			if (ofdFile.ShowDialog() == DialogResult.OK)
-			{
-				_ocrImage = new OcrImage(ofdFile.FileName);
-				OpenImage(_ocrImage);
-				dgvBoxes.Focus();
-				//RefreshBoxesInPictureBox();
-				//RefreshBoxesInfoInGridView();
-			}
-		}
-
 
 		/// <summary>
 		///     打开样本图片，自动复制一份到输出目录，并将该副本显示在文本框中。
@@ -93,30 +89,39 @@ namespace SFY_OCR
 		private void OpenImage(OcrImage sourceImage)
 		{
 			//将原本复制一份副本到输出目录
-
+			Bitmap background;
 			try
 			{
 				File.Copy(sourceImage.OriginalImageInfo.FilePath, sourceImage.TempImageInfo.FilePath, true);
 
-				//pbxExample.Image.Dispose();
-				pbxExample.Image = new Bitmap(_ocrImage.TempImageInfo.FilePath);
+				//将要识别的图片作为背景显示到图片框中
+				background = new Bitmap(_ocrImage.TempImageInfo.FilePath);
+
+				
 			}
 			catch (Exception ex)
 			{
 				throw new Exception(ex.Message);
 			}
 
+			pbxExample.Width = background.Width;
+			pbxExample.Height = background.Height;
+			pbxExample.BackgroundImage = background;
+			//建立一个透明的前景图片，用于显示 Box
+			pbxExample.Image = new Bitmap(background.Width, background.Height);
+
 			//若box存在，则加载对应的 box 文件
 			if (File.Exists(_ocrImage.BoxFileInfo.FilePath))
 			{
+				//显示 Box
 				_ocrImage.LoadFromBoxFile();
-				_ocrImage.DrawBoxesOnImage(pbxExample.Image as Bitmap);
-				pbxExample.Refresh();
-				//GetNewBoxesImage();
+				pbxExample.Image = _ocrImage.GetBoxesImage(pbxExample.Image as Bitmap);
+				pbxExample.Update();
+
+				//在数据网格中显示 Box 信息
 				BindBoxesInfoInGridView();
 			}
 		}
-
 
 
 		/// <summary>
@@ -182,9 +187,9 @@ namespace SFY_OCR
 			cmbPreProcess.SelectedIndex = 0;
 
 			//双缓存，防绘图闪烁
-			SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-			SetStyle(ControlStyles.UserPaint, true);
-			SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+			//SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+			//SetStyle(ControlStyles.UserPaint, true);
+			//SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 
 			//设置选择模式为全行
 			dgvBoxes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -199,7 +204,6 @@ namespace SFY_OCR
 			nudWidth.Maximum = int.MaxValue;
 			nudHeight.Maximum = int.MaxValue;
 		}
-
 
 
 		//private void ConvertToGrayColorSpace(string sourceImagePath, string resultImagePath)
@@ -241,11 +245,11 @@ namespace SFY_OCR
 				Application.DoEvents();
 			}
 
-			pbxExample.Image = new Bitmap(_ocrImage.TempImageInfo.FilePath);
+			pbxExample.BackgroundImage = new Bitmap(_ocrImage.TempImageInfo.FilePath);
+			pbxExample.Image = _ocrImage.GetBoxesImage(pbxExample.BackgroundImage as Bitmap);
 			pbxExample.Refresh();
 		}
 
-	
 
 		private void trackBar1_Scroll(object sender, EventArgs e)
 		{
@@ -265,15 +269,11 @@ namespace SFY_OCR
 		/// <param name="e"></param>
 		private void bgwProcess_DoWork(object sender, DoWorkEventArgs e)
 		{
-
-
 			if (e.Argument is CommandLineProcess)
 			{
 				//拆箱，还原出delegate和hashtable形式的参数列表
 				(e.Argument as CommandLineProcess).Process();
 			}
-
-
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -297,7 +297,6 @@ namespace SFY_OCR
 		/// <param name="e"></param>
 		private void bgwProcess_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-
 			//当背景线程处理完毕后，显示处理完的（临时）图像
 			//try
 			//{
@@ -328,10 +327,12 @@ namespace SFY_OCR
 			//	_isDrawingBox = true;
 			//}
 
+
 			if (e.Button == MouseButtons.Left)
 			{
-				_boxStartPoint = new Point(e.X, e.Y);
-				_boxEndPoint = new Point(e.X, e.Y);
+				Point currentPoint = new Point();
+
+				_startPoint = new Point(e.X, e.Y);
 
 				if (anchorPosition == AnchorPositionType.MiddleMiddle)
 				{
@@ -339,7 +340,9 @@ namespace SFY_OCR
 				}
 				else if (anchorPosition == AnchorPositionType.None)
 				{
-					_isDrawingBox = true;
+					//切换到画 Box 模式
+					_currentMouseMoveState = MouseMoveState.DrawingBox;
+					//bitmap = pbxExample.Image.Clone() as Bitmap;
 				}
 				else
 				{
@@ -349,7 +352,6 @@ namespace SFY_OCR
 			}
 		}
 
-
 		/// <summary>
 		///     在图片上绘制用于识别的矩形
 		/// </summary>
@@ -357,79 +359,82 @@ namespace SFY_OCR
 		/// <param name="e"></param>
 		private void pbxExample_MouseMove(object sender, MouseEventArgs e)
 		{
-			//不处于拖动 Box 大小情况下才改变光标
-			if (!_isSizingBox && _ocrImage.ImageBoxList.SelectedBoxes.Count == 1)
+			Point currentPoint = new Point(e.X, e.Y);
+
+			////不处于拖动 Box 大小情况下才改变光标
+			//if (!_isSizingBox && _ocrImage.ImageBoxList.SelectedBoxes.Count == 1)
+			//{
+			//	ChangeBoxCursor(e.X, e.Y);
+			//}
+			////FIXME 多Box被选中情况下
+
+			//Box box;
+
+			//if (_ocrImage.ImageBoxList.SelectedBoxes.Count >= 1)
+			//{
+			//	box = _ocrImage.ImageBoxList.SelectedBoxes[0];
+
+
+			//	//处于拖动状态
+			//	if (_isMovingBox)
+			//	{
+			//		Pen dashPen = new Pen(Color.DarkRed, 1);
+			//		dashPen.DashStyle = DashStyle.Dash;
+			//		pbxExample.Invalidate();
+			//		pbxExample.CreateGraphics()
+			//			.DrawRectangle(dashPen, box.X + (e.X - _startPoint.X), box.Y + (e.Y - _startPoint.Y), box.Width, box.Height);
+			//	}
+			//}
+
+			if (_currentMouseMoveState == MouseMoveState.DrawingBox)
 			{
-				ChangeBoxCursor(e.X, e.Y);
-			}
-			//FIXME 多Box被选中情况下
+				//pbxExample.Refresh();
+				//pbxExample.Image = bitmap;
 
-			Box box;
+				Pen pen = new Pen(new SolidBrush(Color.Red));
+				pen.Width = 1;
+				pen.DashStyle = DashStyle.Dash;
 
-			if (_ocrImage.ImageBoxList.SelectedBoxes.Count >= 1)
-			{
-				box = _ocrImage.ImageBoxList.SelectedBoxes[0];
+				Point boxLeftTopPoint = new Point();
 
-
-				//处于拖动状态
-				if (_isMovingBox)
+				//判断不同的拖动方向，并计算画 box 的起始点
+				if (currentPoint.X > _startPoint.X)
 				{
-					Pen dashPen = new Pen(Color.DarkRed, 1);
-					dashPen.DashStyle = DashStyle.Dash;
-					pbxExample.Invalidate();
-					pbxExample.CreateGraphics()
-						.DrawRectangle(dashPen, box.X + (e.X - _boxStartPoint.X), box.Y + (e.Y - _boxStartPoint.Y), box.Width, box.Height);
-				}
-			}
-
-			if (_isDrawingBox)
-			{
-				Pen dashPen = new Pen(Color.DarkRed, 1);
-				dashPen.DashStyle = DashStyle.Dash;
-				pbxExample.Invalidate();
-				//pbxExample.CreateGraphics().DrawRectangle(dashPen, _boxStartPoint.X, _boxStartPoint.Y, _boxEndPoint.X - _boxStartPoint.X, _boxEndPoint.X - _boxStartPoint.Y);
-
-
-				//得到拖动结束点坐标
-				_boxEndPoint.X = e.X;
-				_boxEndPoint.Y = e.Y;
-
-				_boxLeftTopPoint = new Point();
-
-				//判断不同的拖动方向，并计算画 box 的范围
-				if (_boxEndPoint.X > _boxStartPoint.X)
-				{
-					_boxLeftTopPoint.X = _boxStartPoint.X;
+					boxLeftTopPoint.X = _startPoint.X;
 				}
 				else
 				{
-					_boxLeftTopPoint.X = _boxEndPoint.X;
+					boxLeftTopPoint.X = currentPoint.X;
 				}
 
-				if (_boxEndPoint.Y > _boxStartPoint.Y)
+				if (currentPoint.Y > _startPoint.Y)
 				{
-					_boxLeftTopPoint.Y = _boxStartPoint.Y;
+					boxLeftTopPoint.Y = _startPoint.Y;
 				}
 				else
 				{
-					_boxLeftTopPoint.Y = _boxEndPoint.Y;
+					boxLeftTopPoint.Y = currentPoint.Y;
 				}
 
-				Graphics g = pbxExample.CreateGraphics();
-				//只有在绘图且移动情况下才画新的矩形
-				//_boxesImage = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
-				//g = Graphics.FromImage(_boxesImage);
-
-				//g.SmoothingMode = SmoothingMode.HighSpeed;
+				Bitmap buffer = _ocrImage.GetBoxesImage(pbxExample.Image as Bitmap);
+				Graphics g = Graphics.FromImage(buffer);
 
 				g.DrawRectangle(
-					dashPen,
-					_boxLeftTopPoint.X,
-					_boxLeftTopPoint.Y,
-					Math.Abs(_boxEndPoint.X - _boxStartPoint.X),
-					Math.Abs(_boxEndPoint.Y - _boxStartPoint.Y));
+					pen,
+					boxLeftTopPoint.X,
+					boxLeftTopPoint.Y,
+					Math.Abs(currentPoint.X - _startPoint.X),
+					Math.Abs(currentPoint.Y - _startPoint.Y));
+				pbxExample.Image = buffer;
+				pbxExample.Update();
 			}
 
+			//Graphics g = pbxExample.CreateGraphics();
+			//g.SmoothingMode = SmoothingMode.HighSpeed;
+
+
+			//pbxExample.Invalidate();
+			//pbxExample.Refresh();
 			//TOFIX
 			//if (e.Button == MouseButtons.Left)
 			//{
@@ -611,6 +616,8 @@ namespace SFY_OCR
 		{
 			if (e.Button == MouseButtons.Left)
 			{
+				_currentMouseMoveState = MouseMoveState.DoNothing;
+
 				//Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
 				//_boxEndPoint = new Point(e.X, e.Y);
 
@@ -764,7 +771,6 @@ namespace SFY_OCR
 			dgvBoxes.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
 			dgvBoxes.AutoResizeColumns();
 			dgvBoxes.AutoResizeRows();
-
 		}
 
 
@@ -861,7 +867,8 @@ namespace SFY_OCR
 			//只有在不存在初始位置的新Box情况下才添加进去
 			if (box == null)
 			{
-				_ocrImage.ImageBoxList.Add(new Box(_ocrImage.ImageBoxList.Boxes.Count + 1, initialCharacter, initialX, initialY, initialWidth, initialHeight));
+				_ocrImage.ImageBoxList.Add(new Box(_ocrImage.ImageBoxList.Boxes.Count + 1, initialCharacter, initialX, initialY,
+					initialWidth, initialHeight));
 				//选中刚添加的Box
 				_ocrImage.ImageBoxList.GetBoxByCoordinate(initialX, initialY, initialWidth, initialHeight).Selected = true;
 				GetNewBoxesImage();
@@ -873,12 +880,12 @@ namespace SFY_OCR
 		{
 			Bitmap bitmap = new Bitmap(_ocrImage.TempImageInfo.FilePath);
 			//将临时文件读取到内存中
-			_ocrImage.DrawBoxesOnImage(bitmap);
+			_ocrImage.GetBoxesImage(bitmap);
 			//将内存中的Bitmap（Box图层）绘制到PictureBox控件中
 			return bitmap;
 		}
 
-		private void toolStripButton2_Click(object sender, EventArgs e)
+		private void toolStripBtnSaveBox_Click(object sender, EventArgs e)
 		{
 			_ocrImage.SaveToBoxFile();
 		}
@@ -1110,23 +1117,22 @@ namespace SFY_OCR
 
 		private void pbxExample_MouseHover(object sender, EventArgs e)
 		{
-			foreach (Box box in _ocrImage.ImageBoxList.Boxes)
-			{
-				if (box.Contains(MousePosition.X, MousePosition.Y))
-				{
-					ToolTip toolTip = new ToolTip();
+			//foreach (Box box in _ocrImage.ImageBoxList.Boxes)
+			//{
+			//	if (box.Contains(MousePosition.X, MousePosition.Y))
+			//	{
+			//		ToolTip toolTip = new ToolTip();
 
-					toolTip.Tag = box.Character;
-					toolTip.ShowAlways = true;
-					toolTip.Show(box.Character, pbxExample, MousePosition.X, MousePosition.Y);
-				}
-			}
+			//		toolTip.Tag = box.Character;
+			//		toolTip.ShowAlways = true;
+			//		toolTip.Show(box.Character, pbxExample, MousePosition.X, MousePosition.Y);
+			//	}
+			//}
 		}
 
 		private void btnMakeBox_Click(object sender, EventArgs e)
 		{
-			progressBar = new frmProgressBar();
-			progressBar.Show();
+			ShowProgressBar();
 
 
 			//pbxExample.Image.Dispose();
@@ -1134,7 +1140,7 @@ namespace SFY_OCR
 			Dictionary<string, string> args = new Dictionary<string, string>
 			{
 				{"sourceImagePath", _ocrImage.TempImageInfo.FilePath},
-				{"boxFilePath", _ocrImage.BoxFileInfo.Dir+_ocrImage.BoxFileInfo.MainFileName},
+				{"boxFilePath", _ocrImage.BoxFileInfo.Dir + _ocrImage.BoxFileInfo.MainFileName},
 			};
 
 			//生成 BOX 文件
@@ -1148,8 +1154,12 @@ namespace SFY_OCR
 			}
 
 			_ocrImage.LoadFromBoxFile();
-			//_ocrImage.DrawBoxesOnImage(pbxExample.Image as Bitmap);
-			pbxExample.Refresh();
+
+
+			//pbxExample.BackgroundImage = (pbxExample.Image.Clone() as Bitmap);
+			//pbxExample.Image = _ocrImage.GetBoxesImage(pbxExample.BackgroundImage as Bitmap);
+			pbxExample.Image = _ocrImage.GetBoxesImage(pbxExample.Image as Bitmap);
+			pbxExample.Update();
 
 			//GetNewBoxImageDelegate getNewBoxImageDelegate = new GetNewBoxImageDelegate(_ocrImage.GetNewBoxesImage);
 			//bgwProcess.RunWorkerAsync(new object[]{getNewBoxImageDelegate,new Bitmap(_ocrImage.TempImageInfo.FilePath)});
@@ -1158,13 +1168,18 @@ namespace SFY_OCR
 			//{
 			//	Application.DoEvents();
 			//}
-
 		}
-		public delegate Bitmap GetNewBoxImageDelegate(Bitmap bitmap);
+
+		private void ShowProgressBar()
+		{
+			progressBar = new frmProgressBar();
+			progressBar.Show();
+		}
 
 		private void btnRotateLeft_Click(object sender, EventArgs e)
 		{
 			#region 用ImageMagick处理旋转
+
 			//pbxExample.Image.Dispose();
 			//////进行旋转操作
 			//Dictionary<string, string> args = new Dictionary<string, string>
@@ -1176,10 +1191,78 @@ namespace SFY_OCR
 			////调用指向TextCleaner
 			//ImageProcess imageProcess = new RotateImageProcess(args);
 			//bgwProcess.RunWorkerAsync(imageProcess);
+
 			#endregion
+
 			//进行逆时针旋转90°操作
-			pbxExample.Image.RotateFlip(RotateFlipType.Rotate270FlipNone);
+			RotateImage(RotateFlipType.Rotate270FlipNone);
+		}
+
+		private void RotateImage(RotateFlipType rotateFilpType)
+		{
+			pbxExample.BackgroundImage.RotateFlip(rotateFilpType);
+			pbxExample.Image.RotateFlip(rotateFilpType);
 			pbxExample.Refresh();
+
+			try
+			{
+				pbxExample.BackgroundImage.Save(_ocrImage.OriginalImageInfo.FilePath);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		private void btnConvertToTiff_Click(object sender, EventArgs e)
+		{
+			Dictionary<string, string> args = new Dictionary<string, string>
+			{
+				{"sourceImagePath", _ocrImage.OriginalImageInfo.FilePath},
+				{"destImagePath", _ocrImage.TempImageInfo.Dir + _ocrImage.OriginalImageInfo.MainFileName + ".tiff"},
+			};
+			//调用指向TextCleaner
+			ImageProcess imageProcess = new ToTiffImageProcess(args);
+			bgwProcess.RunWorkerAsync(imageProcess);
+		}
+
+		private void btnRotateRight_Click(object sender, EventArgs e)
+		{
+			RotateImage(RotateFlipType.Rotate90FlipNone);
+		}
+
+		private void dgvBoxes_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+		{
+		}
+
+		private void button5_Click(object sender, EventArgs e)
+		{
+		}
+
+		private void btnReset_Click(object sender, EventArgs e)
+		{
+			//回复图片为初始状态
+			ResetImage();
+		}
+
+		private void btnSave_Click(object sender, EventArgs e)
+		{
+		}
+
+		private void toolStripBtnOpenImage_Click(object sender, EventArgs e)
+		{
+			//当要打开图片时，设置OpenFileDialog的filter属性
+			ofdFile.Filter = StringResourceManager.OpenImageFilterText;
+
+			//打开样本图片
+			if (ofdFile.ShowDialog() == DialogResult.OK)
+			{
+				_ocrImage = new OcrImage(ofdFile.FileName);
+				OpenImage(_ocrImage);
+				dgvBoxes.Focus();
+				//RefreshBoxesInPictureBox();
+				//RefreshBoxesInfoInGridView();
+			}
 		}
 
 		private enum AnchorPositionType
@@ -1194,43 +1277,6 @@ namespace SFY_OCR
 			BottomLeft,
 			BottomMiddle,
 			BottomRight
-		}
-
-		private void button4_Click(object sender, EventArgs e)
-		{
-			Dictionary<string, string> args = new Dictionary<string, string>
-			{
-				{"sourceImagePath", _ocrImage.OriginalImageInfo.FilePath},
-				{"destImagePath", _ocrImage.TempImageInfo.Dir + _ocrImage.OriginalImageInfo.MainFileName + ".tiff"},
-			};
-			//调用指向TextCleaner
-			ImageProcess imageProcess = new ToTiffImageProcess(args);
-			bgwProcess.RunWorkerAsync(imageProcess);
-		}
-
-		private void btnRotateRight_Click(object sender, EventArgs e)
-		{
-
-			//进行顺时针旋转90°操作
-			pbxExample.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
-			pbxExample.Refresh();
-
-		}
-
-		private void dgvBoxes_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-		{
-		}
-
-		private void button5_Click(object sender, EventArgs e)
-		{
-
-
-		}
-
-		private void btnReset_Click(object sender, EventArgs e)
-		{
-			//回复图片为初始状态
-			ResetImage();
 		}
 	}
 }

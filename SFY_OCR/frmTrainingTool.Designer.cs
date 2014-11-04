@@ -35,13 +35,12 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+			this.toolStripOpenImage = new System.Windows.Forms.ToolStripButton();
+			this.toolStripBtnSaveBox = new System.Windows.Forms.ToolStripButton();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.cmbPreProcess = new System.Windows.Forms.ComboBox();
 			this.chkToTiff = new System.Windows.Forms.CheckBox();
 			this.trackBar1 = new System.Windows.Forms.TrackBar();
-			this.btnTextCleaner = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.dgvBoxes = new System.Windows.Forms.DataGridView();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -63,19 +62,21 @@
 			this.btnMerge = new System.Windows.Forms.Button();
 			this.btnSplit = new System.Windows.Forms.Button();
 			this.btnDelete = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
+			this.btnDisplayBoxes = new System.Windows.Forms.Button();
 			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
 			this.btnRotateLeft = new System.Windows.Forms.Button();
 			this.btnRotateRight = new System.Windows.Forms.Button();
 			this.btnMakeBox = new System.Windows.Forms.Button();
-			this.button4 = new System.Windows.Forms.Button();
+			this.btnConvertToTiff = new System.Windows.Forms.Button();
+			this.btnReset = new System.Windows.Forms.Button();
+			this.btnTextCleaner = new System.Windows.Forms.Button();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcess = new System.ComponentModel.BackgroundWorker();
 			this.tmrClearBox = new System.Windows.Forms.Timer(this.components);
-			this.btnReset = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -159,33 +160,33 @@
 			// 
 			this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
-            this.toolStripButton2});
+            this.toolStripOpenImage,
+            this.toolStripBtnSaveBox});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Size = new System.Drawing.Size(256, 30);
 			this.toolStrip1.TabIndex = 0;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
-			// toolStripButton1
+			// toolStripOpenImage
 			// 
-			this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-			this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton1.Name = "toolStripButton1";
-			this.toolStripButton1.Size = new System.Drawing.Size(23, 27);
-			this.toolStripButton1.Text = "打开图片";
-			this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+			this.toolStripOpenImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripOpenImage.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOpenImage.Image")));
+			this.toolStripOpenImage.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripOpenImage.Name = "toolStripOpenImage";
+			this.toolStripOpenImage.Size = new System.Drawing.Size(23, 27);
+			this.toolStripOpenImage.Text = "打开图片";
+			this.toolStripOpenImage.Click += new System.EventHandler(this.toolStripBtnOpenImage_Click);
 			// 
-			// toolStripButton2
+			// toolStripBtnSaveBox
 			// 
-			this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton2.Name = "toolStripButton2";
-			this.toolStripButton2.Size = new System.Drawing.Size(23, 27);
-			this.toolStripButton2.Text = "toolStripButton2";
-			this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+			this.toolStripBtnSaveBox.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripBtnSaveBox.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnSaveBox.Image")));
+			this.toolStripBtnSaveBox.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripBtnSaveBox.Name = "toolStripBtnSaveBox";
+			this.toolStripBtnSaveBox.Size = new System.Drawing.Size(23, 27);
+			this.toolStripBtnSaveBox.Text = "toolStripButton2";
+			this.toolStripBtnSaveBox.Click += new System.EventHandler(this.toolStripBtnSaveBox_Click);
 			// 
 			// tableLayoutPanel3
 			// 
@@ -235,16 +236,6 @@
 			this.trackBar1.TickFrequency = 5;
 			this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
 			// 
-			// btnTextCleaner
-			// 
-			this.btnTextCleaner.Location = new System.Drawing.Point(408, 3);
-			this.btnTextCleaner.Name = "btnTextCleaner";
-			this.btnTextCleaner.Size = new System.Drawing.Size(75, 23);
-			this.btnTextCleaner.TabIndex = 4;
-			this.btnTextCleaner.Text = "降噪";
-			this.btnTextCleaner.UseVisualStyleBackColor = true;
-			this.btnTextCleaner.Click += new System.EventHandler(this.btnTextCleaner_Click);
-			// 
 			// btnSave
 			// 
 			this.btnSave.Location = new System.Drawing.Point(3, 274);
@@ -253,6 +244,7 @@
 			this.btnSave.TabIndex = 2;
 			this.btnSave.Text = "保存";
 			this.btnSave.UseVisualStyleBackColor = true;
+			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
 			// dgvBoxes
 			// 
@@ -405,12 +397,9 @@
 			this.pbxExample.Location = new System.Drawing.Point(0, 0);
 			this.pbxExample.Name = "pbxExample";
 			this.pbxExample.Size = new System.Drawing.Size(504, 365);
-			this.pbxExample.TabIndex = 1;
+			this.pbxExample.TabIndex = 0;
 			this.pbxExample.TabStop = false;
-			this.pbxExample.Paint += new System.Windows.Forms.PaintEventHandler(this.pbxExample_Paint);
-			this.pbxExample.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseClick);
 			this.pbxExample.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseDown);
-			this.pbxExample.MouseHover += new System.EventHandler(this.pbxExample_MouseHover);
 			this.pbxExample.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseMove);
 			this.pbxExample.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseUp);
 			// 
@@ -420,7 +409,7 @@
 			this.flowLayoutPanel2.Controls.Add(this.btnMerge);
 			this.flowLayoutPanel2.Controls.Add(this.btnSplit);
 			this.flowLayoutPanel2.Controls.Add(this.btnDelete);
-			this.flowLayoutPanel2.Controls.Add(this.button3);
+			this.flowLayoutPanel2.Controls.Add(this.btnDisplayBoxes);
 			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 38);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
@@ -466,22 +455,22 @@
 			this.btnDelete.UseVisualStyleBackColor = true;
 			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
 			// 
-			// button3
+			// btnDisplayBoxes
 			// 
-			this.button3.Location = new System.Drawing.Point(327, 3);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(75, 23);
-			this.button3.TabIndex = 4;
-			this.button3.Text = "button3";
-			this.button3.UseVisualStyleBackColor = true;
-			this.button3.Click += new System.EventHandler(this.button3_Click);
+			this.btnDisplayBoxes.Location = new System.Drawing.Point(327, 3);
+			this.btnDisplayBoxes.Name = "btnDisplayBoxes";
+			this.btnDisplayBoxes.Size = new System.Drawing.Size(75, 23);
+			this.btnDisplayBoxes.TabIndex = 4;
+			this.btnDisplayBoxes.Text = "显示Box";
+			this.btnDisplayBoxes.UseVisualStyleBackColor = true;
+			this.btnDisplayBoxes.Click += new System.EventHandler(this.button3_Click);
 			// 
 			// flowLayoutPanel3
 			// 
 			this.flowLayoutPanel3.Controls.Add(this.btnRotateLeft);
 			this.flowLayoutPanel3.Controls.Add(this.btnRotateRight);
 			this.flowLayoutPanel3.Controls.Add(this.btnMakeBox);
-			this.flowLayoutPanel3.Controls.Add(this.button4);
+			this.flowLayoutPanel3.Controls.Add(this.btnConvertToTiff);
 			this.flowLayoutPanel3.Controls.Add(this.btnReset);
 			this.flowLayoutPanel3.Controls.Add(this.btnTextCleaner);
 			this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -520,15 +509,35 @@
 			this.btnMakeBox.UseVisualStyleBackColor = true;
 			this.btnMakeBox.Click += new System.EventHandler(this.btnMakeBox_Click);
 			// 
-			// button4
+			// btnConvertToTiff
 			// 
-			this.button4.Location = new System.Drawing.Point(246, 3);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(75, 23);
-			this.button4.TabIndex = 3;
-			this.button4.Text = "TOTIFF";
-			this.button4.UseVisualStyleBackColor = true;
-			this.button4.Click += new System.EventHandler(this.button4_Click);
+			this.btnConvertToTiff.Location = new System.Drawing.Point(246, 3);
+			this.btnConvertToTiff.Name = "btnConvertToTiff";
+			this.btnConvertToTiff.Size = new System.Drawing.Size(75, 23);
+			this.btnConvertToTiff.TabIndex = 3;
+			this.btnConvertToTiff.Text = "TOTIFF";
+			this.btnConvertToTiff.UseVisualStyleBackColor = true;
+			this.btnConvertToTiff.Click += new System.EventHandler(this.btnConvertToTiff_Click);
+			// 
+			// btnReset
+			// 
+			this.btnReset.Location = new System.Drawing.Point(327, 3);
+			this.btnReset.Name = "btnReset";
+			this.btnReset.Size = new System.Drawing.Size(75, 23);
+			this.btnReset.TabIndex = 4;
+			this.btnReset.Text = "复位";
+			this.btnReset.UseVisualStyleBackColor = true;
+			this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+			// 
+			// btnTextCleaner
+			// 
+			this.btnTextCleaner.Location = new System.Drawing.Point(408, 3);
+			this.btnTextCleaner.Name = "btnTextCleaner";
+			this.btnTextCleaner.Size = new System.Drawing.Size(75, 23);
+			this.btnTextCleaner.TabIndex = 4;
+			this.btnTextCleaner.Text = "降噪";
+			this.btnTextCleaner.UseVisualStyleBackColor = true;
+			this.btnTextCleaner.Click += new System.EventHandler(this.btnTextCleaner_Click);
 			// 
 			// tabPage2
 			// 
@@ -549,25 +558,14 @@
 			// 
 			this.tmrClearBox.Tick += new System.EventHandler(this.tmrClearBox_Tick);
 			// 
-			// btnReset
-			// 
-			this.btnReset.Location = new System.Drawing.Point(327, 3);
-			this.btnReset.Name = "btnReset";
-			this.btnReset.Size = new System.Drawing.Size(75, 23);
-			this.btnReset.TabIndex = 4;
-			this.btnReset.Text = "复位";
-			this.btnReset.UseVisualStyleBackColor = true;
-			this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-			// 
-			// TrainingTool
+			// frmTrainingTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(784, 522);
 			this.Controls.Add(this.tabControl1);
-			this.DoubleBuffered = true;
 			this.Font = new System.Drawing.Font("微软雅黑", 9F);
-			this.Name = "TrainingTool";
+			this.Name = "frmTrainingTool";
 			this.Text = "训练工具";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TrainingTool_FormClosing);
@@ -576,6 +574,7 @@
 			this.tabPage1.ResumeLayout(false);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
@@ -608,7 +607,7 @@
 		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.ToolStrip toolStrip1;
-		private System.Windows.Forms.ToolStripButton toolStripButton1;
+		private System.Windows.Forms.ToolStripButton toolStripOpenImage;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.OpenFileDialog ofdFile;
 		private System.Windows.Forms.Panel panel1;
@@ -633,19 +632,19 @@
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.TextBox txtCharacter;
-		private System.Windows.Forms.ToolStripButton toolStripButton2;
-		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.ToolStripButton toolStripBtnSaveBox;
+		private System.Windows.Forms.Button btnDisplayBoxes;
 		private System.Windows.Forms.DataGridView dgvBoxes;
 		private System.Windows.Forms.NumericUpDown nudX;
 		private System.Windows.Forms.NumericUpDown nudY;
 		private System.Windows.Forms.NumericUpDown nudWidth;
 		private System.Windows.Forms.NumericUpDown nudHeight;
-		private System.Windows.Forms.PictureBox pbxExample;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
 		private System.Windows.Forms.Button btnRotateLeft;
 		private System.Windows.Forms.Button btnRotateRight;
 		private System.Windows.Forms.Button btnMakeBox;
-		private System.Windows.Forms.Button button4;
+		private System.Windows.Forms.Button btnConvertToTiff;
 		private System.Windows.Forms.Button btnReset;
+		private System.Windows.Forms.PictureBox pbxExample;
 	}
 }
