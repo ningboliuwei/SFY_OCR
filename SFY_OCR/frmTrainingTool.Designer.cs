@@ -41,6 +41,7 @@
 			this.cmbPreProcess = new System.Windows.Forms.ComboBox();
 			this.chkToTiff = new System.Windows.Forms.CheckBox();
 			this.trackBar1 = new System.Windows.Forms.TrackBar();
+			this.button1 = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.dgvBoxes = new System.Windows.Forms.DataGridView();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -74,7 +75,6 @@
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcess = new System.ComponentModel.BackgroundWorker();
 			this.tmrClearBox = new System.Windows.Forms.Timer(this.components);
-			this.button1 = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -161,8 +161,8 @@
 			// 
 			this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripOpenImage,
-            this.toolStripBtnSaveBox});
+			this.toolStripOpenImage,
+			this.toolStripBtnSaveBox});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Size = new System.Drawing.Size(256, 30);
@@ -237,6 +237,16 @@
 			this.trackBar1.TabIndex = 3;
 			this.trackBar1.TickFrequency = 5;
 			this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(3, 84);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(75, 23);
+			this.button1.TabIndex = 4;
+			this.button1.Text = "button1";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click_1);
 			// 
 			// btnSave
 			// 
@@ -559,16 +569,6 @@
 			// tmrClearBox
 			// 
 			this.tmrClearBox.Tick += new System.EventHandler(this.tmrClearBox_Tick);
-			// 
-			// button1
-			// 
-			this.button1.Location = new System.Drawing.Point(3, 84);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 4;
-			this.button1.Text = "button1";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click_1);
 			// 
 			// frmTrainingTool
 			// 

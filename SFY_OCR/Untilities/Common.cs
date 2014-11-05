@@ -40,5 +40,30 @@ namespace SFY_OCR
 				throw new Exception(ex.Message);
 			}
 		}
+
+		public static bool IsInUse(string filePath)
+		{
+			bool inUse = true;
+
+			FileStream fs = null;
+			try
+			{
+				fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
+
+				inUse = false;
+			}
+			catch
+			{
+
+			}
+			finally
+			{
+				if (fs != null)
+				{
+					fs.Close();
+				}
+			}
+			return inUse;//true表示正在使用,false没有使用  
+		}
 	}
 }

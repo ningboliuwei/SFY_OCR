@@ -57,9 +57,9 @@ namespace SFY_OCR.Untilities
 		/// <param name="image">需要画矩形的BitMap对象（如PictureBox.Image）</param>
 		/// <param name="bitmap"></param>
 		/// <returns>画毕的BitMap对象</returns>
-		public Bitmap GetBoxesImage(Bitmap bgBitmap)
+		public Bitmap GetBoxesImage(Size imageSize)
 		{
-			Bitmap bitmap = new Bitmap(bgBitmap.Width, bgBitmap.Height);
+			Bitmap bitmap = new Bitmap(imageSize.Width, imageSize.Height);
 			Graphics g = Graphics.FromImage(bitmap);
 			foreach (Box box in ImageBoxList.Boxes)
 			{
@@ -238,6 +238,7 @@ namespace SFY_OCR.Untilities
 				}
 			}
 		}
+
 
 		/// <summary>
 		///     若图片对应的Box文件（.box）不存在，则根据路径创建

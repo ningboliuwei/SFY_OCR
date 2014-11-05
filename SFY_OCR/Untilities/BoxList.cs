@@ -1,7 +1,10 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Windows.Forms;
 
 #endregion
 
@@ -127,6 +130,44 @@ namespace SFY_OCR.Untilities
 			{
 				box.Selected = false;
 			}
+		}
+
+		/// <summary>
+		/// 得到当前所有 Box 的 DataTable 形式
+		/// </summary>
+		/// <returns></returns>
+		public DataTable GetBoxesDataTable()
+		{
+			DataTable boxesTable = new DataTable();
+
+			//添加所需的列
+			boxesTable.Columns.Add("sn", Type.GetType("System.Int32"));
+			boxesTable.Columns.Add("character", Type.GetType("System.String"));
+			boxesTable.Columns.Add("x", Type.GetType("System.Int32"));
+			boxesTable.Columns.Add("y", Type.GetType("System.Int32"));
+			boxesTable.Columns.Add("width", Type.GetType("System.Int32"));
+			boxesTable.Columns.Add("height", Type.GetType("System.Int32"));
+
+			int boxCount = Boxes.Count;
+
+			//将数据添加到DataTable对象中
+			for (int i = 0; i < boxCount; i++)
+			{
+				DataRow dataRow = boxesTable.NewRow();
+
+				Box currentBox = Boxes[i];
+
+				dataRow["sn"] = currentBox.Sn;
+				dataRow["character"] = currentBox.Character;
+				dataRow["x"] = currentBox.X;
+				dataRow["y"] = currentBox.Y;
+				dataRow["width"] = currentBox.Width;
+				dataRow["height"] = currentBox.Height;
+
+				boxesTable.Rows.Add(dataRow);
+			}
+
+			return boxesTable;
 		}
 	}
 }
