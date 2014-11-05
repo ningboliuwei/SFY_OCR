@@ -50,7 +50,6 @@ namespace SFY_OCR.Untilities
 		/// </summary>
 		public FileNameInfo BoxFileInfo { get; private set; }
 
-
 		/// <summary>
 		///     在一个BitMap对象中画上矩形
 		/// </summary>
@@ -69,7 +68,7 @@ namespace SFY_OCR.Untilities
 					? Convert.ToInt32(StringResourceManager.SelectedBoxBorderWidth)
 					: Convert.ToInt32(StringResourceManager.BoxBorderWidth);
 				//在传入的BitMap上画矩形
-
+				
 				int offset = borderWidth;
 				g.DrawRectangle(new Pen(borderColor, offset), box.X,
 					box.Y, box.Width, box.Height);

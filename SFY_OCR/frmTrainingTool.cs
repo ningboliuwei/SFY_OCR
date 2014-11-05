@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -53,16 +54,10 @@ namespace SFY_OCR
 		private Point _boxLeftTopPoint;
 		//鼠标目前所在的位置
 		private Point _currentPoint;
-
-		//按下鼠标左键之前的光标形状
-
+		//当前鼠标所在的锚点位置（拖动 Box 大小时）
 		private AnchorPositionType anchorPosition;
 		private Bitmap bitmap;
-
 		private frmProgressBar progressBar;
-
-		private DataTable _boxesDataTable;
-
 
 		public frmTrainingTool()
 		{
@@ -103,8 +98,6 @@ namespace SFY_OCR
 
 				//将要识别的图片作为背景显示到图片框中
 				background = Image.FromFile(_ocrImage.TempImageInfo.FilePath) as Bitmap;
-
-
 			}
 			catch (Exception ex)
 			{
@@ -150,12 +143,12 @@ namespace SFY_OCR
 		private void ShowBoxInfoInDataGridView()
 		{
 			//dgvBoxes.DataSource = _ocrImage.ImageBoxList.GetBoxesDataTable();
-			dgvBoxes.Rows.Clear();
+			//dgvBoxes.Rows.Clear();
 
-			foreach (Box box in _ocrImage.ImageBoxList.Boxes)
-			{
-				AddBoxToDataGridView(box);
-			}
+			//foreach (Box box in _ocrImage.ImageBoxList.Boxes)
+			//{
+			//	AddBoxToDataGridView(box);
+			//}
 
 			//dgvBoxes.Columns["sn"].HeaderText = "编号";
 			//dgvBoxes.Columns["character"].HeaderText = "字符";
@@ -181,6 +174,9 @@ namespace SFY_OCR
 			dgvBoxes.Columns.Add("y", "Y");
 			dgvBoxes.Columns.Add("width", "宽度");
 			dgvBoxes.Columns.Add("height", "高度");
+
+			dgvBoxes.VirtualMode = true;
+
 
 		}
 
@@ -240,6 +236,7 @@ namespace SFY_OCR
 			pbxExample.SizeMode = PictureBoxSizeMode.AutoSize;
 			panel1.AutoScroll = true;
 			pbxExample.Dock = DockStyle.None;
+
 
 			//添加下拉菜单选项
 			string[] options = { "不处理", "灰度化", "黑白化" };
@@ -408,6 +405,7 @@ namespace SFY_OCR
 					//切换到画 Box 模式
 					_currentMouseMoveState = MouseMoveState.DrawingBox;
 					//bitmap = pbxExample.Image.Clone() as Bitmap;
+					ChangeBoxCursor(_currentPoint);
 				}
 				else
 				{
@@ -425,6 +423,7 @@ namespace SFY_OCR
 		private void pbxExample_MouseMove(object sender, MouseEventArgs e)
 		{
 			_currentPoint = new Point(e.X, e.Y);
+
 
 			////不处于拖动 Box 大小情况下才改变光标
 			//if (!_isSizingBox && _ocrImage.ImageBoxList.SelectedBoxes.Count == 1)
@@ -450,11 +449,12 @@ namespace SFY_OCR
 			//			.DrawRectangle(dashPen, box.X + (e.X - _startPoint.X), box.Y + (e.Y - _startPoint.Y), box.Width, box.Height);
 			//	}
 			//}
+			//ChangeBoxCursor(_currentPoint);
 
 			if (_currentMouseMoveState == MouseMoveState.DrawingBox)
 			{
-				//pbxExample.Refresh();
-				//pbxExample.Image = bitmap;
+				//if(e.Button == MouseButtons.Left)
+				//	ChangeBoxCursor(_currentPoint);
 
 				Pen pen = new Pen(new SolidBrush(Color.Red));
 				pen.Width = 1;
@@ -481,8 +481,8 @@ namespace SFY_OCR
 
 				Bitmap buffer = _ocrImage.GetBoxesImage((pbxExample.Image as Bitmap).Size);
 				Graphics g = Graphics.FromImage(buffer);
-				g.SmoothingMode = SmoothingMode.HighSpeed;
 
+				g.SmoothingMode = SmoothingMode.HighSpeed;
 				g.DrawRectangle(
 					pen,
 					_boxLeftTopPoint.X,
@@ -593,24 +593,39 @@ namespace SFY_OCR
 		/// <summary>
 		///     改变拖动Box时光标形状
 		/// </summary>
-		private void ChangeBoxCursor(int x, int y)
+		private void ChangeBoxCursor(Point currentPoint)
 		{
-			MouseEventArgs e;
+			//MouseEventArgs e;
 			//选中的Box的边框宽度
 			int bw = Convert.ToInt32(StringResourceManager.SelectedBoxBorderWidth);
+
+			//根据当前鼠标移动状态决定光标样式
+			switch (_currentMouseMoveState)
+			{
+				case MouseMoveState.DoNothing:
+					pbxExample.Cursor = Cursors.Default;
+					break;
+				case MouseMoveState.DrawingBox:
+					pbxExample.Cursor = Cursors.Cross;
+					break;
+				default:
+					break;
+
+
+			}
 
 			foreach (Box box in _ocrImage.ImageBoxList.SelectedBoxes)
 			{
 				//左上
 				if (
-					new Rectangle(box.X, box.Y, bw, bw).Contains(x, y))
+					new Rectangle(box.X, box.Y, bw, bw).Contains(currentPoint))
 				{
 					// ↖↘ 箭头
 					pbxExample.Cursor = Cursors.SizeNWSE;
 					anchorPosition = AnchorPositionType.TopLeft;
 				}
 				//右下
-				else if (new Rectangle(box.X + box.Width - bw, box.Y + box.Height - bw, bw, bw).Contains(x, y))
+				else if (new Rectangle(box.X + box.Width - bw, box.Y + box.Height - bw, bw, bw).Contains(currentPoint))
 				{
 					// ↖↘ 箭头
 					pbxExample.Cursor = Cursors.SizeNWSE;
@@ -618,49 +633,49 @@ namespace SFY_OCR
 				}
 				//左下
 				else if (
-					new Rectangle(box.X, box.Y + box.Height - bw, bw, bw).Contains(x, y))
+					new Rectangle(box.X, box.Y + box.Height - bw, bw, bw).Contains(currentPoint))
 				{
 					// ↗↙ 箭头
 					pbxExample.Cursor = Cursors.SizeNESW;
 					anchorPosition = AnchorPositionType.BottomLeft;
 				}
 				//右上
-				else if (new Rectangle(box.X + box.Width - bw, box.Y, bw, bw).Contains(x, y))
+				else if (new Rectangle(box.X + box.Width - bw, box.Y, bw, bw).Contains(currentPoint))
 				{
 					// ↗↙ 箭头
 					pbxExample.Cursor = Cursors.SizeNESW;
 					anchorPosition = AnchorPositionType.TopRight;
 				}
 				//上边
-				else if (new Rectangle(box.X + bw, box.Y, box.Width - bw * 2, bw).Contains(x, y))
+				else if (new Rectangle(box.X + bw, box.Y, box.Width - bw * 2, bw).Contains(currentPoint))
 				{
 					//上下箭头
 					pbxExample.Cursor = Cursors.SizeNS;
 					anchorPosition = AnchorPositionType.TopMiddle;
 				}
 				//下边
-				else if (new Rectangle(box.X + bw, box.Y + box.Height - bw, box.Width - bw * 2, bw).Contains(x, y))
+				else if (new Rectangle(box.X + bw, box.Y + box.Height - bw, box.Width - bw * 2, bw).Contains(currentPoint))
 				{
 					//上下箭头
 					pbxExample.Cursor = Cursors.SizeNS;
 					anchorPosition = AnchorPositionType.BottomMiddle;
 				}
 				//左边
-				else if (new Rectangle(box.X, box.Y + bw, bw, box.Height - bw * 2).Contains(x, y))
+				else if (new Rectangle(box.X, box.Y + bw, bw, box.Height - bw * 2).Contains(currentPoint))
 				{
 					//左右箭头
 					pbxExample.Cursor = Cursors.SizeWE;
 					anchorPosition = AnchorPositionType.MiddleLeft;
 				}
 				//右边
-				else if (new Rectangle(box.X + box.Width - bw, box.Y + bw, bw, box.Y + box.Height - bw * 2).Contains(x, y))
+				else if (new Rectangle(box.X + box.Width - bw, box.Y + bw, bw, box.Y + box.Height - bw * 2).Contains(currentPoint))
 				{
 					//左右箭头
 					pbxExample.Cursor = Cursors.SizeWE;
 					anchorPosition = AnchorPositionType.MiddleRight;
 				}
 				//Box内部（拖动位置）
-				else if (new Rectangle(box.X + bw, box.Y + bw, box.Width - bw * 2, box.Height - bw * 2).Contains(x, y))
+				else if (new Rectangle(box.X + bw, box.Y + bw, box.Width - bw * 2, box.Height - bw * 2).Contains(currentPoint))
 				{
 					pbxExample.Cursor = Cursors.SizeAll;
 					anchorPosition = AnchorPositionType.MiddleMiddle;
@@ -678,20 +693,21 @@ namespace SFY_OCR
 
 		private void pbxExample_MouseUp(object sender, MouseEventArgs e)
 		{
-			Point currentPoint = new Point(e.X, e.Y);
+			_currentPoint = new Point(e.X, e.Y);
 
 			if (e.Button == MouseButtons.Left)
 			{
 
+
 				//如果松开鼠标左键之前是处于画矩形状态
 				if (_currentMouseMoveState == MouseMoveState.DrawingBox)
 				{
-					if (currentPoint.X != _startPoint.X && currentPoint.Y != _startPoint.Y)
+					if (_currentPoint.X != _startPoint.X && _currentPoint.Y != _startPoint.Y)
 					{
 						int newSn = _ocrImage.ImageBoxList.Boxes.Max(b => b.Sn) + 1;
 						//根据当前 创建一个Box对象
 						Box box = new Box(newSn, "※", _boxLeftTopPoint.X, _boxLeftTopPoint.Y,
-							Math.Abs(currentPoint.X - _startPoint.X),
+							Math.Abs(_currentPoint.X - _startPoint.X),
 							Math.Abs(_currentPoint.Y - _startPoint.Y));
 						box.Selected = true;
 
@@ -702,7 +718,7 @@ namespace SFY_OCR
 
 						//将新的 Box 添加到数据网格中去
 						AddBoxToDataGridView(box);
-						
+
 						//选中刚添加的那行
 						int rowCount = dgvBoxes.RowCount;
 						for (int i = 0; i < rowCount; i++)
@@ -720,18 +736,18 @@ namespace SFY_OCR
 						//pen.Width = 2;
 						//pen.DashStyle = DashStyle.Solid;
 
-					//	Bitmap buffer = _ocrImage.GetBoxesImage((pbxExample.Image as Bitmap).Size);
-					//	Graphics g = Graphics.FromImage(buffer);
-					//	g.SmoothingMode = SmoothingMode.HighSpeed;
-					//	g.DrawRectangle(
-					//pen,
-					//_boxLeftTopPoint.X,
-					//_boxLeftTopPoint.Y,
-					//Math.Abs(_currentPoint.X - _startPoint.X),
-					//Math.Abs(_currentPoint.Y - _startPoint.Y));
+						//	Bitmap buffer = _ocrImage.GetBoxesImage((pbxExample.Image as Bitmap).Size);
+						//	Graphics g = Graphics.FromImage(buffer);
+						//	g.SmoothingMode = SmoothingMode.HighSpeed;
+						//	g.DrawRectangle(
+						//pen,
+						//_boxLeftTopPoint.X,
+						//_boxLeftTopPoint.Y,
+						//Math.Abs(_currentPoint.X - _startPoint.X),
+						//Math.Abs(_currentPoint.Y - _startPoint.Y));
 
 						//pbxExample.Update();
-						
+
 
 
 					}
@@ -749,6 +765,7 @@ namespace SFY_OCR
 				}
 
 				_currentMouseMoveState = MouseMoveState.DoNothing;
+				ChangeBoxCursor(_currentPoint);
 				//Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
 				//_boxEndPoint = new Point(e.X, e.Y);
 
@@ -924,8 +941,43 @@ namespace SFY_OCR
 
 		private void pbxExample_MouseClick(object sender, MouseEventArgs e)
 		{
-			//按住 Ctrl 并点击鼠标左键时
-			if (ModifierKeys == Keys.Control && e.Button == MouseButtons.Left)
+			_currentPoint = new Point(e.X, e.Y);
+			//只是点击鼠标左键时，若同时在多个 Box 以内，选择其中的一个
+			//若点击了之前已经被选中的，变成不选
+			//若没有在任何一个 Box 内，全部不选
+
+			if (ModifierKeys == Keys.None && e.Button == MouseButtons.Left)
+			{
+				foreach (Box box in _ocrImage.ImageBoxList.Boxes)
+				{
+					if (box.Contains(e.X, e.Y))
+					{
+						box.Selected = !box.Selected;
+					}
+					else
+					{
+						box.Selected = false;
+					}
+				}
+
+				if (_ocrImage.ImageBoxList.SelectedBoxes.Count > 1)
+				{
+					List<Box> selectedBoxs = _ocrImage.ImageBoxList.SelectedBoxes;
+					int count = _ocrImage.ImageBoxList.SelectedBoxes.Count;
+
+					for (int i = 1; i < count; i++)
+					{
+						selectedBoxs[i].Selected = false;
+					}
+				}
+
+				
+				//GetNewBoxesImage();
+				//pbxExample.Image = _ocrImage.DrawBoxesOnImage(pbxExample.Image as Bitmap);
+				//ChangeBoxSelectionInImageBox();
+			}
+			//按住 Ctrl + 鼠标左键，可多选
+			else if (ModifierKeys == Keys.Control && e.Button == MouseButtons.Left)
 			{
 				foreach (Box box in _ocrImage.ImageBoxList.Boxes)
 				{
@@ -934,10 +986,24 @@ namespace SFY_OCR
 						box.Selected = !box.Selected;
 					}
 				}
-				//GetNewBoxesImage();
-				//pbxExample.Image = _ocrImage.DrawBoxesOnImage(pbxExample.Image as Bitmap);
-				ChangeBoxSelectionInImageBox();
 			}
+
+			RefreshBoxImageInPictureBox();
+
+			//按住 Ctrl 并点击鼠标左键时
+			//if (ModifierKeys == Keys.Control && e.Button == MouseButtons.Left)
+			//{
+			//	foreach (Box box in _ocrImage.ImageBoxList.Boxes)
+			//	{
+			//		if (box.Contains(e.X, e.Y))
+			//		{
+			//			box.Selected = !box.Selected;
+			//		}
+			//	}
+			//	//GetNewBoxesImage();
+			//	//pbxExample.Image = _ocrImage.DrawBoxesOnImage(pbxExample.Image as Bitmap);
+			//	ChangeBoxSelectionInImageBox();
+			//}
 		}
 
 		private void btnInsert_Click(object sender, EventArgs e)
@@ -1368,6 +1434,8 @@ namespace SFY_OCR
 
 				_ocrImage = new OcrImage(ofdFile.FileName);
 				OpenImage(_ocrImage);
+				//设置数据网格的行数（包括最后一个空行）
+				dgvBoxes.RowCount = _ocrImage.ImageBoxList.Boxes.Count + 1;
 				dgvBoxes.Focus();
 				//RefreshBoxesInPictureBox();
 				//RefreshBoxesInfoInGridView();
@@ -1432,6 +1500,48 @@ namespace SFY_OCR
 			dgvBoxes.Rows[index].Cells["y"].Value = box.Y;
 			dgvBoxes.Rows[index].Cells["width"].Value = box.Width;
 			dgvBoxes.Rows[index].Cells["height"].Value = box.Height;
+		}
+
+		private void dgvBoxes_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+		{
+
+		}
+
+		private void dgvBoxes_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+		{
+			//if (e.RowIndex == dgvBoxes.RowCount)
+			//{
+			//	return;
+			//}
+			//else
+			//{
+			Box box = _ocrImage.ImageBoxList.Boxes[e.RowIndex];
+			switch (e.ColumnIndex)
+			{
+				case 0:
+					e.Value = box.Sn;
+					break;
+				case 2:
+					e.Value = box.Character;
+					break;
+				case 3:
+					e.Value = box.X;
+					break;
+				case 4:
+					e.Value = box.Y;
+					break;
+				case 5:
+					e.Value = box.Width;
+					break;
+				case 6:
+					e.Value = box.Height;
+					break;
+				default:
+					break;
+
+			}
+			//}
+
 		}
 
 
