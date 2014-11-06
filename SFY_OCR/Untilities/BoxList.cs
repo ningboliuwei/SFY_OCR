@@ -1,8 +1,10 @@
 ﻿#region
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -121,6 +123,7 @@ namespace SFY_OCR.Untilities
 		{
 			return Boxes.FirstOrDefault(box => box.Sn == sn);
 		}
+
 		/// <summary>
 		/// 清除所有Box对象的选中状态
 		/// </summary>
@@ -131,6 +134,21 @@ namespace SFY_OCR.Untilities
 				box.Selected = false;
 			}
 		}
+
+		///索引器，暂时不用
+		//public Box this[int index]
+		//{
+		//	get
+		//	{
+		//		return Boxes[index];
+		//	}
+		//	set
+		//	{
+		//		Boxes[index] = value;
+		//	}
+		//}
+
+
 
 		/// <summary>
 		/// 得到当前所有 Box 的 DataTable 形式

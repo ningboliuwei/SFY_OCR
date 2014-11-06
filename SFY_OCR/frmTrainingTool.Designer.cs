@@ -270,6 +270,7 @@
 			this.dgvBoxes.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvBoxes_CellValueChanged);
 			this.dgvBoxes.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dgvBoxes_CellValueNeeded);
 			this.dgvBoxes.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvBoxes_DataBindingComplete);
+			this.dgvBoxes.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvBoxes_RowsAdded);
 			this.dgvBoxes.SelectionChanged += new System.EventHandler(this.dgvBoxes_SelectionChanged);
 			this.dgvBoxes.Click += new System.EventHandler(this.dgvBoxes_Click);
 			// 

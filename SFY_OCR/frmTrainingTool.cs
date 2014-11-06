@@ -1,12 +1,14 @@
 ﻿#region
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -120,6 +122,12 @@ namespace SFY_OCR
 					_ocrImage.LoadFromBoxFile();
 					RefreshBoxImageInPictureBox();
 
+
+
+					dgvBoxes.RowCount = _ocrImage.ImageBoxList.Boxes.Count + 1;
+
+
+
 					//在数据网格中显示 Box 信息
 					//BindBoxesInfoInGridView();
 					ShowBoxInfoInDataGridView();
@@ -159,7 +167,10 @@ namespace SFY_OCR
 
 		}
 
-		private void InitializeGridView()
+		/// <summary>
+		/// 对数据网格进行初始化
+		/// </summary>
+		private void InitializeDataGridView()
 		{
 			dgvBoxes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 			dgvBoxes.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
@@ -174,6 +185,8 @@ namespace SFY_OCR
 			dgvBoxes.Columns.Add("y", "Y");
 			dgvBoxes.Columns.Add("width", "宽度");
 			dgvBoxes.Columns.Add("height", "高度");
+
+			dgvBoxes.Columns["sn"].Visible = false;
 
 			dgvBoxes.VirtualMode = true;
 
@@ -261,7 +274,7 @@ namespace SFY_OCR
 			//dgvBoxes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
 			//设置 NumericUpDown 的最大值（最小值默认都为 0 ）
 
-			InitializeGridView();
+			InitializeDataGridView();
 			nudX.Maximum = int.MaxValue;
 			nudY.Maximum = int.MaxValue;
 			nudWidth.Maximum = int.MaxValue;
@@ -720,11 +733,12 @@ namespace SFY_OCR
 						AddBoxToDataGridView(box);
 
 						//选中刚添加的那行
-						int rowCount = dgvBoxes.RowCount;
-						for (int i = 0; i < rowCount; i++)
-						{
-							dgvBoxes.Rows[i].Selected = false;
-						}
+						//RefreshBoxSelectionInDataGridView();
+						//int rowCount = dgvBoxes.RowCount;
+						//for (int i = 0; i < rowCount; i++)
+						//{
+						//	dgvBoxes.Rows[i].Selected = false;
+						//}
 
 						int rowIndex = dgvBoxes.RowCount - 2;
 						dgvBoxes.Rows[rowIndex].Selected = true;
@@ -950,6 +964,7 @@ namespace SFY_OCR
 			{
 				foreach (Box box in _ocrImage.ImageBoxList.Boxes)
 				{
+					Box lastActiveBox = null;
 					if (box.Contains(e.X, e.Y))
 					{
 						box.Selected = !box.Selected;
@@ -970,8 +985,6 @@ namespace SFY_OCR
 						selectedBoxs[i].Selected = false;
 					}
 				}
-
-				
 				//GetNewBoxesImage();
 				//pbxExample.Image = _ocrImage.DrawBoxesOnImage(pbxExample.Image as Bitmap);
 				//ChangeBoxSelectionInImageBox();
@@ -986,9 +999,14 @@ namespace SFY_OCR
 						box.Selected = !box.Selected;
 					}
 				}
+
 			}
 
+			JumpToInDataGridViewByBox(_ocrImage.ImageBoxList.SelectedBoxes.OrderByDescending(b => b.Sn).First());
+
+			RefreshBoxSelectionInDataGridView();
 			RefreshBoxImageInPictureBox();
+			//RefreshBoxSelectionInDataGridView();
 
 			//按住 Ctrl 并点击鼠标左键时
 			//if (ModifierKeys == Keys.Control && e.Button == MouseButtons.Left)
@@ -1063,41 +1081,52 @@ namespace SFY_OCR
 		{
 		}
 
-		private void ChangeBoxSelectionInImageBox()
-		{
-			//遍历数据网格中每一行，根据当前行坐标找对应的Box，然后改变行的选中状态
-			foreach (DataGridViewRow row in dgvBoxes.Rows)
-			{
-				Box box = _ocrImage.ImageBoxList.GetBoxByCoordinate(Convert.ToInt32(row.Cells["x"].Value),
-					Convert.ToInt32(row.Cells["y"].Value), Convert.ToInt32(row.Cells["width"].Value),
-					Convert.ToInt32(row.Cells["height"].Value));
 
-				if (box != null)
-				{
-					row.Selected = box.Selected;
-				}
-			}
+		//private void ChangeBoxSelectionInImageBox()
+		//{
+		//	//遍历数据网格中每一行，根据当前行坐标找对应的Box，然后改变行的选中状态
+		//	foreach (DataGridViewRow row in dgvBoxes.Rows)
+		//	{
+		//		Box box = _ocrImage.ImageBoxList.GetBoxByCoordinate(Convert.ToInt32(row.Cells["x"].Value),
+		//			Convert.ToInt32(row.Cells["y"].Value), Convert.ToInt32(row.Cells["width"].Value),
+		//			Convert.ToInt32(row.Cells["height"].Value));
+
+		//		if (box != null)
+		//		{
+		//			row.Selected = box.Selected;
+		//		}
+		//	}
+		//}
+
+		/// <summary>
+		/// 在数据网格中跳转到指定 Box 对应的记录
+		/// </summary>
+		/// <param name="box"></param>
+		private void JumpToInDataGridViewByBox(Box box)
+		{
+			int index = _ocrImage.ImageBoxList.Boxes.IndexOf(box);
+			dgvBoxes.CurrentCell = dgvBoxes.Rows[index].Cells[1];
 		}
 
 		/// <summary>
 		///     显示当前Box信息，在上方的各UpDown控件中
 		/// </summary>
-		private void ChangeBoxSelectionInDataGridView()
-		{
-			//清除之前选择的所有Box
-			_ocrImage.ImageBoxList.UnSelectAll();
+		//private void ChangeBoxSelectionInDataGridView()
+		//{
+		//	//清除之前选择的所有Box
+		//	_ocrImage.ImageBoxList.UnSelectAll();
 
-			foreach (DataGridViewRow row in dgvBoxes.SelectedRows)
-			{
-				Box currentBox = _ocrImage.ImageBoxList.GetBoxByCoordinate(Convert.ToInt32(row.Cells["x"].Value),
-					Convert.ToInt32(row.Cells["y"].Value), Convert.ToInt32(row.Cells["width"].Value),
-					Convert.ToInt32(row.Cells["height"].Value));
-				//同时改变当前Box的选中状态
-				currentBox.Selected = true;
-			}
+		//	foreach (DataGridViewRow row in dgvBoxes.SelectedRows)
+		//	{
+		//		Box currentBox = _ocrImage.ImageBoxList.GetBoxByCoordinate(Convert.ToInt32(row.Cells["x"].Value),
+		//			Convert.ToInt32(row.Cells["y"].Value), Convert.ToInt32(row.Cells["width"].Value),
+		//			Convert.ToInt32(row.Cells["height"].Value));
+		//		//同时改变当前Box的选中状态
+		//		currentBox.Selected = true;
+		//	}
 
-			//RefreshBoxInfoInHeader();
-		}
+		//	//RefreshBoxInfoInHeader();
+		//}
 
 		private void RefreshBoxInfoInHeader()
 		{
@@ -1258,21 +1287,80 @@ namespace SFY_OCR
 			//找出最靠下的Y坐标
 			int maxY = _ocrImage.ImageBoxList.SelectedBoxes.Max(box => box.Y + box.Height);
 
-			//改变第一个选中Box的大小
-			_ocrImage.ImageBoxList.SelectedBoxes[0].X = minX;
-			_ocrImage.ImageBoxList.SelectedBoxes[0].Y = minY;
-			_ocrImage.ImageBoxList.SelectedBoxes[0].Width = maxX - minX;
-			_ocrImage.ImageBoxList.SelectedBoxes[0].Height = maxY - minY;
+			string newCharacter = "";
+			foreach (Box box in _ocrImage.ImageBoxList.SelectedBoxes)
+			{
+				newCharacter += box.Character;
+			}
+
+			//改变第一个选中Box的大小，并将字符改为所有选中 Box 的字符的拼接
+
+			Box firstBox = _ocrImage.ImageBoxList.SelectedBoxes[0];
+			firstBox.Character = newCharacter;
+			firstBox.X = minX;
+			firstBox.Y = minY;
+			firstBox.Width = maxX - minX;
+			firstBox.Height = maxY - minY;
+
 
 			//删除其他的
 			for (int i = _ocrImage.ImageBoxList.SelectedBoxes.Count - 1; i >= 1; i--)
 			{
-				_ocrImage.ImageBoxList.Remove(_ocrImage.ImageBoxList.SelectedBoxes[i]);
-			}
+				Box box = _ocrImage.ImageBoxList.SelectedBoxes[i];
+				DeleteBoxInDataGridView(box);
+				_ocrImage.ImageBoxList.Remove(box);
 
-			GetNewBoxesImage();
-			//RefreshBoxesInfoInGridView();
+			}
+			RefreshBoxImageInPictureBox();
+
 		}
+
+		/// <summary>
+		/// 从数据网格中删除指定 Box 对应的数据
+		/// </summary>
+		/// <param name="box"></param>
+		private void DeleteBoxInDataGridView(Box box)
+		{
+			int rowCount = dgvBoxes.RowCount;
+			for (int i = rowCount - 1; i >= 0; i--)
+			{
+				DataGridViewRow row = dgvBoxes.Rows[i];
+				if (Convert.ToInt32(row.Cells["sn"].Value) == box.Sn)
+				{
+					dgvBoxes.Rows.Remove(row);
+				}
+			}
+		}
+
+		/// <summary>
+		/// 在数据网格中选择指定的 Box 对应的数据
+		/// </summary>
+		/// <param name="box"></param>
+		//private void RefreshBoxSelectionInDataGridView()
+		//{
+		//	int boxCount = _ocrImage.ImageBoxList.Boxes.Count;
+		//	int lastSelectedBoxIndex = -1;
+		//	//for (int i = 0; i < boxCount; i++)
+		//	//{
+		//	//	dgvBoxes.Rows[i].Selected = _ocrImage.ImageBoxList.Boxes[i].Selected;
+
+		//	//	if (dgvBoxes.Rows[i].Selected)
+		//	//	{
+		//	//		lastSelectedBoxIndex = i;
+		//	//	}
+		//	//}
+		//	dgvBoxes.CurrentCell = dgvBoxes.Rows[lastSelectedBoxIndex].Cells[1];
+		//	for (int i = 0; i < boxCount; i++)
+		//	{
+		//		dgvBoxes.Rows[i].Selected = _ocrImage.ImageBoxList.Boxes[i].Selected;
+
+		//		if (dgvBoxes.Rows[i].Selected)
+		//		{
+		//			lastSelectedBoxIndex = i;
+		//		}
+		//	}
+		//}
+
 
 		private void pbxExample_MouseHover(object sender, EventArgs e)
 		{
@@ -1343,12 +1431,50 @@ namespace SFY_OCR
 
 		private void btnRotateLeft_Click(object sender, EventArgs e)
 		{
+			//使旋转按钮失效（防止多次点造成存文件不正常）
+			DisableAllFileRelatedControls();
 			//进行逆时针旋转90°操作
 			//先不旋转图片，因为会把图片文件方向也改变
 			RotateImage(RotateFlipType.Rotate270FlipNone);
 			_ocrImage.ChangeBoxCoordinates(RotateFlipType.Rotate270FlipNone);
 			ShowBoxInfoInDataGridView();
+			EnableAllFileRelatedControls();
 
+		}
+		/// <summary>
+		/// 把所有可能会造成文件冲突的控件失效
+		/// </summary>
+		private void DisableAllFileRelatedControls()
+		{
+			btnRotateLeft.Enabled = false;
+			btnRotateRight.Enabled = false;
+		}
+
+		/// <summary>
+		/// 把所有可能会造成文件冲突的控件生效
+		/// </summary>
+		private void EnableAllFileRelatedControls()
+		{
+			//等待文件占用完毕
+			while (Common.IsInUse(_ocrImage.TempImageInfo.FilePath) || Common.IsInUse(_ocrImage.OriginalImageInfo.FilePath))
+			{
+				Application.DoEvents();
+			}
+			btnRotateLeft.Enabled = true;
+			btnRotateRight.Enabled = true;
+		}
+
+
+		/// <summary>
+		/// 根据 Box 的选中状态，改变数据网格中所有行的选中状态
+		/// </summary>
+		private void RefreshBoxSelectionInDataGridView()
+		{
+			int boxCount = _ocrImage.ImageBoxList.Boxes.Count;
+			for (int i = 0; i < boxCount; i++)
+			{
+				dgvBoxes.Rows[i].Selected = _ocrImage.ImageBoxList.Boxes[i].Selected;
+			}
 		}
 
 		private void RotateImage(RotateFlipType rotateFilpType)
@@ -1356,27 +1482,27 @@ namespace SFY_OCR
 			int previousHeight = pbxExample.BackgroundImage.Height;
 			int previousWidth = pbxExample.BackgroundImage.Width;
 
-			pbxExample.BackgroundImage.RotateFlip(rotateFilpType);
-			pbxExample.Image.RotateFlip(rotateFilpType);
-
-			//旋转时，图片框大小也要变化（否则会造成背景图片不对）
-			pbxExample.Height = previousWidth;
-			pbxExample.Width = previousHeight;
-
-			pbxExample.Refresh();
 
 			try
 			{
-				if (!Common.IsInUse(_ocrImage.TempImageInfo.FilePath) && !Common.IsInUse(_ocrImage.OriginalImageInfo.FilePath))
-				{
-					//保存旋转后的临时文件
-					pbxExample.BackgroundImage.Save(_ocrImage.TempImageInfo.FilePath);
+				//若文件正在使用，等一会儿
+				//if (!Common.IsInUse(_ocrImage.TempImageInfo.FilePath) && !Common.IsInUse(_ocrImage.OriginalImageInfo.FilePath))
+				//{
+				pbxExample.BackgroundImage.RotateFlip(rotateFilpType);
+				pbxExample.Image.RotateFlip(rotateFilpType);
 
-					//将原文件也旋转后保存
-					Bitmap originalBitmap = _ocrImage.GetOriginalImage() as Bitmap;
-					originalBitmap.RotateFlip(rotateFilpType);
-					originalBitmap.Save(_ocrImage.OriginalImageInfo.FilePath);
-				}
+				//旋转时，图片框大小也要变化（否则会造成背景图片不对）
+				pbxExample.Height = previousWidth;
+				pbxExample.Width = previousHeight;
+				pbxExample.Refresh();
+				//保存旋转后的临时文件
+				pbxExample.BackgroundImage.Save(_ocrImage.TempImageInfo.FilePath, Common.GetImageFormatByExtName(_ocrImage.TempImageInfo.ExtFileName));
+
+				//将原文件也旋转后保存
+				Bitmap originalBitmap = _ocrImage.GetOriginalImage() as Bitmap;
+				originalBitmap.RotateFlip(rotateFilpType);
+				originalBitmap.Save(_ocrImage.OriginalImageInfo.FilePath, Common.GetImageFormatByExtName(_ocrImage.OriginalImageInfo.ExtFileName));
+				//}
 			}
 			catch (Exception ex)
 			{
@@ -1398,9 +1524,13 @@ namespace SFY_OCR
 
 		private void btnRotateRight_Click(object sender, EventArgs e)
 		{
+			//使旋转按钮失效（防止多次点造成存文件不正常）
+			DisableAllFileRelatedControls();
 			RotateImage(RotateFlipType.Rotate90FlipNone);
 			_ocrImage.ChangeBoxCoordinates(RotateFlipType.Rotate90FlipNone);
 			ShowBoxInfoInDataGridView();
+			//使旋转按钮失效（防止多次点造成存文件不正常）
+			EnableAllFileRelatedControls();
 
 		}
 
@@ -1434,8 +1564,7 @@ namespace SFY_OCR
 
 				_ocrImage = new OcrImage(ofdFile.FileName);
 				OpenImage(_ocrImage);
-				//设置数据网格的行数（包括最后一个空行）
-				dgvBoxes.RowCount = _ocrImage.ImageBoxList.Boxes.Count + 1;
+
 				dgvBoxes.Focus();
 				//RefreshBoxesInPictureBox();
 				//RefreshBoxesInfoInGridView();
@@ -1515,25 +1644,26 @@ namespace SFY_OCR
 			//}
 			//else
 			//{
+
 			Box box = _ocrImage.ImageBoxList.Boxes[e.RowIndex];
 			switch (e.ColumnIndex)
 			{
 				case 0:
 					e.Value = box.Sn;
 					break;
-				case 2:
+				case 1:
 					e.Value = box.Character;
 					break;
-				case 3:
+				case 2:
 					e.Value = box.X;
 					break;
-				case 4:
+				case 3:
 					e.Value = box.Y;
 					break;
-				case 5:
+				case 4:
 					e.Value = box.Width;
 					break;
-				case 6:
+				case 5:
 					e.Value = box.Height;
 					break;
 				default:
@@ -1542,6 +1672,11 @@ namespace SFY_OCR
 			}
 			//}
 
+		}
+
+		private void dgvBoxes_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+		{
+			dgvBoxes.Rows[e.RowIndex].HeaderCell.Value = e.RowIndex;
 		}
 
 

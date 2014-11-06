@@ -176,7 +176,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CNPOPSOFT.Controls.dll" />
     <Content Include="Resources\image.png" />
     <Content Include="Resources\scanner.ico" />
     <Content Include="SuperControlPackage.dll" />

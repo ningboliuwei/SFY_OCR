@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.IO;
 using SFY_OCR.Properties;
 
@@ -41,6 +42,40 @@ namespace SFY_OCR
 			}
 		}
 
+
+		public static ImageFormat GetImageFormatByExtName(string extName)
+		{
+			switch (extName.ToUpper())
+			{
+				case "JPEG":
+				case "JPG":
+					return ImageFormat.Jpeg;
+					break;
+				case "TIFF":
+				case "TIF":
+					return ImageFormat.Tiff;
+					break;
+				case "PNG":
+					return ImageFormat.Png;
+					break;
+				case "BMP":
+					return ImageFormat.Bmp;
+					break;
+				case "GIF":
+					return ImageFormat.Gif;
+					break;
+				default:
+					return null;
+					break;
+
+			}
+		}
+		
+		/// <summary>
+		/// 判断指定文件是否正在使用中
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <returns></returns>
 		public static bool IsInUse(string filePath)
 		{
 			bool inUse = true;
