@@ -56,12 +56,11 @@
 			this.nudWidth = new System.Windows.Forms.NumericUpDown();
 			this.label4 = new System.Windows.Forms.Label();
 			this.nudHeight = new System.Windows.Forms.NumericUpDown();
-			this.panel1 = new System.Windows.Forms.Panel();
+			this.pnlPictureBox = new System.Windows.Forms.Panel();
 			this.pbxExample = new System.Windows.Forms.PictureBox();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
 			this.btnInsert = new System.Windows.Forms.Button();
 			this.btnMerge = new System.Windows.Forms.Button();
-			this.btnSplit = new System.Windows.Forms.Button();
 			this.btnDelete = new System.Windows.Forms.Button();
 			this.btnDisplayBoxes = new System.Windows.Forms.Button();
 			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
@@ -92,7 +91,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.nudY)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudWidth)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudHeight)).BeginInit();
-			this.panel1.SuspendLayout();
+			this.pnlPictureBox.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).BeginInit();
 			this.flowLayoutPanel2.SuspendLayout();
 			this.flowLayoutPanel3.SuspendLayout();
@@ -279,7 +278,7 @@
 			this.tableLayoutPanel2.ColumnCount = 1;
 			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 0);
-			this.tableLayoutPanel2.Controls.Add(this.panel1, 0, 3);
+			this.tableLayoutPanel2.Controls.Add(this.pnlPictureBox, 0, 3);
 			this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel2, 0, 1);
 			this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel3, 0, 2);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -397,14 +396,14 @@
 			this.nudHeight.TabIndex = 13;
 			this.nudHeight.ValueChanged += new System.EventHandler(this.nudHeight_ValueChanged);
 			// 
-			// panel1
+			// pnlPictureBox
 			// 
-			this.panel1.Controls.Add(this.pbxExample);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(3, 118);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(504, 365);
-			this.panel1.TabIndex = 2;
+			this.pnlPictureBox.Controls.Add(this.pbxExample);
+			this.pnlPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.pnlPictureBox.Location = new System.Drawing.Point(3, 118);
+			this.pnlPictureBox.Name = "pnlPictureBox";
+			this.pnlPictureBox.Size = new System.Drawing.Size(504, 365);
+			this.pnlPictureBox.TabIndex = 2;
 			// 
 			// pbxExample
 			// 
@@ -412,7 +411,7 @@
 			this.pbxExample.Location = new System.Drawing.Point(0, 0);
 			this.pbxExample.Name = "pbxExample";
 			this.pbxExample.Size = new System.Drawing.Size(504, 365);
-			this.pbxExample.TabIndex = 0;
+			this.pbxExample.TabIndex = 1;
 			this.pbxExample.TabStop = false;
 			this.pbxExample.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseClick);
 			this.pbxExample.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseDown);
@@ -423,7 +422,6 @@
 			// 
 			this.flowLayoutPanel2.Controls.Add(this.btnInsert);
 			this.flowLayoutPanel2.Controls.Add(this.btnMerge);
-			this.flowLayoutPanel2.Controls.Add(this.btnSplit);
 			this.flowLayoutPanel2.Controls.Add(this.btnDelete);
 			this.flowLayoutPanel2.Controls.Add(this.btnDisplayBoxes);
 			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -452,18 +450,9 @@
 			this.btnMerge.UseVisualStyleBackColor = true;
 			this.btnMerge.Click += new System.EventHandler(this.btnMerge_Click);
 			// 
-			// btnSplit
-			// 
-			this.btnSplit.Location = new System.Drawing.Point(165, 3);
-			this.btnSplit.Name = "btnSplit";
-			this.btnSplit.Size = new System.Drawing.Size(75, 23);
-			this.btnSplit.TabIndex = 2;
-			this.btnSplit.Text = "分割";
-			this.btnSplit.UseVisualStyleBackColor = true;
-			// 
 			// btnDelete
 			// 
-			this.btnDelete.Location = new System.Drawing.Point(246, 3);
+			this.btnDelete.Location = new System.Drawing.Point(165, 3);
 			this.btnDelete.Name = "btnDelete";
 			this.btnDelete.Size = new System.Drawing.Size(75, 23);
 			this.btnDelete.TabIndex = 3;
@@ -473,7 +462,7 @@
 			// 
 			// btnDisplayBoxes
 			// 
-			this.btnDisplayBoxes.Location = new System.Drawing.Point(327, 3);
+			this.btnDisplayBoxes.Location = new System.Drawing.Point(246, 3);
 			this.btnDisplayBoxes.Name = "btnDisplayBoxes";
 			this.btnDisplayBoxes.Size = new System.Drawing.Size(75, 23);
 			this.btnDisplayBoxes.TabIndex = 4;
@@ -608,7 +597,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.nudY)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudWidth)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudHeight)).EndInit();
-			this.panel1.ResumeLayout(false);
+			this.pnlPictureBox.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).EndInit();
 			this.flowLayoutPanel2.ResumeLayout(false);
 			this.flowLayoutPanel3.ResumeLayout(false);
@@ -627,7 +616,7 @@
 		private System.Windows.Forms.ToolStripButton toolStripOpenImage;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.OpenFileDialog ofdFile;
-		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.Panel pnlPictureBox;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
 		private System.Windows.Forms.ComboBox cmbPreProcess;
 		private System.Windows.Forms.CheckBox chkToTiff;
@@ -644,7 +633,6 @@
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
 		private System.Windows.Forms.Button btnInsert;
 		private System.Windows.Forms.Button btnMerge;
-		private System.Windows.Forms.Button btnSplit;
 		private System.Windows.Forms.Button btnDelete;
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.Label label5;
@@ -662,7 +650,7 @@
 		private System.Windows.Forms.Button btnMakeBox;
 		private System.Windows.Forms.Button btnConvertToTiff;
 		private System.Windows.Forms.Button btnReset;
-		private System.Windows.Forms.PictureBox pbxExample;
 		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.PictureBox pbxExample;
 	}
 }
