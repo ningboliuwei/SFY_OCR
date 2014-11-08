@@ -50,9 +50,9 @@ namespace SFY_OCR.Untilities
 		/// <param name="x">要判断的点的x坐标</param>
 		/// <param name="y">要判断的点的y坐标</param>
 		/// <returns>true表示某点在当前box范围之内</returns>
-		public bool Contains(int x, int y)
+		public bool Contains(Point point)
 		{
-			if (new Rectangle(X, Y, Width, Height).Contains(x, y))
+			if (new Rectangle(X, Y, Width, Height).Contains(point.X, point.Y))
 			{
 				return true;
 			}
