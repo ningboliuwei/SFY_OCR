@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -127,11 +128,10 @@ namespace SFY_OCR
 
 
 					dgvBoxes.RowCount = _ocrImage.ImageBoxList.Boxes.Count + 1;
+					//清楚网格中所有选择
+					dgvBoxes.ClearSelection();
 
 
-					//在数据网格中显示 Box 信息
-					//BindBoxesInfoInGridView();
-					ShowBoxInfoInDataGridView();
 				}
 				catch (Exception ex)
 				{
@@ -412,7 +412,6 @@ namespace SFY_OCR
 				{
 					//切换到移动 Box 模式
 					_currentMouseMoveState = MouseMoveState.MovingBox;
-
 				}
 				else
 				{
@@ -435,8 +434,8 @@ namespace SFY_OCR
 		/// <param name="e"></param>
 		private void pbxExample_MouseMove(object sender, MouseEventArgs e)
 		{
+			btnConvertToTiff.Text = _ocrImage.ImageBoxList.SelectedBoxes.Count.ToString();
 			_currentPoint = new Point(e.X, e.Y);
-
 
 			Bitmap buffer = _ocrImage.GetBoxesImage((pbxExample.Image as Bitmap).Size);
 			Graphics g = Graphics.FromImage(buffer);
@@ -508,16 +507,13 @@ namespace SFY_OCR
 			else if (_currentMouseMoveState == MouseMoveState.MovingBox) //移动 Box 状态
 			{
 				//只允许选中一个Box进行移动
-				//1108 屏蔽
-				//int newBoxLeftTopPointX = _activingBox.X + (_currentPoint.X - _startPoint.X);
-				//int newBoxLeftTopPointY = _activingBox.Y + (_currentPoint.Y - _startPoint.Y);
+				Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
+				int newBoxLeftTopPointX = box.X + (_currentPoint.X - _startPoint.X);
+				int newBoxLeftTopPointY = box.Y + (_currentPoint.Y - _startPoint.Y);
 
-				//g.DrawRectangle(
-				//	_dashPen,
-				//	newBoxLeftTopPointX, newBoxLeftTopPointY, _activingBox.Width, _activingBox.Height);
-				//box.X += (_boxEndPoint.X - _boxStartPoint.X);
-				//box.Y += (_boxEndPoint.Y - _boxStartPoint.Y);
-				//1108屏蔽
+				g.DrawRectangle(
+					_dashPen,
+					newBoxLeftTopPointX, newBoxLeftTopPointY, box.Width, box.Height);
 			}
 
 			//Graphics g = pbxExample.CreateGraphics();
@@ -720,6 +716,7 @@ namespace SFY_OCR
 
 			if (Control.ModifierKeys == Keys.None && e.Button == MouseButtons.Left)
 			{
+				//测试用 btnConvertToTiff.Text = _ocrImage.ImageBoxList.SelectedBoxes.Count.ToString();
 				//如果松开鼠标左键之前是处于画矩形状态
 				if (_currentMouseMoveState == MouseMoveState.DrawingBox)
 				{
@@ -739,18 +736,19 @@ namespace SFY_OCR
 						//将新的 Box 添加到数据网格中去
 						AddBoxToDataGridView(box);
 						//跳转到刚添加的那行
-						JumpToInDataGridViewByBox(box);
+						JumpToBoxRecordInDataGridView(box);
 
 					}
 				}
 				//若之前处于移动 Box 状态
 				else if (_currentMouseMoveState == MouseMoveState.MovingBox)
 				{
-					//1108屏蔽
-					//_activingBox.X += (_currentPoint.X - _startPoint.X);
-					//_activingBox.Y += (_currentPoint.Y - _startPoint.Y);
-					//_activingBox.Selected = true;
-					//1108屏蔽
+					if (_ocrImage.ImageBoxList.SelectedBoxes.Count != 0)//补丁语句
+					{
+						Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
+						box.X += (_currentPoint.X - _startPoint.X);
+						box.Y += (_currentPoint.Y - _startPoint.Y);
+					}
 				}
 				else if (_currentMouseMoveState == MouseMoveState.ResizingBox)
 				{
@@ -805,8 +803,8 @@ namespace SFY_OCR
 
 				}
 
+				RefreshBoxImageInPictureBox();
 				_currentMouseMoveState = MouseMoveState.DoNothing;
-
 				ChangeCursor(_currentPoint);
 				//根据在图片框中的选中状态，刷新数据网格中的选中状态
 				//RefreshBoxSelectionInDataGridView();
@@ -887,8 +885,9 @@ namespace SFY_OCR
 			//只是点击鼠标左键时，若同时在多个 Box 以内，选择其中的一个
 			//若点击了之前已经被选中的，变成不选
 			//若没有在任何一个 Box 内，全部不选
-
+			//TODO 特殊情况，选中三个，然后再在其中一个点，应该选中那个
 			//只点击鼠标左键，单选
+			
 			if (ModifierKeys == Keys.None && e.Button == MouseButtons.Left)
 			{
 				Box clickedBox = null;
@@ -904,31 +903,47 @@ namespace SFY_OCR
 				//如果点中了某一个Box的话
 				if (clickedBox != null)
 				{
-					//反选此 Box
-					clickedBox.Selected = !clickedBox.Selected;
-
-					//将所有非点中的Box设为不选中
-					foreach (Box box in _ocrImage.ImageBoxList.Boxes)
+					//如果当时只选中一个
+					if (_ocrImage.ImageBoxList.SelectedBoxes.Count == 1)
 					{
-						if (box != clickedBox)
+						//反选此 Box
+						clickedBox.Selected = !clickedBox.Selected;
+					}
+					else //如果当时已同时选中了多个
+					{
+						//变成只选中点的那个
+						clickedBox.Selected = true;
+					}
+
+					//排除移动 Box 的情况，因为移动完毕后会点在别的地方
+					if (_currentMouseMoveState != MouseMoveState.MovingBox)
+					{
+						//将所有非点中的Box设为不选中
+						foreach (Box box in _ocrImage.ImageBoxList.Boxes)
 						{
-							box.Selected = false;
+							if (box != clickedBox)
+							{
+								box.Selected = false;
+							}
 						}
 					}
 				}
-				else//如果没点中任何一个，取消选择所有的
+				else //如果没点中任何一个，取消选择所有的
 				{
-					_ocrImage.ImageBoxList.UnSelectAll();
+					//排除正在移动 Box 的状态
+					if (_currentMouseMoveState != MouseMoveState.MovingBox)
+					{
+						_ocrImage.ImageBoxList.UnSelectAll();
+					}
 				}
-
 				if (_ocrImage.ImageBoxList.SelectedBoxes.Count != 0)
 				{
 					//JumpToInDataGridViewByBox(_ocrImage.ImageBoxList.SelectedBoxes.OrderByDescending(b => b.Sn).First());
 				}
 				RefreshBoxImageInPictureBox();
-				//RefreshBoxSelectionInDataGridView();
-				
+				RefreshBoxSelectionInDataGridView();
 
+				btnConvertToTiff.Text = _ocrImage.ImageBoxList.SelectedBoxes.Count.ToString();
 			}
 			//按住 Ctrl + 鼠标左键，可多选
 			else if (ModifierKeys == Keys.Control && e.Button == MouseButtons.Left)
@@ -956,9 +971,8 @@ namespace SFY_OCR
 				{
 					//JumpToInDataGridViewByBox(_ocrImage.ImageBoxList.SelectedBoxes.OrderByDescending(b => b.Sn).First());
 				}
-
-				//RefreshBoxSelectionInDataGridView();
 				RefreshBoxImageInPictureBox();
+				RefreshBoxSelectionInDataGridView();
 			}
 			//如果当前有选中 Box ，数据网格跳到那个Sn最大的Box对应的行
 
@@ -1044,7 +1058,7 @@ namespace SFY_OCR
 		///     在数据网格中跳转到指定 Box 对应的记录
 		/// </summary>
 		/// <param name="box"></param>
-		private void JumpToInDataGridViewByBox(Box box)
+		private void JumpToBoxRecordInDataGridView(Box box)
 		{
 			int index = _ocrImage.ImageBoxList.Boxes.IndexOf(box);
 			dgvBoxes.CurrentCell = dgvBoxes.Rows[index].Cells[1];
@@ -1122,25 +1136,22 @@ namespace SFY_OCR
 			RefreshBoxImageInPictureBox();
 		}
 
-		/// <summary>
-		///     根据数据网格中的选中项删除对应的Box
-		/// </summary>
+	
+		//在改变数据网格中的选中状态时，改变 Box 选中状态
 		private void dgvBoxes_SelectionChanged(object sender, EventArgs e)
 		{
-			//加载所有数据完毕后才执行
-			int rowCount = dgvBoxes.Rows.Count;
-			for (int i = 0; i < rowCount - 1; i++)
-			{
-				int sn = Convert.ToInt32(dgvBoxes.Rows[i].Cells["sn"].Value);
-				_ocrImage.ImageBoxList.GetBoxBySn(sn).Selected = dgvBoxes.Rows[i].Selected;
-			}
-			RefreshBoxImageInPictureBox();
-
-			if (dgvBoxes.SelectedRows.Count != 0)
-			{
-				ScrollToInPictureBoxByBox(_ocrImage.ImageBoxList.SelectedBoxes.OrderByDescending(b => b.Sn).First());
-			}
+			//TODO 会引起问题，先不做这个功能了
+			//保证加载完毕后
+			//if (dgvBoxes.Rows.Count == _ocrImage.ImageBoxList.Boxes.Count + 1)
+			//{
+			//	DataGridViewRow row = dgvBoxes.Rows[dgvBoxes.CurrentRow.Index];
+			//	int sn = Convert.ToInt32(row.Cells["sn"].Value);
+			//	_ocrImage.ImageBoxList.GetBoxBySn(sn).Selected = row.Selected;
+			//	RefreshBoxImageInPictureBox();
+			//}
 		}
+
+		
 
 		/// <summary>
 		///     在图片框中滚动到指定 Box 位置(使其在图片框中心)

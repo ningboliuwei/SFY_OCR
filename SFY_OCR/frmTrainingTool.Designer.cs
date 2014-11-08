@@ -286,10 +286,9 @@
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 4;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.86475F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.13525F));
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel2.Size = new System.Drawing.Size(510, 486);
 			this.tableLayoutPanel2.TabIndex = 1;
 			// 
@@ -400,9 +399,9 @@
 			// 
 			this.pnlPictureBox.Controls.Add(this.pbxExample);
 			this.pnlPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.pnlPictureBox.Location = new System.Drawing.Point(3, 118);
+			this.pnlPictureBox.Location = new System.Drawing.Point(3, 108);
 			this.pnlPictureBox.Name = "pnlPictureBox";
-			this.pnlPictureBox.Size = new System.Drawing.Size(504, 365);
+			this.pnlPictureBox.Size = new System.Drawing.Size(504, 375);
 			this.pnlPictureBox.TabIndex = 2;
 			// 
 			// pbxExample
@@ -410,7 +409,7 @@
 			this.pbxExample.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pbxExample.Location = new System.Drawing.Point(0, 0);
 			this.pbxExample.Name = "pbxExample";
-			this.pbxExample.Size = new System.Drawing.Size(504, 365);
+			this.pbxExample.Size = new System.Drawing.Size(504, 375);
 			this.pbxExample.TabIndex = 1;
 			this.pbxExample.TabStop = false;
 			this.pbxExample.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseClick);
@@ -427,7 +426,7 @@
 			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 38);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-			this.flowLayoutPanel2.Size = new System.Drawing.Size(504, 39);
+			this.flowLayoutPanel2.Size = new System.Drawing.Size(504, 29);
 			this.flowLayoutPanel2.TabIndex = 5;
 			// 
 			// btnInsert
@@ -479,7 +478,7 @@
 			this.flowLayoutPanel3.Controls.Add(this.btnReset);
 			this.flowLayoutPanel3.Controls.Add(this.btnTextCleaner);
 			this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 83);
+			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 73);
 			this.flowLayoutPanel3.Name = "flowLayoutPanel3";
 			this.flowLayoutPanel3.Size = new System.Drawing.Size(504, 29);
 			this.flowLayoutPanel3.TabIndex = 6;
