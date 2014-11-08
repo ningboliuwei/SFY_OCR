@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -39,7 +38,8 @@ namespace SFY_OCR
 		//当前鼠标移动状态（for 功能），初始值为 DoNothing
 		private MouseMoveState _currentMouseMoveState = MouseMoveState.DoNothing;
 		private Point _currentPoint;
-		private Cursor _cursor;
+		private Cursor _cursorWhenStartResizing;
+		private Pen _dashPen;
 		private bool _isDrawingBox;
 		//当前鼠标是否在移动
 		//是否在移动 Box
@@ -57,7 +57,6 @@ namespace SFY_OCR
 		private Bitmap bitmap;
 		private frmProgressBar progressBar;
 		//画 Box 与移动 Box 用到
-		private Pen _dashPen;
 		//当前激活的 Box （用于移动）
 		//private Box _activingBox;
 
@@ -130,8 +129,6 @@ namespace SFY_OCR
 					dgvBoxes.RowCount = _ocrImage.ImageBoxList.Boxes.Count + 1;
 					//清楚网格中所有选择
 					dgvBoxes.ClearSelection();
-
-
 				}
 				catch (Exception ex)
 				{
@@ -277,7 +274,8 @@ namespace SFY_OCR
 
 			//设置图片框所在的Panel的AutoScroll属性
 			pnlPictureBox.AutoScroll = true;
-			pnlPictureBox.BorderStyle = BorderStyle.FixedSingle; ;
+			pnlPictureBox.BorderStyle = BorderStyle.FixedSingle;
+			;
 		}
 
 
@@ -397,7 +395,7 @@ namespace SFY_OCR
 		{
 			_currentPoint = new Point(e.X, e.Y);
 
-			if (Control.ModifierKeys == Keys.None && e.Button == MouseButtons.Left)
+			if (ModifierKeys == Keys.None && e.Button == MouseButtons.Left)
 			{
 				//记录下按下鼠标左键时的位置
 				_startPoint = new Point(e.X, e.Y);
@@ -418,12 +416,11 @@ namespace SFY_OCR
 					//切换到改变 Box 大小状态
 					_currentMouseMoveState = MouseMoveState.ResizingBox;
 					//记住切换到改变大小状态时的光标（决定改变大小的方式）
-					_cursor = pbxExample.Cursor;
+					_cursorWhenStartResizing = pbxExample.Cursor;
 				}
 			}
-			else if (Control.ModifierKeys == Keys.Control && e.Button == MouseButtons.Left)
+			else if (ModifierKeys == Keys.Control && e.Button == MouseButtons.Left)
 			{
-
 			}
 		}
 
@@ -434,7 +431,6 @@ namespace SFY_OCR
 		/// <param name="e"></param>
 		private void pbxExample_MouseMove(object sender, MouseEventArgs e)
 		{
-			btnConvertToTiff.Text = _ocrImage.ImageBoxList.SelectedBoxes.Count.ToString();
 			_currentPoint = new Point(e.X, e.Y);
 
 			Bitmap buffer = _ocrImage.GetBoxesImage((pbxExample.Image as Bitmap).Size);
@@ -473,10 +469,6 @@ namespace SFY_OCR
 			//若当前处于画 Box 状态
 			if (_currentMouseMoveState == MouseMoveState.DrawingBox)
 			{
-				//if(e.Button == MouseButtons.Left)
-				//	ChangeBoxCursor(_currentPoint);
-
-
 				//判断不同的拖动方向，并计算画 box 的起始点
 				if (_currentPoint.X > _startPoint.X)
 				{
@@ -502,115 +494,80 @@ namespace SFY_OCR
 					_boxLeftTopPoint.Y,
 					Math.Abs(_currentPoint.X - _startPoint.X),
 					Math.Abs(_currentPoint.Y - _startPoint.Y));
-
 			}
 			else if (_currentMouseMoveState == MouseMoveState.MovingBox) //移动 Box 状态
 			{
 				//只允许选中一个Box进行移动
-				Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
-				int newBoxLeftTopPointX = box.X + (_currentPoint.X - _startPoint.X);
-				int newBoxLeftTopPointY = box.Y + (_currentPoint.Y - _startPoint.Y);
+				if (_ocrImage.ImageBoxList.SelectedBoxes.Count != 0) //补丁代码
+				{
+					Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
+					int newBoxLeftTopPointX = box.X + (_currentPoint.X - _startPoint.X);
+					int newBoxLeftTopPointY = box.Y + (_currentPoint.Y - _startPoint.Y);
 
-				g.DrawRectangle(
-					_dashPen,
-					newBoxLeftTopPointX, newBoxLeftTopPointY, box.Width, box.Height);
+					g.DrawRectangle(
+						_dashPen,
+						newBoxLeftTopPointX, newBoxLeftTopPointY, box.Width, box.Height);
+				}
+			}
+			else if (_currentMouseMoveState == MouseMoveState.ResizingBox)
+			{
+				if (_ocrImage.ImageBoxList.SelectedBoxes.Count != 0) //补丁代码
+				{
+					Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
+					int newBoxLeftTopPointX = box.X;
+					int newBoxLeftTopPointY = box.Y;
+					int newBoxWidth = box.Width;
+					int newBoxHeight = box.Height;
+					if (anchorPosition == AnchorPositionType.TopLeft)
+					{
+						newBoxLeftTopPointX = _currentPoint.X;
+						newBoxLeftTopPointY = _currentPoint.Y;
+						newBoxWidth -= _currentPoint.X - _startPoint.X;
+						newBoxHeight -= _currentPoint.Y - _startPoint.Y;
+					}
+					else if (anchorPosition == AnchorPositionType.TopMiddle)
+					{
+						newBoxLeftTopPointY = _currentPoint.Y;
+						newBoxHeight -= _currentPoint.Y - _startPoint.Y;
+					}
+					else if (anchorPosition == AnchorPositionType.TopRight)
+					{
+						newBoxLeftTopPointY = _currentPoint.Y;
+						newBoxWidth += _currentPoint.X - _startPoint.X;
+						newBoxHeight -= _currentPoint.Y - _startPoint.Y;
+					}
+					else if (anchorPosition == AnchorPositionType.MiddleLeft)
+					{
+						newBoxLeftTopPointX = _currentPoint.X;
+						newBoxWidth -= _currentPoint.X - _startPoint.X;
+					}
+					else if (anchorPosition == AnchorPositionType.MiddleRight)
+					{
+						newBoxWidth += _currentPoint.X - _startPoint.X;
+					}
+					else if (anchorPosition == AnchorPositionType.BottomLeft)
+					{
+						newBoxLeftTopPointX = _currentPoint.X;
+						newBoxWidth += _startPoint.X - _currentPoint.X;
+						newBoxHeight += _currentPoint.Y - _startPoint.Y;
+					}
+					else if (anchorPosition == AnchorPositionType.BottomMiddle)
+					{
+						newBoxHeight += _currentPoint.Y - _startPoint.Y;
+					}
+					else if (anchorPosition == AnchorPositionType.BottomRight)
+					{
+						newBoxWidth += _currentPoint.X - _startPoint.X;
+						newBoxHeight += _currentPoint.Y - _startPoint.Y;
+					}
+
+					g.DrawRectangle(
+						_dashPen,
+						newBoxLeftTopPointX, newBoxLeftTopPointY, newBoxWidth, newBoxHeight);
+				}
 			}
 
-			//Graphics g = pbxExample.CreateGraphics();
-			//g.SmoothingMode = SmoothingMode.HighSpeed;
 
-
-			//pbxExample.Invalidate();
-			//pbxExample.Refresh();
-			//TOFIX
-			//if (e.Button == MouseButtons.Left)
-			//{
-			//	if (_isDrawingBox)
-			//	{
-			//		//将当前鼠标坐标与之前记录下的鼠标坐标作比较
-			//		_currentPoint = new Point(e.X, e.Y);
-
-			//		//if (e.X == _boxEndPoint.X && e.Y == _boxEndPoint.Y)
-			//		//{
-			//		//	_isDrawingAndMoving = false;
-			//		//}
-			//		//else
-			//		//{
-			//		//	_isDrawingAndMoving = true;
-			//		//}
-
-			//		//得到拖动结束点坐标
-			//		_boxEndPoint.X = e.X;
-			//		_boxEndPoint.Y = e.Y;
-
-			//		_boxLeftTopPoint = new Point();
-
-			//		//判断不同的拖动方向，并计算画 box 的范围
-			//		if (_boxEndPoint.X > _boxStartPoint.X)
-			//		{
-			//			_boxLeftTopPoint.X = _boxStartPoint.X;
-			//		}
-			//		else
-			//		{
-			//			_boxLeftTopPoint.X = _boxEndPoint.X;
-			//		}
-
-			//		if (_boxEndPoint.Y > _boxStartPoint.Y)
-			//		{
-			//			_boxLeftTopPoint.Y = _boxStartPoint.Y;
-			//		}
-			//		else
-			//		{
-			//			_boxLeftTopPoint.Y = _boxEndPoint.Y;
-			//		}
-
-			//		Graphics g = pbxExample.CreateGraphics();
-
-			//		g.SmoothingMode = SmoothingMode.HighSpeed;
-
-			//		//只有在绘图且移动情况下才画新的矩形
-			//		//_boxesImage = new Bitmap(pbxExample.ClientSize.Width, pbxExample.ClientSize.Height);
-			//		//g = Graphics.FromImage(_boxesImage);
-
-			//		g.SmoothingMode = SmoothingMode.HighSpeed;
-
-			//		//g.DrawRectangle(
-			//		//	new Pen(Color.Red, Convert.ToInt32(StringResourceManager.BoxBorderWidth)),
-			//		//	_boxLeftTopPoint.X,
-			//		//	_boxLeftTopPoint.Y,
-			//		//	Math.Abs(_boxEndPoint.X - _boxStartPoint.X),
-			//		//	Math.Abs(_boxEndPoint.Y - _boxStartPoint.Y));
-
-			//		//;
-			//		Rectangle rectangle = new Rectangle(_boxLeftTopPoint.X, _boxLeftTopPoint.Y,
-			//			Math.Abs(_boxEndPoint.X - _boxStartPoint.X), Math.Abs(_boxEndPoint.Y - _boxStartPoint.Y));
-			//		g.DrawRectangle(new Pen(Color.Red, Convert.ToInt32(StringResourceManager.BoxBorderWidth)), rectangle);
-			//		pbxExample.Invalidate(rectangle);
-			//		//显示当前鼠标坐标
-			//		button1.Text = _boxStartPoint.X + "," + _boxStartPoint.Y + "," + Math.Abs(_boxEndPoint.X - _boxStartPoint.X) + ","
-			//					   + Math.Abs(_boxEndPoint.Y - _boxStartPoint.Y);
-
-			//		////获取画矩形之前的图片（以便擦除）
-			//		//_previousImage = (Bitmap)pbxExample.Image;
-			//		////将矩形真正画到picturebox上
-			//		//pbxExample.CreateGraphics().DrawImage(_boxesImage, 0, 0);
-
-			//		//Thread.Sleep(10);
-
-			//		////只有在拖动矩形前提下，才清除
-			//		//if (_isDrawingAndMoving)
-			//		//{
-			//		//	pbxExample.Image = _previousImage;
-			//	}
-			//}
-
-			//只有在拖动矩形情况下才需要画矩形（并不断清除）
-			//if (_isDrawingAndMoving)
-			//{
-			//	//tmrClearBox.Start();
-			//	//判断矩形左上角的点的位置
-
-			//}
 			pbxExample.Image = buffer;
 			pbxExample.Update();
 		}
@@ -621,7 +578,7 @@ namespace SFY_OCR
 		private void ChangeCursor(Point currentPoint)
 		{
 			//选中的Box的边框宽度
-			int bw = Convert.ToInt32(StringResourceManager.SelectedBoxBorderWidth);
+			int bw = Convert.ToInt32(StringResourceManager.SelectedBoxBorderWidth) * 3; //给了3倍的宽容度
 
 			//若还没有打开图片，或已打开，但没选中任何 Box
 			if (_ocrImage == null || _ocrImage.ImageBoxList.SelectedBoxes.Count != 1)
@@ -629,84 +586,84 @@ namespace SFY_OCR
 				pbxExample.Cursor = Cursors.Default;
 				anchorPosition = AnchorPositionType.None;
 			}
-			else//只选中了一个 Box 
+			else //只选中了一个 Box 
 			{
-				Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
-				if (
-					new Rectangle(box.X, box.Y, bw, bw).Contains(currentPoint))
+				//在不处于 Resizing 模式下下才变化光标样式
+				if (_currentMouseMoveState != MouseMoveState.ResizingBox) //补丁代码
 				{
-					// ↖↘ 箭头
-					pbxExample.Cursor = Cursors.SizeNWSE;
-					anchorPosition = AnchorPositionType.TopLeft;
-				}
-				//右下
-				else if (new Rectangle(box.X + box.Width - bw, box.Y + box.Height - bw, bw, bw).Contains(currentPoint))
-				{
-					// ↖↘ 箭头
-					pbxExample.Cursor = Cursors.SizeNWSE;
-					anchorPosition = AnchorPositionType.BottomRight;
-				}
-				//左下
-				else if (
-					new Rectangle(box.X, box.Y + box.Height - bw, bw, bw).Contains(currentPoint))
-				{
-					// ↗↙ 箭头
-					pbxExample.Cursor = Cursors.SizeNESW;
-					anchorPosition = AnchorPositionType.BottomLeft;
-				}
-				//右上
-				else if (new Rectangle(box.X + box.Width - bw, box.Y, bw, bw).Contains(currentPoint))
-				{
-					// ↗↙ 箭头
-					pbxExample.Cursor = Cursors.SizeNESW;
-					anchorPosition = AnchorPositionType.TopRight;
-				}
-				//上边
-				else if (new Rectangle(box.X + bw, box.Y, box.Width - bw * 2, bw).Contains(currentPoint))
-				{
-					//上下箭头
-					pbxExample.Cursor = Cursors.SizeNS;
-					anchorPosition = AnchorPositionType.TopMiddle;
-				}
-				//下边
-				else if (new Rectangle(box.X + bw, box.Y + box.Height - bw, box.Width - bw * 2, bw).Contains(currentPoint))
-				{
-					//上下箭头
-					pbxExample.Cursor = Cursors.SizeNS;
-					anchorPosition = AnchorPositionType.BottomMiddle;
-				}
-				//左边
-				else if (new Rectangle(box.X, box.Y + bw, bw, box.Height - bw * 2).Contains(currentPoint))
-				{
-					//左右箭头
-					pbxExample.Cursor = Cursors.SizeWE;
-					anchorPosition = AnchorPositionType.MiddleLeft;
-				}
-				//右边
-				else if (new Rectangle(box.X + box.Width - bw, box.Y + bw, bw, box.Y + box.Height - bw * 2).Contains(currentPoint))
-				{
-					//左右箭头
-					pbxExample.Cursor = Cursors.SizeWE;
-					anchorPosition = AnchorPositionType.MiddleRight;
-				}
-				//Box内部（拖动位置）
-				else if (new Rectangle(box.X + bw, box.Y + bw, box.Width - bw * 2, box.Height - bw * 2).Contains(currentPoint))
-				{
-					pbxExample.Cursor = Cursors.SizeAll;
-					anchorPosition = AnchorPositionType.MiddleMiddle;
-				}
+					Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
+					if (
+						new Rectangle(box.X, box.Y, bw, bw).Contains(currentPoint))
+					{
+						// ↖↘ 箭头
+						pbxExample.Cursor = Cursors.SizeNWSE;
+						anchorPosition = AnchorPositionType.TopLeft;
+					}
+					//右下
+					else if (new Rectangle(box.X + box.Width - bw, box.Y + box.Height - bw, bw, bw).Contains(currentPoint))
+					{
+						// ↖↘ 箭头
+						pbxExample.Cursor = Cursors.SizeNWSE;
+						anchorPosition = AnchorPositionType.BottomRight;
+					}
+					//左下
+					else if (
+						new Rectangle(box.X, box.Y + box.Height - bw, bw, bw).Contains(currentPoint))
+					{
+						// ↗↙ 箭头
+						pbxExample.Cursor = Cursors.SizeNESW;
+						anchorPosition = AnchorPositionType.BottomLeft;
+					}
+					//右上
+					else if (new Rectangle(box.X + box.Width - bw, box.Y, bw, bw).Contains(currentPoint))
+					{
+						// ↗↙ 箭头
+						pbxExample.Cursor = Cursors.SizeNESW;
+						anchorPosition = AnchorPositionType.TopRight;
+					}
+					//上边
+					else if (new Rectangle(box.X + bw, box.Y, box.Width - bw * 2, bw).Contains(currentPoint))
+					{
+						//上下箭头
+						pbxExample.Cursor = Cursors.SizeNS;
+						anchorPosition = AnchorPositionType.TopMiddle;
+					}
+					//下边
+					else if (new Rectangle(box.X + bw, box.Y + box.Height - bw, box.Width - bw * 2, bw).Contains(currentPoint))
+					{
+						//上下箭头
+						pbxExample.Cursor = Cursors.SizeNS;
+						anchorPosition = AnchorPositionType.BottomMiddle;
+					}
+					//左边
+					else if (new Rectangle(box.X, box.Y + bw, bw, box.Height - bw * 2).Contains(currentPoint))
+					{
+						//左右箭头
+						pbxExample.Cursor = Cursors.SizeWE;
+						anchorPosition = AnchorPositionType.MiddleLeft;
+					}
+					//右边
+					else if (new Rectangle(box.X + box.Width - bw, box.Y + bw, bw, box.Y + box.Height - bw * 2).Contains(currentPoint))
+					{
+						//左右箭头
+						pbxExample.Cursor = Cursors.SizeWE;
+						anchorPosition = AnchorPositionType.MiddleRight;
+					}
+					//Box内部（拖动位置）
+					else if (new Rectangle(box.X + bw, box.Y + bw, box.Width - bw * 2, box.Height - bw * 2).Contains(currentPoint))
+					{
+						pbxExample.Cursor = Cursors.SizeAll;
+						anchorPosition = AnchorPositionType.MiddleMiddle;
+					}
 
-					//Box 外部
-				else
-				{
-					pbxExample.Cursor = Cursors.Default;
-					anchorPosition = AnchorPositionType.None;
+						//Box 外部
+					else
+					{
+						pbxExample.Cursor = Cursors.Default;
+						anchorPosition = AnchorPositionType.None;
+					}
 				}
-				//}
-				//}
-
 			}
-
 		}
 
 
@@ -714,7 +671,7 @@ namespace SFY_OCR
 		{
 			_currentPoint = new Point(e.X, e.Y);
 
-			if (Control.ModifierKeys == Keys.None && e.Button == MouseButtons.Left)
+			if (ModifierKeys == Keys.None && e.Button == MouseButtons.Left)
 			{
 				//测试用 btnConvertToTiff.Text = _ocrImage.ImageBoxList.SelectedBoxes.Count.ToString();
 				//如果松开鼠标左键之前是处于画矩形状态
@@ -737,13 +694,12 @@ namespace SFY_OCR
 						AddBoxToDataGridView(box);
 						//跳转到刚添加的那行
 						JumpToBoxRecordInDataGridView(box);
-
 					}
 				}
 				//若之前处于移动 Box 状态
 				else if (_currentMouseMoveState == MouseMoveState.MovingBox)
 				{
-					if (_ocrImage.ImageBoxList.SelectedBoxes.Count != 0)//补丁语句
+					if (_ocrImage.ImageBoxList.SelectedBoxes.Count != 0) //补丁语句
 					{
 						Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
 						box.X += (_currentPoint.X - _startPoint.X);
@@ -752,55 +708,53 @@ namespace SFY_OCR
 				}
 				else if (_currentMouseMoveState == MouseMoveState.ResizingBox)
 				{
-					//1108屏蔽
-					//if (anchorPosition == AnchorPositionType.TopLeft)
-					//{
-					//	_activingBox.X = _currentPoint.X;
-					//	_activingBox.Y = _currentPoint.Y;
-					//	_activingBox.Width -= _currentPoint.X - _startPoint.X;
-					//	_activingBox.Height -= _currentPoint.Y - _startPoint.Y;
-					//}
-					//else if (anchorPosition == AnchorPositionType.TopMiddle)
-					//{
-					//	_activingBox.Y = _currentPoint.Y;
-					//	_activingBox.Height -= _currentPoint.Y - _startPoint.Y;
-					//}
-					//else if (anchorPosition == AnchorPositionType.TopRight)
-					//{
-					//	_activingBox.Y = _currentPoint.Y;
-					//	_activingBox.Width += _currentPoint.X - _startPoint.X;
-					//	_activingBox.Height -= _currentPoint.Y - _startPoint.Y;
-					//}
-					//else if (anchorPosition == AnchorPositionType.MiddleLeft)
-					//{
-					//	_activingBox.X = _currentPoint.X;
-					//	_activingBox.Width -= _currentPoint.X - _startPoint.X;
-					//}
-					//else if (anchorPosition == AnchorPositionType.MiddleRight)
-					//{
-					//	_activingBox.Width += _currentPoint.X - _startPoint.X;
-					//}
-					//else if (anchorPosition == AnchorPositionType.BottomLeft)
-					//{
-					//	_activingBox.X = _currentPoint.X;
-					//	_activingBox.Width += _startPoint.X - _currentPoint.X;
-					//	_activingBox.Height += _currentPoint.Y - _startPoint.Y;
-					//}
-					//else if (anchorPosition == AnchorPositionType.BottomMiddle)
-					//{
-					//	_activingBox.Y = _currentPoint.Y;
-					//	_activingBox.Height += _currentPoint.Y - _startPoint.Y;
-					//}
-					//else if (anchorPosition == AnchorPositionType.BottomRight)
-					//{
-					//	_activingBox.Width += _currentPoint.X - _startPoint.X;
-					//	_activingBox.Height += _currentPoint.Y - _startPoint.Y;
-					//}
-					//1108屏蔽
-				}
-				else
-				{
+					if (_ocrImage.ImageBoxList.SelectedBoxes.Count != 0) //补丁代码
+					{
+						Box box = _ocrImage.ImageBoxList.SelectedBoxes[0];
 
+						if (anchorPosition == AnchorPositionType.TopLeft)
+						{
+							box.X = _currentPoint.X;
+							box.Y = _currentPoint.Y;
+							box.Width -= _currentPoint.X - _startPoint.X;
+							box.Height -= _currentPoint.Y - _startPoint.Y;
+						}
+						else if (anchorPosition == AnchorPositionType.TopMiddle)
+						{
+							box.Y = _currentPoint.Y;
+							box.Height -= _currentPoint.Y - _startPoint.Y;
+						}
+						else if (anchorPosition == AnchorPositionType.TopRight)
+						{
+							box.Y = _currentPoint.Y;
+							box.Width += _currentPoint.X - _startPoint.X;
+							box.Height -= _currentPoint.Y - _startPoint.Y;
+						}
+						else if (anchorPosition == AnchorPositionType.MiddleLeft)
+						{
+							box.X = _currentPoint.X;
+							box.Width -= _currentPoint.X - _startPoint.X;
+						}
+						else if (anchorPosition == AnchorPositionType.MiddleRight)
+						{
+							box.Width += _currentPoint.X - _startPoint.X;
+						}
+						else if (anchorPosition == AnchorPositionType.BottomLeft)
+						{
+							box.X = _currentPoint.X;
+							box.Width += _startPoint.X - _currentPoint.X;
+							box.Height += _currentPoint.Y - _startPoint.Y;
+						}
+						else if (anchorPosition == AnchorPositionType.BottomMiddle)
+						{
+							box.Height += _currentPoint.Y - _startPoint.Y;
+						}
+						else if (anchorPosition == AnchorPositionType.BottomRight)
+						{
+							box.Width += _currentPoint.X - _startPoint.X;
+							box.Height += _currentPoint.Y - _startPoint.Y;
+						}
+					}
 				}
 
 				RefreshBoxImageInPictureBox();
@@ -810,10 +764,7 @@ namespace SFY_OCR
 				//RefreshBoxSelectionInDataGridView();
 				//刷新图片框中 Box 的选中状态
 				//RefreshBoxImageInPictureBox();
-
 			}
-
-
 		}
 
 
@@ -887,7 +838,7 @@ namespace SFY_OCR
 			//若没有在任何一个 Box 内，全部不选
 			//TODO 特殊情况，选中三个，然后再在其中一个点，应该选中那个
 			//只点击鼠标左键，单选
-			
+
 			if (ModifierKeys == Keys.None && e.Button == MouseButtons.Left)
 			{
 				Box clickedBox = null;
@@ -903,21 +854,23 @@ namespace SFY_OCR
 				//如果点中了某一个Box的话
 				if (clickedBox != null)
 				{
-					//如果当时只选中一个
-					if (_ocrImage.ImageBoxList.SelectedBoxes.Count == 1)
+					//排除正在移动 Box 的状态和正在改变 Box 大小的状态
+					if (_currentMouseMoveState != MouseMoveState.MovingBox && _currentMouseMoveState != MouseMoveState.ResizingBox)//补丁代码
 					{
-						//反选此 Box
-						clickedBox.Selected = !clickedBox.Selected;
-					}
-					else //如果当时已同时选中了多个
-					{
-						//变成只选中点的那个
-						clickedBox.Selected = true;
-					}
+						//如果当时只选中一个
+						if (_ocrImage.ImageBoxList.SelectedBoxes.Count == 1)
+						{
+							//反选此 Box
+							clickedBox.Selected = !clickedBox.Selected;
+						}
+						else //如果当时已同时选中了多个
+						{
+							//变成只选中点的那个
+							clickedBox.Selected = true;
+						}
 
-					//排除移动 Box 的情况，因为移动完毕后会点在别的地方
-					if (_currentMouseMoveState != MouseMoveState.MovingBox)
-					{
+						//排除移动 Box 的情况和正在改变 Box 大小的状态，因为移动完毕后会点在别的地方
+
 						//将所有非点中的Box设为不选中
 						foreach (Box box in _ocrImage.ImageBoxList.Boxes)
 						{
@@ -930,8 +883,7 @@ namespace SFY_OCR
 				}
 				else //如果没点中任何一个，取消选择所有的
 				{
-					//排除正在移动 Box 的状态
-					if (_currentMouseMoveState != MouseMoveState.MovingBox)
+					if (_currentMouseMoveState != MouseMoveState.MovingBox && _currentMouseMoveState != MouseMoveState.ResizingBox)
 					{
 						_ocrImage.ImageBoxList.UnSelectAll();
 					}
@@ -975,10 +927,6 @@ namespace SFY_OCR
 				RefreshBoxSelectionInDataGridView();
 			}
 			//如果当前有选中 Box ，数据网格跳到那个Sn最大的Box对应的行
-
-
-
-
 		}
 
 		private void btnInsert_Click(object sender, EventArgs e)
@@ -1136,7 +1084,7 @@ namespace SFY_OCR
 			RefreshBoxImageInPictureBox();
 		}
 
-	
+
 		//在改变数据网格中的选中状态时，改变 Box 选中状态
 		private void dgvBoxes_SelectionChanged(object sender, EventArgs e)
 		{
@@ -1151,7 +1099,6 @@ namespace SFY_OCR
 			//}
 		}
 
-		
 
 		/// <summary>
 		///     在图片框中滚动到指定 Box 位置(使其在图片框中心)
