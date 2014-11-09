@@ -28,7 +28,6 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTrainingTool));
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -73,7 +72,6 @@
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcess = new System.ComponentModel.BackgroundWorker();
-			this.tmrClearBox = new System.Windows.Forms.Timer(this.components);
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -407,6 +405,7 @@
 			// pbxExample
 			// 
 			this.pbxExample.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.pbxExample.Enabled = false;
 			this.pbxExample.Location = new System.Drawing.Point(0, 0);
 			this.pbxExample.Name = "pbxExample";
 			this.pbxExample.Size = new System.Drawing.Size(504, 375);
@@ -414,6 +413,8 @@
 			this.pbxExample.TabStop = false;
 			this.pbxExample.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseClick);
 			this.pbxExample.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseDown);
+			this.pbxExample.MouseEnter += new System.EventHandler(this.pbxExample_MouseEnter);
+			this.pbxExample.MouseLeave += new System.EventHandler(this.pbxExample_MouseLeave);
 			this.pbxExample.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseMove);
 			this.pbxExample.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseUp);
 			// 
@@ -558,10 +559,6 @@
 			this.bgwProcess.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProcess_DoWork);
 			this.bgwProcess.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwProcess_RunWorkerCompleted);
 			// 
-			// tmrClearBox
-			// 
-			this.tmrClearBox.Tick += new System.EventHandler(this.tmrClearBox_Tick);
-			// 
 			// frmTrainingTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -622,7 +619,6 @@
 		private System.Windows.Forms.TrackBar trackBar1;
 		private System.Windows.Forms.Button btnTextCleaner;
 		private System.ComponentModel.BackgroundWorker bgwProcess;
-		private System.Windows.Forms.Timer tmrClearBox;
 		private System.Windows.Forms.Timer tmrCheckMovement;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 		private System.Windows.Forms.Label label1;
