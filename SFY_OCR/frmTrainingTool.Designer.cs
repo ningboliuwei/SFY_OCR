@@ -36,7 +36,9 @@
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this.toolStripOpenImage = new System.Windows.Forms.ToolStripButton();
 			this.toolStripBtnSaveBox = new System.Windows.Forms.ToolStripButton();
+			this.toolStripBtnMakeTrainedData = new System.Windows.Forms.ToolStripButton();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+			this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
 			this.cmbPreProcess = new System.Windows.Forms.ComboBox();
 			this.chkToTiff = new System.Windows.Forms.CheckBox();
 			this.trackBar1 = new System.Windows.Forms.TrackBar();
@@ -67,8 +69,6 @@
 			this.btnTextCleaner = new System.Windows.Forms.Button();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcess = new System.ComponentModel.BackgroundWorker();
-			this.toolStripBtnMakeTrainedData = new System.Windows.Forms.ToolStripButton();
-			this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -78,6 +78,7 @@
 			this.tableLayoutPanel1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
+			this.flowLayoutPanel4.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvBoxes)).BeginInit();
 			this.tableLayoutPanel2.SuspendLayout();
@@ -90,7 +91,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).BeginInit();
 			this.flowLayoutPanel2.SuspendLayout();
 			this.flowLayoutPanel3.SuspendLayout();
-			this.flowLayoutPanel4.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -182,6 +182,15 @@
 			this.toolStripBtnSaveBox.Text = "保存Box文件";
 			this.toolStripBtnSaveBox.Click += new System.EventHandler(this.toolStripBtnSaveBox_Click);
 			// 
+			// toolStripBtnMakeTrainedData
+			// 
+			this.toolStripBtnMakeTrainedData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripBtnMakeTrainedData.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnMakeTrainedData.Image")));
+			this.toolStripBtnMakeTrainedData.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripBtnMakeTrainedData.Name = "toolStripBtnMakeTrainedData";
+			this.toolStripBtnMakeTrainedData.Size = new System.Drawing.Size(36, 37);
+			this.toolStripBtnMakeTrainedData.Text = "生成训练文件";
+			// 
 			// tableLayoutPanel3
 			// 
 			this.tableLayoutPanel3.ColumnCount = 1;
@@ -194,6 +203,17 @@
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel3.Size = new System.Drawing.Size(250, 110);
 			this.tableLayoutPanel3.TabIndex = 1;
+			// 
+			// flowLayoutPanel4
+			// 
+			this.flowLayoutPanel4.Controls.Add(this.cmbPreProcess);
+			this.flowLayoutPanel4.Controls.Add(this.chkToTiff);
+			this.flowLayoutPanel4.Controls.Add(this.trackBar1);
+			this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 3);
+			this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+			this.flowLayoutPanel4.Size = new System.Drawing.Size(244, 104);
+			this.flowLayoutPanel4.TabIndex = 4;
 			// 
 			// cmbPreProcess
 			// 
@@ -239,6 +259,7 @@
 			this.dgvBoxes.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvBoxes_RowsAdded);
 			this.dgvBoxes.SelectionChanged += new System.EventHandler(this.dgvBoxes_SelectionChanged);
 			this.dgvBoxes.Click += new System.EventHandler(this.dgvBoxes_Click);
+			this.dgvBoxes.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvBoxes_KeyDown);
 			// 
 			// tableLayoutPanel2
 			// 
@@ -496,26 +517,6 @@
 			this.bgwProcess.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProcess_DoWork);
 			this.bgwProcess.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwProcess_RunWorkerCompleted);
 			// 
-			// toolStripBtnMakeTrainedData
-			// 
-			this.toolStripBtnMakeTrainedData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripBtnMakeTrainedData.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnMakeTrainedData.Image")));
-			this.toolStripBtnMakeTrainedData.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripBtnMakeTrainedData.Name = "toolStripBtnMakeTrainedData";
-			this.toolStripBtnMakeTrainedData.Size = new System.Drawing.Size(36, 37);
-			this.toolStripBtnMakeTrainedData.Text = "生成训练文件";
-			// 
-			// flowLayoutPanel4
-			// 
-			this.flowLayoutPanel4.Controls.Add(this.cmbPreProcess);
-			this.flowLayoutPanel4.Controls.Add(this.chkToTiff);
-			this.flowLayoutPanel4.Controls.Add(this.trackBar1);
-			this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 3);
-			this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-			this.flowLayoutPanel4.Size = new System.Drawing.Size(244, 185);
-			this.flowLayoutPanel4.TabIndex = 4;
-			// 
 			// frmTrainingTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -541,6 +542,8 @@
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();
 			this.tableLayoutPanel3.ResumeLayout(false);
+			this.flowLayoutPanel4.ResumeLayout(false);
+			this.flowLayoutPanel4.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvBoxes)).EndInit();
 			this.tableLayoutPanel2.ResumeLayout(false);
@@ -554,8 +557,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).EndInit();
 			this.flowLayoutPanel2.ResumeLayout(false);
 			this.flowLayoutPanel3.ResumeLayout(false);
-			this.flowLayoutPanel4.ResumeLayout(false);
-			this.flowLayoutPanel4.PerformLayout();
 			this.ResumeLayout(false);
 
 		}

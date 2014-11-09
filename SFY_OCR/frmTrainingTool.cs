@@ -845,6 +845,9 @@ namespace SFY_OCR
 								box.Selected = false;
 							}
 						}
+						//实验性补充
+						ScrollToInPictureBoxByBox(clickedBox);
+						JumpToBoxRecordInDataGridView(clickedBox);
 					}
 				}
 				else //如果没点中任何一个，取消选择所有的
@@ -892,12 +895,15 @@ namespace SFY_OCR
 					}
 
 				}
+				//实验性补充
+				ScrollToInPictureBoxByBox(clickedBox);
+				JumpToBoxRecordInDataGridView(clickedBox);
 
 			}
 			RefreshBoxImageInPictureBox();
 			RefreshBoxSelectionInDataGridView();
 			RefreshBoxInfoInHeader();
-			
+
 		}
 
 		private void btnInsert_Click(object sender, EventArgs e)
@@ -954,6 +960,24 @@ namespace SFY_OCR
 
 		private void dgvBoxes_Click(object sender, EventArgs e)
 		{
+			DataGridViewRow row = dgvBoxes.Rows[dgvBoxes.CurrentRow.Index];
+			int sn = Convert.ToInt32(row.Cells["sn"].Value);
+			_ocrImage.ImageBoxList.GetBoxBySn(sn).Selected = row.Selected;
+
+			foreach (DataGridViewRow r in dgvBoxes.Rows)
+			{
+				//如果不是最后一行（空行）
+				if (r.Index != dgvBoxes.Rows.Count - 1 && r.Index != dgvBoxes.CurrentRow.Index)
+				{
+					_ocrImage.ImageBoxList.Boxes[r.Index].Selected = r.Selected;
+				}
+			}
+
+			btnMakeBox.Text = _ocrImage.ImageBoxList.SelectedBoxes.Count.ToString();
+
+			RefreshBoxImageInPictureBox();
+			RefreshBoxInfoInHeader();
+			ScrollToInPictureBoxByBox(_ocrImage.ImageBoxList.GetBoxBySn(Convert.ToInt32(dgvBoxes.CurrentRow.Cells["sn"].Value)));
 		}
 
 
@@ -1060,10 +1084,12 @@ namespace SFY_OCR
 			//保证加载完毕后
 			//if (dgvBoxes.Rows.Count == _ocrImage.ImageBoxList.Boxes.Count + 1)
 			//{
-			//	DataGridViewRow row = dgvBoxes.Rows[dgvBoxes.CurrentRow.Index];
-			//	int sn = Convert.ToInt32(row.Cells["sn"].Value);
-			//	_ocrImage.ImageBoxList.GetBoxBySn(sn).Selected = row.Selected;
+			//DataGridViewRow row = dgvBoxes.Rows[dgvBoxes.CurrentRow.Index];
+			//int sn = Convert.ToInt32(row.Cells["sn"].Value);
+			//_ocrImage.ImageBoxList.GetBoxBySn(sn).Selected = row.Selected;
 			//	RefreshBoxImageInPictureBox();
+
+
 			//}
 		}
 
@@ -1562,6 +1588,14 @@ namespace SFY_OCR
 		private void pbxExample_MouseLeave(object sender, EventArgs e)
 		{
 
+		}
+
+		private void dgvBoxes_KeyDown(object sender, KeyEventArgs e)
+		{
+			//if (ModifierKeys == Keys.Control && e == "a")
+			//{
+				
+			//}
 		}
 	}
 }
