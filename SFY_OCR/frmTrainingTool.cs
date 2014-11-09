@@ -432,6 +432,11 @@ namespace SFY_OCR
 		/// <param name="e"></param>
 		private void pbxExample_MouseMove(object sender, MouseEventArgs e)
 		{
+			if (pbxExample.Image == null)
+			{
+				return;
+			}
+
 			_currentPoint = new Point(e.X, e.Y);
 
 			Bitmap buffer = _ocrImage.GetBoxesImage((pbxExample.Image as Bitmap).Size);
@@ -892,8 +897,7 @@ namespace SFY_OCR
 			RefreshBoxImageInPictureBox();
 			RefreshBoxSelectionInDataGridView();
 			RefreshBoxInfoInHeader();
-			//如果当前有选中 Box ，数据网格跳到那个Sn最大的Box对应的行
-			btnConvertToTiff.Text = _ocrImage.ImageBoxList.SelectedBoxes.Count.ToString();
+			
 		}
 
 		private void btnInsert_Click(object sender, EventArgs e)
@@ -1295,6 +1299,9 @@ namespace SFY_OCR
 		{
 			btnRotateLeft.Enabled = false;
 			btnRotateRight.Enabled = false;
+			btnMakeBox.Enabled = false;
+			btnReset.Enabled = false;
+			btnTextCleaner.Enabled = false;
 		}
 
 		/// <summary>
@@ -1309,6 +1316,9 @@ namespace SFY_OCR
 			}
 			btnRotateLeft.Enabled = true;
 			btnRotateRight.Enabled = true;
+			btnMakeBox.Enabled = true;
+			btnReset.Enabled = true;
+			btnTextCleaner.Enabled = true;
 		}
 
 
@@ -1542,10 +1552,6 @@ namespace SFY_OCR
 			g.FillRectangle(new SolidBrush(Color.LightYellow), toolTipX - 2, toolTipY - 2, characterSize.Width,
 				characterSize.Height);
 			g.DrawString(character, characterFont, new SolidBrush(Color.Black), toolTipX - 2, toolTipY - 2);
-			//g.DrawRectangle(new Pen(Color.Gray, 2), toolTipX, toolTipY, characterSize.Width, characterSize.Height);
-			//提示的阴影部分
-
-
 		}
 
 		private void pbxExample_MouseEnter(object sender, EventArgs e)

@@ -40,8 +40,6 @@
 			this.cmbPreProcess = new System.Windows.Forms.ComboBox();
 			this.chkToTiff = new System.Windows.Forms.CheckBox();
 			this.trackBar1 = new System.Windows.Forms.TrackBar();
-			this.button1 = new System.Windows.Forms.Button();
-			this.btnSave = new System.Windows.Forms.Button();
 			this.dgvBoxes = new System.Windows.Forms.DataGridView();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -61,17 +59,16 @@
 			this.btnInsert = new System.Windows.Forms.Button();
 			this.btnMerge = new System.Windows.Forms.Button();
 			this.btnDelete = new System.Windows.Forms.Button();
-			this.btnDisplayBoxes = new System.Windows.Forms.Button();
 			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
 			this.btnRotateLeft = new System.Windows.Forms.Button();
 			this.btnRotateRight = new System.Windows.Forms.Button();
 			this.btnMakeBox = new System.Windows.Forms.Button();
-			this.btnConvertToTiff = new System.Windows.Forms.Button();
 			this.btnReset = new System.Windows.Forms.Button();
 			this.btnTextCleaner = new System.Windows.Forms.Button();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcess = new System.ComponentModel.BackgroundWorker();
+			this.toolStripBtnMakeTrainedData = new System.Windows.Forms.ToolStripButton();
+			this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -93,12 +90,12 @@
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).BeginInit();
 			this.flowLayoutPanel2.SuspendLayout();
 			this.flowLayoutPanel3.SuspendLayout();
+			this.flowLayoutPanel4.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
@@ -114,7 +111,7 @@
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
 			this.tabPage1.Size = new System.Drawing.Size(776, 492);
 			this.tabPage1.TabIndex = 0;
-			this.tabPage1.Text = "tabPage1";
+			this.tabPage1.Text = "训练";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
 			// splitContainer1
@@ -140,16 +137,13 @@
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel1.Controls.Add(this.toolStrip1, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 1);
-			this.tableLayoutPanel1.Controls.Add(this.btnSave, 0, 3);
-			this.tableLayoutPanel1.Controls.Add(this.dgvBoxes, 0, 4);
+			this.tableLayoutPanel1.Controls.Add(this.dgvBoxes, 0, 2);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 5;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 197F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+			this.tableLayoutPanel1.RowCount = 3;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 116F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(256, 486);
 			this.tableLayoutPanel1.TabIndex = 0;
@@ -157,12 +151,14 @@
 			// toolStrip1
 			// 
 			this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.toolStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripOpenImage,
-            this.toolStripBtnSaveBox});
+            this.toolStripBtnSaveBox,
+            this.toolStripBtnMakeTrainedData});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(256, 30);
+			this.toolStrip1.Size = new System.Drawing.Size(256, 40);
 			this.toolStrip1.TabIndex = 0;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
@@ -172,7 +168,7 @@
 			this.toolStripOpenImage.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOpenImage.Image")));
 			this.toolStripOpenImage.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripOpenImage.Name = "toolStripOpenImage";
-			this.toolStripOpenImage.Size = new System.Drawing.Size(23, 27);
+			this.toolStripOpenImage.Size = new System.Drawing.Size(36, 37);
 			this.toolStripOpenImage.Text = "打开图片";
 			this.toolStripOpenImage.Click += new System.EventHandler(this.toolStripBtnOpenImage_Click);
 			// 
@@ -182,28 +178,21 @@
 			this.toolStripBtnSaveBox.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnSaveBox.Image")));
 			this.toolStripBtnSaveBox.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripBtnSaveBox.Name = "toolStripBtnSaveBox";
-			this.toolStripBtnSaveBox.Size = new System.Drawing.Size(23, 27);
-			this.toolStripBtnSaveBox.Text = "toolStripButton2";
+			this.toolStripBtnSaveBox.Size = new System.Drawing.Size(36, 37);
+			this.toolStripBtnSaveBox.Text = "保存Box文件";
 			this.toolStripBtnSaveBox.Click += new System.EventHandler(this.toolStripBtnSaveBox_Click);
 			// 
 			// tableLayoutPanel3
 			// 
 			this.tableLayoutPanel3.ColumnCount = 1;
 			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel3.Controls.Add(this.cmbPreProcess, 0, 0);
-			this.tableLayoutPanel3.Controls.Add(this.chkToTiff, 0, 1);
-			this.tableLayoutPanel3.Controls.Add(this.trackBar1, 0, 4);
-			this.tableLayoutPanel3.Controls.Add(this.button1, 0, 2);
+			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 0, 0);
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 33);
+			this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 43);
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-			this.tableLayoutPanel3.RowCount = 5;
+			this.tableLayoutPanel3.RowCount = 1;
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(250, 191);
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(250, 110);
 			this.tableLayoutPanel3.TabIndex = 1;
 			// 
 			// cmbPreProcess
@@ -218,7 +207,7 @@
 			// chkToTiff
 			// 
 			this.chkToTiff.AutoSize = true;
-			this.chkToTiff.Location = new System.Drawing.Point(3, 54);
+			this.chkToTiff.Location = new System.Drawing.Point(3, 34);
 			this.chkToTiff.Name = "chkToTiff";
 			this.chkToTiff.Size = new System.Drawing.Size(142, 21);
 			this.chkToTiff.TabIndex = 1;
@@ -227,7 +216,7 @@
 			// 
 			// trackBar1
 			// 
-			this.trackBar1.Location = new System.Drawing.Point(3, 143);
+			this.trackBar1.Location = new System.Drawing.Point(3, 61);
 			this.trackBar1.Maximum = 100;
 			this.trackBar1.Name = "trackBar1";
 			this.trackBar1.Size = new System.Drawing.Size(172, 45);
@@ -235,34 +224,14 @@
 			this.trackBar1.TickFrequency = 5;
 			this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
 			// 
-			// button1
-			// 
-			this.button1.Location = new System.Drawing.Point(3, 84);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 4;
-			this.button1.Text = "button1";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click_1);
-			// 
-			// btnSave
-			// 
-			this.btnSave.Location = new System.Drawing.Point(3, 274);
-			this.btnSave.Name = "btnSave";
-			this.btnSave.Size = new System.Drawing.Size(75, 23);
-			this.btnSave.TabIndex = 2;
-			this.btnSave.Text = "保存";
-			this.btnSave.UseVisualStyleBackColor = true;
-			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-			// 
 			// dgvBoxes
 			// 
 			this.dgvBoxes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dgvBoxes.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dgvBoxes.Location = new System.Drawing.Point(3, 319);
+			this.dgvBoxes.Location = new System.Drawing.Point(3, 159);
 			this.dgvBoxes.Name = "dgvBoxes";
 			this.dgvBoxes.RowTemplate.Height = 24;
-			this.dgvBoxes.Size = new System.Drawing.Size(250, 164);
+			this.dgvBoxes.Size = new System.Drawing.Size(250, 324);
 			this.dgvBoxes.TabIndex = 3;
 			this.dgvBoxes.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvBoxes_CellValueChanged);
 			this.dgvBoxes.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dgvBoxes_CellValueNeeded);
@@ -423,7 +392,6 @@
 			this.flowLayoutPanel2.Controls.Add(this.btnInsert);
 			this.flowLayoutPanel2.Controls.Add(this.btnMerge);
 			this.flowLayoutPanel2.Controls.Add(this.btnDelete);
-			this.flowLayoutPanel2.Controls.Add(this.btnDisplayBoxes);
 			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 38);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
@@ -460,22 +428,11 @@
 			this.btnDelete.UseVisualStyleBackColor = true;
 			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
 			// 
-			// btnDisplayBoxes
-			// 
-			this.btnDisplayBoxes.Location = new System.Drawing.Point(246, 3);
-			this.btnDisplayBoxes.Name = "btnDisplayBoxes";
-			this.btnDisplayBoxes.Size = new System.Drawing.Size(75, 23);
-			this.btnDisplayBoxes.TabIndex = 4;
-			this.btnDisplayBoxes.Text = "显示Box";
-			this.btnDisplayBoxes.UseVisualStyleBackColor = true;
-			this.btnDisplayBoxes.Click += new System.EventHandler(this.button3_Click);
-			// 
 			// flowLayoutPanel3
 			// 
 			this.flowLayoutPanel3.Controls.Add(this.btnRotateLeft);
 			this.flowLayoutPanel3.Controls.Add(this.btnRotateRight);
 			this.flowLayoutPanel3.Controls.Add(this.btnMakeBox);
-			this.flowLayoutPanel3.Controls.Add(this.btnConvertToTiff);
 			this.flowLayoutPanel3.Controls.Add(this.btnReset);
 			this.flowLayoutPanel3.Controls.Add(this.btnTextCleaner);
 			this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -514,19 +471,9 @@
 			this.btnMakeBox.UseVisualStyleBackColor = true;
 			this.btnMakeBox.Click += new System.EventHandler(this.btnMakeBox_Click);
 			// 
-			// btnConvertToTiff
-			// 
-			this.btnConvertToTiff.Location = new System.Drawing.Point(246, 3);
-			this.btnConvertToTiff.Name = "btnConvertToTiff";
-			this.btnConvertToTiff.Size = new System.Drawing.Size(75, 23);
-			this.btnConvertToTiff.TabIndex = 3;
-			this.btnConvertToTiff.Text = "TOTIFF";
-			this.btnConvertToTiff.UseVisualStyleBackColor = true;
-			this.btnConvertToTiff.Click += new System.EventHandler(this.btnConvertToTiff_Click);
-			// 
 			// btnReset
 			// 
-			this.btnReset.Location = new System.Drawing.Point(327, 3);
+			this.btnReset.Location = new System.Drawing.Point(246, 3);
 			this.btnReset.Name = "btnReset";
 			this.btnReset.Size = new System.Drawing.Size(75, 23);
 			this.btnReset.TabIndex = 4;
@@ -536,7 +483,7 @@
 			// 
 			// btnTextCleaner
 			// 
-			this.btnTextCleaner.Location = new System.Drawing.Point(408, 3);
+			this.btnTextCleaner.Location = new System.Drawing.Point(327, 3);
 			this.btnTextCleaner.Name = "btnTextCleaner";
 			this.btnTextCleaner.Size = new System.Drawing.Size(75, 23);
 			this.btnTextCleaner.TabIndex = 4;
@@ -544,20 +491,30 @@
 			this.btnTextCleaner.UseVisualStyleBackColor = true;
 			this.btnTextCleaner.Click += new System.EventHandler(this.btnTextCleaner_Click);
 			// 
-			// tabPage2
-			// 
-			this.tabPage2.Location = new System.Drawing.Point(4, 26);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(776, 492);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "tabPage2";
-			this.tabPage2.UseVisualStyleBackColor = true;
-			// 
 			// bgwProcess
 			// 
 			this.bgwProcess.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProcess_DoWork);
 			this.bgwProcess.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwProcess_RunWorkerCompleted);
+			// 
+			// toolStripBtnMakeTrainedData
+			// 
+			this.toolStripBtnMakeTrainedData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripBtnMakeTrainedData.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnMakeTrainedData.Image")));
+			this.toolStripBtnMakeTrainedData.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripBtnMakeTrainedData.Name = "toolStripBtnMakeTrainedData";
+			this.toolStripBtnMakeTrainedData.Size = new System.Drawing.Size(36, 37);
+			this.toolStripBtnMakeTrainedData.Text = "生成训练文件";
+			// 
+			// flowLayoutPanel4
+			// 
+			this.flowLayoutPanel4.Controls.Add(this.cmbPreProcess);
+			this.flowLayoutPanel4.Controls.Add(this.chkToTiff);
+			this.flowLayoutPanel4.Controls.Add(this.trackBar1);
+			this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 3);
+			this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+			this.flowLayoutPanel4.Size = new System.Drawing.Size(244, 185);
+			this.flowLayoutPanel4.TabIndex = 4;
 			// 
 			// frmTrainingTool
 			// 
@@ -566,6 +523,7 @@
 			this.ClientSize = new System.Drawing.Size(784, 522);
 			this.Controls.Add(this.tabControl1);
 			this.Font = new System.Drawing.Font("微软雅黑", 9F);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "frmTrainingTool";
 			this.Text = "训练工具";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -583,7 +541,6 @@
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();
 			this.tableLayoutPanel3.ResumeLayout(false);
-			this.tableLayoutPanel3.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvBoxes)).EndInit();
 			this.tableLayoutPanel2.ResumeLayout(false);
@@ -597,6 +554,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.pbxExample)).EndInit();
 			this.flowLayoutPanel2.ResumeLayout(false);
 			this.flowLayoutPanel3.ResumeLayout(false);
+			this.flowLayoutPanel4.ResumeLayout(false);
+			this.flowLayoutPanel4.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -606,7 +565,6 @@
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.SplitContainer splitContainer1;
-		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.ToolStrip toolStrip1;
 		private System.Windows.Forms.ToolStripButton toolStripOpenImage;
@@ -629,11 +587,9 @@
 		private System.Windows.Forms.Button btnInsert;
 		private System.Windows.Forms.Button btnMerge;
 		private System.Windows.Forms.Button btnDelete;
-		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.TextBox txtCharacter;
 		private System.Windows.Forms.ToolStripButton toolStripBtnSaveBox;
-		private System.Windows.Forms.Button btnDisplayBoxes;
 		private System.Windows.Forms.DataGridView dgvBoxes;
 		private System.Windows.Forms.NumericUpDown nudX;
 		private System.Windows.Forms.NumericUpDown nudY;
@@ -643,9 +599,9 @@
 		private System.Windows.Forms.Button btnRotateLeft;
 		private System.Windows.Forms.Button btnRotateRight;
 		private System.Windows.Forms.Button btnMakeBox;
-		private System.Windows.Forms.Button btnConvertToTiff;
 		private System.Windows.Forms.Button btnReset;
-		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.PictureBox pbxExample;
+		private System.Windows.Forms.ToolStripButton toolStripBtnMakeTrainedData;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
 	}
 }
