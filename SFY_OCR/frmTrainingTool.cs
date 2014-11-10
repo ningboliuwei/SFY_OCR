@@ -127,6 +127,7 @@ namespace SFY_OCR
 					dgvBoxes.RowCount = _ocrImage.ImageBoxList.Boxes.Count + 1;
 					//清楚网格中所有选择
 					dgvBoxes.ClearSelection();
+					toolStripBtnSaveBox.Enabled = true;
 				}
 				catch (Exception ex)
 				{
@@ -274,6 +275,10 @@ namespace SFY_OCR
 			//设置图片框所在的Panel的AutoScroll属性
 			pnlPictureBox.AutoScroll = true;
 			pnlPictureBox.BorderStyle = BorderStyle.FixedSingle;
+
+			//设置工具栏
+			//toolStripBtnSaveBox.Checked = false;
+			toolStripBtnSaveBox.Enabled = false;
 
 		}
 
@@ -1080,7 +1085,7 @@ namespace SFY_OCR
 				DataGridViewRow nextRow = dgvBoxes.Rows[nextIndex];
 
 				//取消当前行的选中状态
-				dgvBoxes.CurrentRow.Selected = false;
+				//dgvBoxes.CurrentRow.Selected = false;
 				//选中当前行的下一行
 				dgvBoxes.Rows[nextIndex].Selected = true;
 				int sn = Convert.ToInt32(nextRow.Cells["sn"].Value);
