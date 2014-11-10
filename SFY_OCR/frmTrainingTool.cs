@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using SFY_OCR.Properties;
 using SFY_OCR.Untilities;
 
 #endregion
@@ -46,6 +47,7 @@ namespace SFY_OCR
 		private bool _isMovingBox;
 		//是否在改变 Box 大小
 		private bool _isSizingBox;
+		private Label _lblCharacterToolTip = null;
 		private OcrImage _ocrImage;
 		//之前的图层（用于擦除矩形）
 		private Bitmap _previousImage;
@@ -56,7 +58,6 @@ namespace SFY_OCR
 		private AnchorPositionType anchorPosition = AnchorPositionType.None;
 		private Bitmap bitmap;
 		private frmProgressBar progressBar;
-		private Label _lblCharacterToolTip = null;
 		//是否在上次操作后存盘过
 
 		public frmTrainingTool()
@@ -88,8 +89,8 @@ namespace SFY_OCR
 
 			if (toolStripBtnSaveBox.Enabled)
 			{
-				DialogResult result = MessageBox.Show(this, "Box 文件还没有存盘，确定退出训练工具吗?", "问题", MessageBoxButtons.YesNoCancel,
-					MessageBoxIcon.Question, MessageBoxDefaultButton.Button3);
+				DialogResult result = MessageBox.Show(this, "Box 文件还没有存盘，需要在退出训练程序前存盘吗?", "警告", MessageBoxButtons.YesNoCancel,
+					MessageBoxIcon.Warning, MessageBoxDefaultButton.Button3);
 
 				if (result == DialogResult.Yes)
 				{
@@ -103,10 +104,6 @@ namespace SFY_OCR
 				else if (result == DialogResult.No)
 				{
 					//不做任何事情	
-				}
-				else
-				{
-					//暂无代码
 				}
 			}
 		}
@@ -179,7 +176,6 @@ namespace SFY_OCR
 				row.Cells["width"].Value = box.Width;
 			}
 			dgvBoxes.Refresh();
-
 		}
 
 		/// <summary>
@@ -259,7 +255,7 @@ namespace SFY_OCR
 		private void TrainingTool_Load(object sender, EventArgs e)
 		{
 			//双缓存
-			this.DoubleBuffered = true;
+			DoubleBuffered = true;
 			//使图片框在显示较大的图片时增加滚动条
 			pbxExample.SizeMode = PictureBoxSizeMode.AutoSize;
 			pnlPictureBox.AutoScroll = true;
@@ -303,7 +299,6 @@ namespace SFY_OCR
 			//设置工具栏
 			//toolStripBtnSaveBox.Checked = false;
 			toolStripBtnSaveBox.Enabled = false;
-
 		}
 
 
@@ -389,7 +384,6 @@ namespace SFY_OCR
 		private void ResetImage()
 		{
 			OpenImage(_ocrImage);
-			
 		}
 
 		/// <summary>
@@ -435,7 +429,6 @@ namespace SFY_OCR
 				{
 					//切换到画 Box 模式
 					_currentMouseMoveState = MouseMoveState.DrawingBox;
-
 				}
 				else if (anchorPosition == AnchorPositionType.MiddleMiddle)
 				{
@@ -476,8 +469,8 @@ namespace SFY_OCR
 
 			ChangeCursor(_currentPoint);
 
-
 			#region 显示字符提示部分
+
 			//找出鼠标当前所在的 Box
 			Box showedBox = null;
 			if (_ocrImage.ImageBoxList.Boxes.Count != 0)
@@ -497,14 +490,12 @@ namespace SFY_OCR
 			{
 				PopBoxCharacterToolTip(g, showedBox);
 			}
-			#endregion
 
+			#endregion
 
 			//若当前处于画 Box 状态
 			if (_currentMouseMoveState == MouseMoveState.DrawingBox)
 			{
-
-
 				//判断不同的拖动方向，并计算画 box 的起始点
 				if (_currentPoint.X > _startPoint.X)
 				{
@@ -601,11 +592,6 @@ namespace SFY_OCR
 						_dashPen,
 						newBoxLeftTopPointX, newBoxLeftTopPointY, newBoxWidth, newBoxHeight);
 				}
-			}
-			else
-			{
-				//还没有任何代码
-
 			}
 
 
@@ -825,9 +811,6 @@ namespace SFY_OCR
 		}
 
 
-
-
-
 		private void pbxExample_MouseClick(object sender, MouseEventArgs e)
 		{
 			_currentPoint = new Point(e.X, e.Y);
@@ -853,7 +836,8 @@ namespace SFY_OCR
 				if (clickedBox != null)
 				{
 					//排除正在移动 Box 的状态和正在改变 Box 大小的状态
-					if (_currentMouseMoveState != MouseMoveState.MovingBox && _currentMouseMoveState != MouseMoveState.ResizingBox)//补丁代码
+					if (_currentMouseMoveState != MouseMoveState.MovingBox && _currentMouseMoveState != MouseMoveState.ResizingBox)
+					//补丁代码
 					{
 						//如果当时只选中一个
 						if (_ocrImage.ImageBoxList.SelectedBoxes.Count == 1)
@@ -893,7 +877,6 @@ namespace SFY_OCR
 				{
 					//JumpToInDataGridViewByBox(_ocrImage.ImageBoxList.SelectedBoxes.OrderByDescending(b => b.Sn).First());
 				}
-
 			}
 			//按住 Ctrl + 鼠标左键，可多选
 			else if (ModifierKeys == Keys.Control && e.Button == MouseButtons.Left)
@@ -911,7 +894,6 @@ namespace SFY_OCR
 				if (_currentMouseMoveState != MouseMoveState.MovingBox && _currentMouseMoveState != MouseMoveState.ResizingBox)
 				//补丁代码
 				{
-
 					if (clickedBox != null)
 					{
 						clickedBox.Selected = !clickedBox.Selected;
@@ -925,17 +907,14 @@ namespace SFY_OCR
 					{
 						//JumpToInDataGridViewByBox(_ocrImage.ImageBoxList.SelectedBoxes.OrderByDescending(b => b.Sn).First());
 					}
-
 				}
 				//实验性补充
 				ScrollToInPictureBoxByBox(clickedBox);
 				JumpToBoxRecordInDataGridView(clickedBox);
-
 			}
 			RefreshBoxImageInPictureBox();
 			RefreshBoxSelectionInDataGridView();
 			RefreshBoxInfoInHeader();
-
 		}
 
 
@@ -958,7 +937,6 @@ namespace SFY_OCR
 		{
 			_ocrImage.SaveToBoxFile();
 			DisableSaveBoxButton();
-
 		}
 
 		private void DisableSaveBoxButton()
@@ -1066,7 +1044,6 @@ namespace SFY_OCR
 			}
 			else //否则不显示
 			{
-
 				txtCharacter.Enabled = false;
 				nudX.Enabled = false;
 				nudY.Enabled = false;
@@ -1212,8 +1189,7 @@ namespace SFY_OCR
 
 		private void JumpToNextBoxInDataGridView()
 		{
-//如果当前不是在最后一个Box
-			
+			//如果当前不是在最后一个Box
 		}
 
 		private void nudX_ValueChanged(object sender, EventArgs e)
@@ -1338,8 +1314,6 @@ namespace SFY_OCR
 		//		}
 		//	}
 		//}
-
-
 		private void btnMakeBox_Click(object sender, EventArgs e)
 		{
 			ShowProgressBar();
@@ -1373,6 +1347,10 @@ namespace SFY_OCR
 			//pbxExample.BackgroundImage = (pbxExample.Image.Clone() as Bitmap);
 			//pbxExample.Image = _ocrImage.GetBoxesImage(pbxExample.BackgroundImage as Bitmap);
 			RefreshBoxImageInPictureBox();
+			dgvBoxes.RowCount = _ocrImage.ImageBoxList.Boxes.Count + 1;
+			//清楚网格中所有选择
+			dgvBoxes.ClearSelection();
+			toolStripBtnSaveBox.Enabled = true;
 			EnableSaveBoxButton();
 
 			//重新显示
@@ -1406,7 +1384,6 @@ namespace SFY_OCR
 			RefreshBoxInfoInHeader();
 			EnableAllFileRelatedControls();
 			EnableSaveBoxButton();
-
 		}
 
 		/// <summary>
@@ -1605,6 +1582,11 @@ namespace SFY_OCR
 			//}
 			//else
 			//{
+			//补丁代码
+			if (_ocrImage.ImageBoxList.Boxes.Count == 0 || e.RowIndex == _ocrImage.ImageBoxList.Boxes.Count)
+			{
+				return;
+			}
 
 			Box box = _ocrImage.ImageBoxList.Boxes[e.RowIndex];
 			switch (e.ColumnIndex)
@@ -1638,29 +1620,15 @@ namespace SFY_OCR
 			dgvBoxes.Rows[e.RowIndex].HeaderCell.Value = e.RowIndex;
 		}
 
-		private enum AnchorPositionType
-		{
-			None,
-			TopLeft,
-			TopMiddle,
-			TopRight,
-			MiddleLeft,
-			MiddleMiddle,
-			MiddleRight,
-			BottomLeft,
-			BottomMiddle,
-			BottomRight
-		}
-
 		/// <summary>
-		/// 用于显示指定
+		///     用于显示指定
 		/// </summary>
 		/// <param name="g"></param>
 		/// <param name="box"></param>
 		private void PopBoxCharacterToolTip(Graphics g, Box box)
 		{
 			string character = box.Character;
-			Font characterFont = new Font(this.Font.FontFamily, 24, FontStyle.Bold);
+			Font characterFont = new Font(Font.FontFamily, 24, FontStyle.Bold);
 			SizeF characterSize = g.MeasureString(character, characterFont);
 			int toolTipX = Convert.ToInt32(box.X + Math.Round((box.Width - characterSize.Width) * 0.5));
 			int toolTipY = Convert.ToInt32(box.Y + (box.Height + 5));
@@ -1674,8 +1642,197 @@ namespace SFY_OCR
 
 		private void toolStripBtnMakeTrainedData_Click(object sender, EventArgs e)
 		{
+			//当要打开图片时，设置OpenFileDialog的filter属性
+			sfdTrainedData.Filter = string.Format("样本训练文件|*.{0}", StringResourceManager.TrainedDataExtName);
 
+			//打开样本图片
+			if (sfdTrainedData.ShowDialog() == DialogResult.OK)
+			{
+				GenerateFontPropertiesFile("b");
+				//GenerateFontPropertiesFile(_ocrImage.TempImageInfo.MainFileName);
+				GenerateTrainedData();
+				//
+			}
 		}
 
+		private void GenerateTrainedData()
+		{
+			string trFilePath = _ocrImage.BoxFileInfo.Dir + _ocrImage.BoxFileInfo.MainFileName + ".tr";
+
+			List<CommandLineProcess> commands = new List<CommandLineProcess>();
+
+			//生成 .tr 文件
+			//tesseract.exe num.font.exp0.tif num.font.exp0 nobatch box.train  
+			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
+			{
+				{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "tesseract.exe"},
+				{
+					"arguments",
+					string.Format("{0} {1} nobatch box.train", _ocrImage.TempImageInfo.FilePath,
+						_ocrImage.BoxFileInfo.Dir + _ocrImage.BoxFileInfo.MainFileName)
+				}
+			}));
+
+
+			//生成 unicharset
+			//unicharset_extractor.exe num.font.exp0.box  
+			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
+			{
+				{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "unicharset_extractor.exe"},
+				{
+					"arguments",
+					string.Format("{0}", _ocrImage.BoxFileInfo.FilePath)
+				},
+				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
+			}));
+
+			//mftraining -F font_properties -U unicharset -O num.unicharset num.font.exp0.tr
+			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
+			{
+				{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "mftraining.exe"},
+				{
+					"arguments",
+					string.Format("-F font_properties -U {0} -O {1} {2}", _ocrImage.BoxFileInfo.Dir + "unicharset",
+						_ocrImage.BoxFileInfo.Dir + _ocrImage.BoxFileInfo.MainFileName + ".unicharset", trFilePath)
+				},
+				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
+			}));
+
+			////cntraining.exe num.font.exp0.tr  
+			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
+			{
+				{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "cntraining.exe"},
+				{
+					"arguments",
+					string.Format("{0}", trFilePath)
+				},
+				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
+			}));
+
+
+			////rename normproto num.normproto
+			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
+			{
+				{"commandPath", "cmd.exe"},
+				{
+					"arguments",
+					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "normproto", _ocrImage.BoxFileInfo.MainFileName + ".normproto" )
+				},
+				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
+					}
+			));
+			////rename inttemp num.inttemp  
+			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
+			{
+				{"commandPath", "cmd.exe"},
+				{
+					"arguments",
+					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "inttemp", _ocrImage.BoxFileInfo.MainFileName + ".inttemp" )
+				},
+				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
+					
+			}));
+
+			////rename pffmtable num.pffmtable  
+			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
+			{
+				{"commandPath", "cmd.exe"},
+				{
+					"arguments",
+					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "pffmtable", _ocrImage.BoxFileInfo.MainFileName + ".pffmtable" )
+				},
+				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
+			}));
+
+			////rename shapetable num.shapetable
+			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
+			{
+				{"commandPath", "cmd.exe"},
+				{
+					"arguments",
+					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "shapetable", _ocrImage.BoxFileInfo.MainFileName + ".shapetable" )
+				},
+				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
+			}));
+
+			////rename unicharset num.unicharset
+			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
+			{
+				{"commandPath", "cmd.exe"},
+				{
+					"arguments",
+					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "unicharset", _ocrImage.BoxFileInfo.MainFileName + ".unicharset" )
+				},
+				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
+			}));
+
+			////combine_tessdata.exe num.
+			//commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
+			//{
+			//	{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "combine_tessdata.exe"},
+			//	{
+			//		"arguments",
+			//		string.Format("{0}",  _ocrImage.BoxFileInfo.MainFileName + ".")
+			//	}
+			//}));
+
+
+			foreach (CommandLineProcess command in commands)
+			{
+				if (!bgwProcess.IsBusy)
+				{
+					bgwProcess.RunWorkerAsync(command);
+				}
+
+				//等待处理完毕
+				while (bgwProcess.IsBusy)
+				{
+					Application.DoEvents();
+				}
+			}
+		}
+
+		/// <summary>
+		///     创建训练时需要的 font_properties 文件
+		/// </summary>
+		/// <param name="fontName"></param>
+		private void GenerateFontPropertiesFile(string fontName)
+		{
+			string fontPropertiesFilePath = Settings.Default.OutputDir + "font_properties";
+
+			StreamWriter streamWriter = null;
+			try
+			{
+				streamWriter = new StreamWriter(fontPropertiesFilePath);
+
+				streamWriter.Write("{0} 0 0 0 0 0", fontName);
+				streamWriter.Close();
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+			finally
+			{
+				if (streamWriter != null)
+				{
+					streamWriter.Close();
+				}
+			}
+		}
+
+		private enum AnchorPositionType
+		{
+			None,
+			TopLeft,
+			TopMiddle,
+			TopRight,
+			MiddleLeft,
+			MiddleMiddle,
+			MiddleRight,
+			BottomLeft,
+			BottomMiddle,
+			BottomRight
+		}
 	}
 }

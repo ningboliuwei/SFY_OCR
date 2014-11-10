@@ -11,6 +11,7 @@ namespace SFY_OCR.Untilities
 	{
 		protected string _commandPath;
 		protected string _arguments;
+		protected string _workingDirectory;
 
 		public void Process()
 		{
@@ -23,6 +24,7 @@ namespace SFY_OCR.Untilities
 					process.StartInfo.UseShellExecute = false;
 					process.StartInfo.CreateNoWindow = true;
 					process.StartInfo.RedirectStandardOutput = true;
+					process.StartInfo.WorkingDirectory = _workingDirectory;
 					process.Start();
 					process.WaitForExit();
 				}

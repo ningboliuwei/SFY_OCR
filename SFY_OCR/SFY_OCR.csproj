@@ -107,6 +107,7 @@
     <Compile Include="Untilities\Box.cs" />
     <Compile Include="Untilities\BoxList.cs" />
     <Compile Include="Untilities\CommandLineProcess.cs" />
+    <Compile Include="Untilities\CustomCommandLineProcess.cs" />
     <Compile Include="Untilities\FileNameInfo.cs" />
     <Compile Include="Untilities\GenerateTrainedDataProcess.cs" />
     <Compile Include="Untilities\ImageProcess.cs" />
@@ -177,7 +178,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\image.png" />
     <Content Include="Resources\scanner.ico" />
   </ItemGroup>
   <ItemGroup />

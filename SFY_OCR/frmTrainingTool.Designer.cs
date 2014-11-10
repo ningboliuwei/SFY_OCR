@@ -63,6 +63,7 @@
 			this.btnTextCleaner = new System.Windows.Forms.Button();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcess = new System.ComponentModel.BackgroundWorker();
+			this.sfdTrainedData = new System.Windows.Forms.SaveFileDialog();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -358,7 +359,7 @@
 			this.btnMerge.Name = "btnMerge";
 			this.btnMerge.Size = new System.Drawing.Size(75, 23);
 			this.btnMerge.TabIndex = 1;
-			this.btnMerge.Text = "合并";
+			this.btnMerge.Text = "合并(&H)";
 			this.btnMerge.UseVisualStyleBackColor = true;
 			this.btnMerge.Click += new System.EventHandler(this.btnMerge_Click);
 			// 
@@ -368,7 +369,7 @@
 			this.btnDelete.Name = "btnDelete";
 			this.btnDelete.Size = new System.Drawing.Size(75, 23);
 			this.btnDelete.TabIndex = 3;
-			this.btnDelete.Text = "删除";
+			this.btnDelete.Text = "删除(&S)";
 			this.btnDelete.UseVisualStyleBackColor = true;
 			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
 			// 
@@ -376,9 +377,9 @@
 			// 
 			this.flowLayoutPanel3.Controls.Add(this.btnRotateLeft);
 			this.flowLayoutPanel3.Controls.Add(this.btnRotateRight);
-			this.flowLayoutPanel3.Controls.Add(this.btnMakeBox);
 			this.flowLayoutPanel3.Controls.Add(this.btnReset);
 			this.flowLayoutPanel3.Controls.Add(this.btnTextCleaner);
+			this.flowLayoutPanel3.Controls.Add(this.btnMakeBox);
 			this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 73);
 			this.flowLayoutPanel3.Name = "flowLayoutPanel3";
@@ -391,7 +392,7 @@
 			this.btnRotateLeft.Name = "btnRotateLeft";
 			this.btnRotateLeft.Size = new System.Drawing.Size(75, 23);
 			this.btnRotateLeft.TabIndex = 0;
-			this.btnRotateLeft.Text = "左转90°";
+			this.btnRotateLeft.Text = "左转90°(&Z)";
 			this.btnRotateLeft.UseVisualStyleBackColor = true;
 			this.btnRotateLeft.Click += new System.EventHandler(this.btnRotateLeft_Click);
 			// 
@@ -401,37 +402,37 @@
 			this.btnRotateRight.Name = "btnRotateRight";
 			this.btnRotateRight.Size = new System.Drawing.Size(75, 23);
 			this.btnRotateRight.TabIndex = 1;
-			this.btnRotateRight.Text = "右转90°";
+			this.btnRotateRight.Text = "右转90°(&Y)";
 			this.btnRotateRight.UseVisualStyleBackColor = true;
 			this.btnRotateRight.Click += new System.EventHandler(this.btnRotateRight_Click);
 			// 
 			// btnMakeBox
 			// 
-			this.btnMakeBox.Location = new System.Drawing.Point(165, 3);
+			this.btnMakeBox.Location = new System.Drawing.Point(327, 3);
 			this.btnMakeBox.Name = "btnMakeBox";
-			this.btnMakeBox.Size = new System.Drawing.Size(75, 23);
+			this.btnMakeBox.Size = new System.Drawing.Size(100, 23);
 			this.btnMakeBox.TabIndex = 2;
-			this.btnMakeBox.Text = "重新识别";
+			this.btnMakeBox.Text = "重新识别(&C)";
 			this.btnMakeBox.UseVisualStyleBackColor = true;
 			this.btnMakeBox.Click += new System.EventHandler(this.btnMakeBox_Click);
 			// 
 			// btnReset
 			// 
-			this.btnReset.Location = new System.Drawing.Point(246, 3);
+			this.btnReset.Location = new System.Drawing.Point(165, 3);
 			this.btnReset.Name = "btnReset";
 			this.btnReset.Size = new System.Drawing.Size(75, 23);
 			this.btnReset.TabIndex = 4;
-			this.btnReset.Text = "复位";
+			this.btnReset.Text = "复位(&F)";
 			this.btnReset.UseVisualStyleBackColor = true;
 			this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
 			// 
 			// btnTextCleaner
 			// 
-			this.btnTextCleaner.Location = new System.Drawing.Point(327, 3);
+			this.btnTextCleaner.Location = new System.Drawing.Point(246, 3);
 			this.btnTextCleaner.Name = "btnTextCleaner";
 			this.btnTextCleaner.Size = new System.Drawing.Size(75, 23);
 			this.btnTextCleaner.TabIndex = 4;
-			this.btnTextCleaner.Text = "降噪";
+			this.btnTextCleaner.Text = "降噪(&J)";
 			this.btnTextCleaner.UseVisualStyleBackColor = true;
 			this.btnTextCleaner.Click += new System.EventHandler(this.btnTextCleaner_Click);
 			// 
@@ -517,5 +518,6 @@
 		private System.Windows.Forms.Button btnReset;
 		private System.Windows.Forms.PictureBox pbxExample;
 		private System.Windows.Forms.ToolStripButton toolStripBtnMakeTrainedData;
+		private System.Windows.Forms.SaveFileDialog sfdTrainedData;
 	}
 }

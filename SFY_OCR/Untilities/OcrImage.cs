@@ -24,7 +24,7 @@ namespace SFY_OCR.Untilities
 								 OriginalImageInfo.ExtFileName);
 			//对应的Box文件（如 R:\a.tiff.box）
 			BoxFileInfo =
-				new FileNameInfo(TempImageInfo.Dir + OriginalImageInfo.MainFileName + "." +
+				new FileNameInfo(TempImageInfo.Dir + TempImageInfo.MainFileName + "." +
 								 StringResourceManager.BoxFileExtName);
 			//创建BoxList对象
 			ImageBoxList = new BoxList();
