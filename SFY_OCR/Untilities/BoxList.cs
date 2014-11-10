@@ -125,6 +125,17 @@ namespace SFY_OCR.Untilities
 		}
 
 		/// <summary>
+		/// 选中所有的 Box
+		/// </summary>
+		public void SelectAll()
+		{
+			foreach (Box box in Boxes)
+			{
+				box.Selected = true;
+			}
+		}
+
+		/// <summary>
 		/// 清除所有Box对象的选中状态
 		/// </summary>
 		public void UnSelectAll()

@@ -153,9 +153,9 @@
 			this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripOpenImage,
-            this.toolStripBtnSaveBox,
-            this.toolStripBtnMakeTrainedData});
+			this.toolStripOpenImage,
+			this.toolStripBtnSaveBox,
+			this.toolStripBtnMakeTrainedData});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Size = new System.Drawing.Size(256, 40);
@@ -259,7 +259,6 @@
 			this.dgvBoxes.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvBoxes_RowsAdded);
 			this.dgvBoxes.SelectionChanged += new System.EventHandler(this.dgvBoxes_SelectionChanged);
 			this.dgvBoxes.Click += new System.EventHandler(this.dgvBoxes_Click);
-			this.dgvBoxes.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvBoxes_KeyDown);
 			// 
 			// tableLayoutPanel2
 			// 
@@ -403,8 +402,6 @@
 			this.pbxExample.TabStop = false;
 			this.pbxExample.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseClick);
 			this.pbxExample.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseDown);
-			this.pbxExample.MouseEnter += new System.EventHandler(this.pbxExample_MouseEnter);
-			this.pbxExample.MouseLeave += new System.EventHandler(this.pbxExample_MouseLeave);
 			this.pbxExample.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseMove);
 			this.pbxExample.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbxExample_MouseUp);
 			// 

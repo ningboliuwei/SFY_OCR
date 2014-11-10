@@ -1062,6 +1062,7 @@ namespace SFY_OCR
 				nudHeight.Text = "";
 			}
 			txtCharacter.Focus();
+			txtCharacter.SelectAll();
 		}
 
 		private void btnDelete_Click(object sender, EventArgs e)
@@ -1072,8 +1073,34 @@ namespace SFY_OCR
 				DeleteBoxInDataGridView(box);
 				_ocrImage.ImageBoxList.Remove(box);
 			}
-			dgvBoxes.ClearSelection();
-			RefreshBoxImageInPictureBox();
+
+			if (dgvBoxes.CurrentRow.Index != _ocrImage.ImageBoxList.Boxes.Count)
+			{
+				int nextIndex = dgvBoxes.CurrentRow.Index;
+				DataGridViewRow nextRow = dgvBoxes.Rows[nextIndex];
+
+				//取消当前行的选中状态
+				dgvBoxes.CurrentRow.Selected = false;
+				//选中当前行的下一行
+				dgvBoxes.Rows[nextIndex].Selected = true;
+				int sn = Convert.ToInt32(nextRow.Cells["sn"].Value);
+				Box nextBox = _ocrImage.ImageBoxList.GetBoxBySn(sn);
+				nextBox.Selected = nextRow.Selected;
+				JumpToBoxRecordInDataGridView(nextBox);
+
+				foreach (DataGridViewRow r in dgvBoxes.Rows)
+				{
+					//如果不是最后一行（空行）
+					if (r.Index != dgvBoxes.Rows.Count - 1 && r.Index != nextIndex)
+					{
+						_ocrImage.ImageBoxList.Boxes[r.Index].Selected = r.Selected;
+					}
+				}
+
+				RefreshBoxImageInPictureBox();
+				RefreshBoxInfoInHeader();
+				ScrollToInPictureBoxByBox(_ocrImage.ImageBoxList.GetBoxBySn(sn));
+			}
 		}
 
 
@@ -1132,7 +1159,41 @@ namespace SFY_OCR
 			if (e.KeyChar == (char)Keys.Return)
 			{
 				ChangeSingleBoxData();
+
+				if (dgvBoxes.CurrentRow.Index != _ocrImage.ImageBoxList.Boxes.Count - 1)
+				{
+					int nextIndex = dgvBoxes.CurrentRow.Index + 1;
+					DataGridViewRow nextRow = dgvBoxes.Rows[nextIndex];
+
+					//取消当前行的选中状态
+					dgvBoxes.CurrentRow.Selected = false;
+					//选中当前行的下一行
+					dgvBoxes.Rows[nextIndex].Selected = true;
+					int sn = Convert.ToInt32(nextRow.Cells["sn"].Value);
+					Box nextBox = _ocrImage.ImageBoxList.GetBoxBySn(sn);
+					nextBox.Selected = nextRow.Selected;
+					JumpToBoxRecordInDataGridView(nextBox);
+
+					foreach (DataGridViewRow r in dgvBoxes.Rows)
+					{
+						//如果不是最后一行（空行）
+						if (r.Index != dgvBoxes.Rows.Count - 1 && r.Index != nextIndex)
+						{
+							_ocrImage.ImageBoxList.Boxes[r.Index].Selected = r.Selected;
+						}
+					}
+
+					RefreshBoxImageInPictureBox();
+					RefreshBoxInfoInHeader();
+					ScrollToInPictureBoxByBox(_ocrImage.ImageBoxList.GetBoxBySn(sn));
+				}
 			}
+		}
+
+		private void JumpToNextBoxInDataGridView()
+		{
+//如果当前不是在最后一个Box
+			
 		}
 
 		private void nudX_ValueChanged(object sender, EventArgs e)
@@ -1192,6 +1253,7 @@ namespace SFY_OCR
 			firstBox.Y = minY;
 			firstBox.Width = maxX - minX;
 			firstBox.Height = maxY - minY;
+			firstBox.Selected = true;
 
 
 			//删除其他的
@@ -1202,6 +1264,7 @@ namespace SFY_OCR
 				_ocrImage.ImageBoxList.Remove(box);
 			}
 			RefreshBoxImageInPictureBox();
+			RefreshBoxInfoInHeader();
 		}
 
 		/// <summary>
@@ -1580,22 +1643,5 @@ namespace SFY_OCR
 			g.DrawString(character, characterFont, new SolidBrush(Color.Black), toolTipX - 2, toolTipY - 2);
 		}
 
-		private void pbxExample_MouseEnter(object sender, EventArgs e)
-		{
-
-		}
-
-		private void pbxExample_MouseLeave(object sender, EventArgs e)
-		{
-
-		}
-
-		private void dgvBoxes_KeyDown(object sender, KeyEventArgs e)
-		{
-			//if (ModifierKeys == Keys.Control && e == "a")
-			//{
-				
-			//}
-		}
 	}
 }
