@@ -57,6 +57,7 @@ namespace SFY_OCR
 		private Bitmap bitmap;
 		private frmProgressBar progressBar;
 		private Label _lblCharacterToolTip = null;
+		//是否在上次操作后存盘过
 
 		public frmTrainingTool()
 		{
@@ -122,7 +123,6 @@ namespace SFY_OCR
 				{
 					_ocrImage.LoadFromBoxFile();
 					RefreshBoxImageInPictureBox();
-
 
 					dgvBoxes.RowCount = _ocrImage.ImageBoxList.Boxes.Count + 1;
 					//清楚网格中所有选择
@@ -364,6 +364,7 @@ namespace SFY_OCR
 		private void ResetImage()
 		{
 			OpenImage(_ocrImage);
+			
 		}
 
 		/// <summary>
@@ -789,6 +790,7 @@ namespace SFY_OCR
 				RefreshBoxInfoInDataGridView();
 				//刷新上方的 Box 各种信息显示
 				RefreshBoxInfoInHeader();
+				EnableSaveBoxButton();
 
 				//根据在图片框中的选中状态，刷新数据网格中的选中状态
 				//RefreshBoxSelectionInDataGridView();
@@ -911,27 +913,6 @@ namespace SFY_OCR
 
 		}
 
-		private void btnInsert_Click(object sender, EventArgs e)
-		{
-			const string initialCharacter = "※";
-			const int initialX = 20;
-			const int initialY = 20;
-			const int initialWidth = 50;
-			const int initialHeight = 50;
-
-			Box box = _ocrImage.ImageBoxList.GetBoxByCoordinate(initialX, initialY, initialWidth, initialHeight);
-
-			//只有在不存在初始位置的新Box情况下才添加进去
-			if (box == null)
-			{
-				_ocrImage.ImageBoxList.Add(new Box(_ocrImage.ImageBoxList.Boxes.Count + 1, initialCharacter, initialX, initialY,
-					initialWidth, initialHeight));
-				//选中刚添加的Box
-				_ocrImage.ImageBoxList.GetBoxByCoordinate(initialX, initialY, initialWidth, initialHeight).Selected = true;
-				GetNewBoxesImage();
-			}
-		}
-
 
 		//public void RefreshBoxImageInGridView()
 		//{
@@ -951,6 +932,13 @@ namespace SFY_OCR
 		private void toolStripBtnSaveBox_Click(object sender, EventArgs e)
 		{
 			_ocrImage.SaveToBoxFile();
+			DisableSaveBoxButton();
+
+		}
+
+		private void DisableSaveBoxButton()
+		{
+			toolStripBtnSaveBox.Enabled = false;
 		}
 
 		private void button3_Click(object sender, EventArgs e)
@@ -1105,6 +1093,7 @@ namespace SFY_OCR
 				RefreshBoxImageInPictureBox();
 				RefreshBoxInfoInHeader();
 				ScrollToInPictureBoxByBox(_ocrImage.ImageBoxList.GetBoxBySn(sn));
+				EnableSaveBoxButton();
 			}
 		}
 
@@ -1156,6 +1145,7 @@ namespace SFY_OCR
 
 				RefreshBoxImageInPictureBox();
 				RefreshBoxInfoInDataGridView();
+				EnableSaveBoxButton();
 			}
 		}
 
@@ -1207,6 +1197,11 @@ namespace SFY_OCR
 			{
 				ChangeSingleBoxData();
 			}
+		}
+
+		private void EnableSaveBoxButton()
+		{
+			toolStripBtnSaveBox.Enabled = true;
 		}
 
 		private void nudY_ValueChanged(object sender, EventArgs e)
@@ -1270,6 +1265,7 @@ namespace SFY_OCR
 			}
 			RefreshBoxImageInPictureBox();
 			RefreshBoxInfoInHeader();
+			EnableSaveBoxButton();
 		}
 
 		/// <summary>
@@ -1352,6 +1348,7 @@ namespace SFY_OCR
 			//pbxExample.BackgroundImage = (pbxExample.Image.Clone() as Bitmap);
 			//pbxExample.Image = _ocrImage.GetBoxesImage(pbxExample.BackgroundImage as Bitmap);
 			RefreshBoxImageInPictureBox();
+			EnableSaveBoxButton();
 
 			//重新显示
 
@@ -1383,6 +1380,7 @@ namespace SFY_OCR
 			RefreshBoxInfoInDataGridView();
 			RefreshBoxInfoInHeader();
 			EnableAllFileRelatedControls();
+			EnableSaveBoxButton();
 
 		}
 
@@ -1485,6 +1483,7 @@ namespace SFY_OCR
 			RefreshBoxInfoInHeader();
 			//使旋转按钮失效（防止多次点造成存文件不正常）
 			EnableAllFileRelatedControls();
+			EnableSaveBoxButton();
 		}
 
 		private void dgvBoxes_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)

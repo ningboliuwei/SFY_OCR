@@ -58,7 +58,6 @@
 			this.pnlPictureBox = new System.Windows.Forms.Panel();
 			this.pbxExample = new System.Windows.Forms.PictureBox();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-			this.btnInsert = new System.Windows.Forms.Button();
 			this.btnMerge = new System.Windows.Forms.Button();
 			this.btnDelete = new System.Windows.Forms.Button();
 			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
@@ -153,9 +152,9 @@
 			this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.toolStripOpenImage,
-			this.toolStripBtnSaveBox,
-			this.toolStripBtnMakeTrainedData});
+            this.toolStripOpenImage,
+            this.toolStripBtnSaveBox,
+            this.toolStripBtnMakeTrainedData});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Size = new System.Drawing.Size(256, 40);
@@ -407,7 +406,6 @@
 			// 
 			// flowLayoutPanel2
 			// 
-			this.flowLayoutPanel2.Controls.Add(this.btnInsert);
 			this.flowLayoutPanel2.Controls.Add(this.btnMerge);
 			this.flowLayoutPanel2.Controls.Add(this.btnDelete);
 			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -416,19 +414,9 @@
 			this.flowLayoutPanel2.Size = new System.Drawing.Size(504, 29);
 			this.flowLayoutPanel2.TabIndex = 5;
 			// 
-			// btnInsert
-			// 
-			this.btnInsert.Location = new System.Drawing.Point(3, 3);
-			this.btnInsert.Name = "btnInsert";
-			this.btnInsert.Size = new System.Drawing.Size(75, 23);
-			this.btnInsert.TabIndex = 0;
-			this.btnInsert.Text = "插入";
-			this.btnInsert.UseVisualStyleBackColor = true;
-			this.btnInsert.Click += new System.EventHandler(this.btnInsert_Click);
-			// 
 			// btnMerge
 			// 
-			this.btnMerge.Location = new System.Drawing.Point(84, 3);
+			this.btnMerge.Location = new System.Drawing.Point(3, 3);
 			this.btnMerge.Name = "btnMerge";
 			this.btnMerge.Size = new System.Drawing.Size(75, 23);
 			this.btnMerge.TabIndex = 1;
@@ -438,7 +426,7 @@
 			// 
 			// btnDelete
 			// 
-			this.btnDelete.Location = new System.Drawing.Point(165, 3);
+			this.btnDelete.Location = new System.Drawing.Point(84, 3);
 			this.btnDelete.Name = "btnDelete";
 			this.btnDelete.Size = new System.Drawing.Size(75, 23);
 			this.btnDelete.TabIndex = 3;
@@ -582,7 +570,6 @@
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-		private System.Windows.Forms.Button btnInsert;
 		private System.Windows.Forms.Button btnMerge;
 		private System.Windows.Forms.Button btnDelete;
 		private System.Windows.Forms.Label label5;
