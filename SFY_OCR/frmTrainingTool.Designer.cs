@@ -179,6 +179,7 @@
 			this.toolStripBtnMakeTrainedData.Name = "toolStripBtnMakeTrainedData";
 			this.toolStripBtnMakeTrainedData.Size = new System.Drawing.Size(36, 37);
 			this.toolStripBtnMakeTrainedData.Text = "生成训练文件";
+			this.toolStripBtnMakeTrainedData.Click += new System.EventHandler(this.toolStripBtnMakeTrainedData_Click);
 			// 
 			// dgvBoxes
 			// 

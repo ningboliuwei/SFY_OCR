@@ -108,6 +108,7 @@
     <Compile Include="Untilities\BoxList.cs" />
     <Compile Include="Untilities\CommandLineProcess.cs" />
     <Compile Include="Untilities\FileNameInfo.cs" />
+    <Compile Include="Untilities\GenerateTrainedDataProcess.cs" />
     <Compile Include="Untilities\ImageProcess.cs" />
     <Compile Include="Untilities\MakeBoxTessProcess.cs" />
     <Compile Include="Untilities\OcrImage.cs" />

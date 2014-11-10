@@ -1672,5 +1672,10 @@ namespace SFY_OCR
 			g.DrawString(character, characterFont, new SolidBrush(Color.Black), toolTipX - 2, toolTipY - 2);
 		}
 
+		private void toolStripBtnMakeTrainedData_Click(object sender, EventArgs e)
+		{
+
+		}
+
 	}
 }
