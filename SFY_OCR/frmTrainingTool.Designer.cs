@@ -37,11 +37,6 @@
 			this.toolStripOpenImage = new System.Windows.Forms.ToolStripButton();
 			this.toolStripBtnSaveBox = new System.Windows.Forms.ToolStripButton();
 			this.toolStripBtnMakeTrainedData = new System.Windows.Forms.ToolStripButton();
-			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-			this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-			this.cmbPreProcess = new System.Windows.Forms.ComboBox();
-			this.chkToTiff = new System.Windows.Forms.CheckBox();
-			this.trackBar1 = new System.Windows.Forms.TrackBar();
 			this.dgvBoxes = new System.Windows.Forms.DataGridView();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -76,9 +71,6 @@
 			this.splitContainer1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
-			this.tableLayoutPanel3.SuspendLayout();
-			this.flowLayoutPanel4.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvBoxes)).BeginInit();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
@@ -135,14 +127,12 @@
 			this.tableLayoutPanel1.ColumnCount = 1;
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel1.Controls.Add(this.toolStrip1, 0, 0);
-			this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 1);
-			this.tableLayoutPanel1.Controls.Add(this.dgvBoxes, 0, 2);
+			this.tableLayoutPanel1.Controls.Add(this.dgvBoxes, 0, 1);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 3;
+			this.tableLayoutPanel1.RowCount = 2;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 116F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(256, 486);
 			this.tableLayoutPanel1.TabIndex = 0;
@@ -190,67 +180,14 @@
 			this.toolStripBtnMakeTrainedData.Size = new System.Drawing.Size(36, 37);
 			this.toolStripBtnMakeTrainedData.Text = "生成训练文件";
 			// 
-			// tableLayoutPanel3
-			// 
-			this.tableLayoutPanel3.ColumnCount = 1;
-			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 0, 0);
-			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 43);
-			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-			this.tableLayoutPanel3.RowCount = 1;
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(250, 110);
-			this.tableLayoutPanel3.TabIndex = 1;
-			// 
-			// flowLayoutPanel4
-			// 
-			this.flowLayoutPanel4.Controls.Add(this.cmbPreProcess);
-			this.flowLayoutPanel4.Controls.Add(this.chkToTiff);
-			this.flowLayoutPanel4.Controls.Add(this.trackBar1);
-			this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 3);
-			this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-			this.flowLayoutPanel4.Size = new System.Drawing.Size(244, 104);
-			this.flowLayoutPanel4.TabIndex = 4;
-			// 
-			// cmbPreProcess
-			// 
-			this.cmbPreProcess.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cmbPreProcess.FormattingEnabled = true;
-			this.cmbPreProcess.Location = new System.Drawing.Point(3, 3);
-			this.cmbPreProcess.Name = "cmbPreProcess";
-			this.cmbPreProcess.Size = new System.Drawing.Size(121, 25);
-			this.cmbPreProcess.TabIndex = 0;
-			// 
-			// chkToTiff
-			// 
-			this.chkToTiff.AutoSize = true;
-			this.chkToTiff.Location = new System.Drawing.Point(3, 34);
-			this.chkToTiff.Name = "chkToTiff";
-			this.chkToTiff.Size = new System.Drawing.Size(142, 21);
-			this.chkToTiff.TabIndex = 1;
-			this.chkToTiff.Text = "转换为无损 TIFF 格式";
-			this.chkToTiff.UseVisualStyleBackColor = true;
-			// 
-			// trackBar1
-			// 
-			this.trackBar1.Location = new System.Drawing.Point(3, 61);
-			this.trackBar1.Maximum = 100;
-			this.trackBar1.Name = "trackBar1";
-			this.trackBar1.Size = new System.Drawing.Size(172, 45);
-			this.trackBar1.TabIndex = 3;
-			this.trackBar1.TickFrequency = 5;
-			this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
-			// 
 			// dgvBoxes
 			// 
 			this.dgvBoxes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dgvBoxes.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dgvBoxes.Location = new System.Drawing.Point(3, 159);
+			this.dgvBoxes.Location = new System.Drawing.Point(3, 43);
 			this.dgvBoxes.Name = "dgvBoxes";
 			this.dgvBoxes.RowTemplate.Height = 24;
-			this.dgvBoxes.Size = new System.Drawing.Size(250, 324);
+			this.dgvBoxes.Size = new System.Drawing.Size(250, 440);
 			this.dgvBoxes.TabIndex = 3;
 			this.dgvBoxes.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvBoxes_CellValueChanged);
 			this.dgvBoxes.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dgvBoxes_CellValueNeeded);
@@ -526,10 +463,6 @@
 			this.tableLayoutPanel1.PerformLayout();
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();
-			this.tableLayoutPanel3.ResumeLayout(false);
-			this.flowLayoutPanel4.ResumeLayout(false);
-			this.flowLayoutPanel4.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvBoxes)).EndInit();
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.flowLayoutPanel1.ResumeLayout(false);
@@ -557,10 +490,6 @@
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.OpenFileDialog ofdFile;
 		private System.Windows.Forms.Panel pnlPictureBox;
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-		private System.Windows.Forms.ComboBox cmbPreProcess;
-		private System.Windows.Forms.CheckBox chkToTiff;
-		private System.Windows.Forms.TrackBar trackBar1;
 		private System.Windows.Forms.Button btnTextCleaner;
 		private System.ComponentModel.BackgroundWorker bgwProcess;
 		private System.Windows.Forms.Timer tmrCheckMovement;
@@ -587,6 +516,5 @@
 		private System.Windows.Forms.Button btnReset;
 		private System.Windows.Forms.PictureBox pbxExample;
 		private System.Windows.Forms.ToolStripButton toolStripBtnMakeTrainedData;
-		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
 	}
 }

@@ -76,14 +76,38 @@ namespace SFY_OCR
 		private void TrainingTool_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			//关闭窗体
-			if (MessageBox.Show(this, "确定退出训练工具吗?", "问题", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-				MessageBoxDefaultButton.Button2) == DialogResult.No)
+			//if (MessageBox.Show(this, "确定退出训练工具吗?", "问题", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+			//	MessageBoxDefaultButton.Button2) == DialogResult.No)
+			//{
+			//	e.Cancel = true;
+			//}
+			//else
+			//{
+			//	GC.Collect();
+			//}
+
+			if (toolStripBtnSaveBox.Enabled)
 			{
-				e.Cancel = true;
-			}
-			else
-			{
-				GC.Collect();
+				DialogResult result = MessageBox.Show(this, "Box 文件还没有存盘，确定退出训练工具吗?", "问题", MessageBoxButtons.YesNoCancel,
+					MessageBoxIcon.Question, MessageBoxDefaultButton.Button3);
+
+				if (result == DialogResult.Yes)
+				{
+					//模拟点击存盘按钮
+					toolStripBtnSaveBox_Click(null, null);
+				}
+				else if (result == DialogResult.Cancel)
+				{
+					e.Cancel = true;
+				}
+				else if (result == DialogResult.No)
+				{
+					//不做任何事情	
+				}
+				else
+				{
+					//暂无代码
+				}
 			}
 		}
 
@@ -243,11 +267,11 @@ namespace SFY_OCR
 			pbxExample.Enabled = true;
 
 
-			//添加下拉菜单选项
-			string[] options = { "不处理", "灰度化", "黑白化" };
+			////添加下拉菜单选项
+			//string[] options = { "不处理", "灰度化", "黑白化" };
 
-			cmbPreProcess.DataSource = options;
-			cmbPreProcess.SelectedIndex = 0;
+			//cmbPreProcess.DataSource = options;
+			//cmbPreProcess.SelectedIndex = 0;
 
 			//双缓存，防绘图闪烁
 			//SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
@@ -300,13 +324,14 @@ namespace SFY_OCR
 
 		private void btnTextCleaner_Click(object sender, EventArgs e)
 		{
+			const int filterSize = 50;
 			pbxExample.Image.Dispose();
 			//进行文本降噪黑白高对比度操作
 			Dictionary<string, string> args = new Dictionary<string, string>
 			{
 				{"sourceImagePath", _ocrImage.TempImageInfo.FilePath},
 				{"destImagePath", _ocrImage.TempImageInfo.FilePath},
-				{"filter_size", trackBar1.Value.ToString()},
+				{"filter_size", filterSize.ToString()},
 				{"off_set", 10.ToString()},
 				{"bgcolor", "white"},
 				//裁剪时候倾斜角
