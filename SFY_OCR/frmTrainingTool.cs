@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using SFY_OCR.Properties;
@@ -1383,7 +1384,7 @@ namespace SFY_OCR
 			btnRotateRight.Enabled = false;
 			btnMakeBox.Enabled = false;
 			btnReset.Enabled = false;
-			btnTextCleaner.Enabled = false;
+			//btnTextCleaner.Enabled = false;
 		}
 
 		/// <summary>
@@ -1400,7 +1401,7 @@ namespace SFY_OCR
 			btnRotateRight.Enabled = true;
 			btnMakeBox.Enabled = true;
 			btnReset.Enabled = true;
-			btnTextCleaner.Enabled = true;
+			//btnTextCleaner.Enabled = true;
 		}
 
 
@@ -1496,12 +1497,24 @@ namespace SFY_OCR
 			//打开样本图片
 			if (ofdFile.ShowDialog() == DialogResult.OK)
 			{
-				DisposeAllResources();
+				string filePath = ofdFile.FileName;
+				Regex regex = new Regex(@"\w+\.\w+\.\w+\.\w+");
 
-				_ocrImage = new OcrImage(ofdFile.FileName);
-				OpenImage(_ocrImage);
+				if (regex.IsMatch(filePath))
+				{
+					DisposeAllResources();
 
-				dgvBoxes.Focus();
+					_ocrImage = new OcrImage(ofdFile.FileName);
+					OpenImage(_ocrImage);
+
+					dgvBoxes.Focus();
+				}
+				else
+				{
+					MessageBox.Show("要识别的图片文件文件名必须为 a.b.c.d 的模式，如：lang.font.exp0.JPG 。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+
+
 				//RefreshBoxesInPictureBox();
 				//RefreshBoxesInfoInGridView();
 			}
@@ -1615,20 +1628,27 @@ namespace SFY_OCR
 
 		private void toolStripBtnGenerateTrainedData_Click(object sender, EventArgs e)
 		{
-			//当要打开图片时，设置OpenFileDialog的filter属性
+			string fileName = _ocrImage.TempImageInfo.MainFileName;
+			string fontName = fileName.Substring(fileName.IndexOf(".") + 1, fileName.LastIndexOf(".") - fileName.IndexOf(".") - 1);
+			string langName = fileName.Substring(0, fileName.IndexOf("."));
+
+			//当要保存图片时，设置SaveFileDialog的filter属性
 			sfdTrainedData.Filter = string.Format("样本训练文件|*.{0}", StringResourceManager.TrainedDataExtName);
-			sfdTrainedData.FileName = "";
+			sfdTrainedData.FileName = langName;
 			//打开样本图片
 			if (sfdTrainedData.ShowDialog() == DialogResult.OK)
 			{
 
 				try
 				{
-					GenerateFontPropertiesFile("b");
+					ShowProgressBar();
+					progressBar.pbMain.Value = 10;
+
+					GenerateFontPropertiesFile(fontName);
 					//GenerateFontPropertiesFile(_ocrImage.TempImageInfo.MainFileName);
 					GenerateTrainedData();
 
-					string generatedTrainedDataFilePath = Settings.Default.OutputDir + _ocrImage.TempImageInfo.MainFileName + "." +
+					string generatedTrainedDataFilePath = Settings.Default.OutputDir + langName + "." +
 														  StringResourceManager.TrainedDataExtName;
 					string savedTrainedDataFilePath = sfdTrainedData.FileName;
 					File.Copy(generatedTrainedDataFilePath, savedTrainedDataFilePath, true);
@@ -1637,6 +1657,10 @@ namespace SFY_OCR
 												  "\\" +
 												  sfdTrainedData.FileName.Substring(sfdTrainedData.FileName.LastIndexOf("\\") + 1);
 					File.Copy(generatedTrainedDataFilePath, destTessDataFilePath, true);
+
+					progressBar.pbMain.Value = 100;
+					Thread.Sleep(1000);
+					progressBar.Close();
 
 					if (File.Exists(savedTrainedDataFilePath))
 					{
@@ -1649,6 +1673,9 @@ namespace SFY_OCR
 							MessageBoxIcon.Error);
 					}
 
+					
+
+
 				}
 				catch (Exception ex)
 				{
@@ -1660,8 +1687,11 @@ namespace SFY_OCR
 
 		private void GenerateTrainedData()
 		{
+			string fileName = _ocrImage.TempImageInfo.MainFileName;
+			string fontName = fileName.Substring(fileName.IndexOf(".") + 1, fileName.LastIndexOf(".") - fileName.IndexOf(".") - 1);
+			string langName = fileName.Substring(0, fileName.IndexOf("."));
 			string trFilePath = _ocrImage.BoxFileInfo.Dir + _ocrImage.BoxFileInfo.MainFileName + ".tr";
-			ShowProgressBar();
+
 			List<CommandLineProcess> commands = new List<CommandLineProcess>();
 
 			//生成 .tr 文件
@@ -1696,7 +1726,7 @@ namespace SFY_OCR
 				{
 					"arguments",
 					string.Format("-F font_properties -U {0} -O {1} {2}", "unicharset",
-						 _ocrImage.BoxFileInfo.MainFileName + ".unicharset", trFilePath)
+						langName + ".unicharset", trFilePath)
 				},
 				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
 			}));
@@ -1719,7 +1749,7 @@ namespace SFY_OCR
 				{"commandPath", "cmd.exe"},
 				{
 					"arguments",
-					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "normproto", _ocrImage.BoxFileInfo.MainFileName + ".normproto" )
+					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "normproto", langName + ".normproto" )
 				},
 				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
 					}
@@ -1730,7 +1760,7 @@ namespace SFY_OCR
 				{"commandPath", "cmd.exe"},
 				{
 					"arguments",
-					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "inttemp", _ocrImage.BoxFileInfo.MainFileName + ".inttemp" )
+					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "inttemp", langName + ".inttemp" )
 				},
 				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
 					
@@ -1742,7 +1772,7 @@ namespace SFY_OCR
 				{"commandPath", "cmd.exe"},
 				{
 					"arguments",
-					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "pffmtable", _ocrImage.BoxFileInfo.MainFileName + ".pffmtable" )
+					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "pffmtable", langName + ".pffmtable" )
 				},
 				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
 			}));
@@ -1753,7 +1783,7 @@ namespace SFY_OCR
 				{"commandPath", "cmd.exe"},
 				{
 					"arguments",
-					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "shapetable", _ocrImage.BoxFileInfo.MainFileName + ".shapetable" )
+					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "shapetable", langName + ".shapetable" )
 				},
 				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
 			}));
@@ -1764,7 +1794,7 @@ namespace SFY_OCR
 				{"commandPath", "cmd.exe"},
 				{
 					"arguments",
-					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "unicharset", _ocrImage.BoxFileInfo.MainFileName + ".unicharset" )
+					string.Format("/C ren {0} {1}", Settings.Default.OutputDir + "unicharset", langName + ".unicharset" )
 				},
 				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
 			}));
@@ -1775,7 +1805,7 @@ namespace SFY_OCR
 				{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "combine_tessdata.exe"},
 				{
 					"arguments",
-					string.Format("{0}",  _ocrImage.BoxFileInfo.MainFileName + ".")
+					string.Format("{0}",  langName + ".")
 				},
 				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
 			}));
@@ -1783,20 +1813,26 @@ namespace SFY_OCR
 			int index = 0;
 			foreach (CommandLineProcess command in commands)
 			{
+				BackgroundWorker bgw = new BackgroundWorker();
 
-				if (!bgwProcess.IsBusy)
+				if (!bgw.IsBusy)
 				{
-					bgwProcess.RunWorkerAsync(command);
+					bgw.RunWorkerAsync(command);
 				}
 
 				//等待处理完毕
-				while (bgwProcess.IsBusy)
+				while (bgw.IsBusy)
 				{
 					Application.DoEvents();
 				}
 				index++;
+				Thread.Sleep(500);
+				//前面留10，后面留10
+				progressBar.pbMain.Value = Convert.ToInt32(10 + Convert.ToDouble(index) / commands.Count * 80);
 
 			}
+
+
 
 		}
 
