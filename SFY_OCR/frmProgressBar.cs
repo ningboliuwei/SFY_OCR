@@ -15,8 +15,9 @@ namespace SFY_OCR
 		{
 			InitializeComponent();
 
-			this.FormBorderStyle = FormBorderStyle.None;
+			this.FormBorderStyle = FormBorderStyle.FixedSingle;
 			this.TopMost = true;
+			this.ControlBox = false;
 			this.StartPosition = FormStartPosition.CenterScreen;
 		}
 

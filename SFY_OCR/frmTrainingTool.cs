@@ -148,7 +148,8 @@ namespace SFY_OCR
 					dgvBoxes.RowCount = _ocrImage.ImageBoxList.Boxes.Count + 1;
 					//清楚网格中所有选择
 					dgvBoxes.ClearSelection();
-					toolStripBtnSaveBox.Enabled = true;
+					EnableSaveBoxButton();
+					EnableGenerateTrainedDataButton();
 				}
 				catch (Exception ex)
 				{
@@ -299,6 +300,7 @@ namespace SFY_OCR
 			//设置工具栏
 			//toolStripBtnSaveBox.Checked = false;
 			toolStripBtnSaveBox.Enabled = false;
+			toolStripBtnGenerateTrainedData.Enabled = false;
 		}
 
 
@@ -372,11 +374,7 @@ namespace SFY_OCR
 			}
 		}
 
-		private void button1_Click(object sender, EventArgs e)
-		{
-			//恢复为最初的图片（副本）
-			ResetImage();
-		}
+
 
 		/// <summary>
 		///     复原到样本图片（重新进行一次打开图片处理）
@@ -393,20 +391,6 @@ namespace SFY_OCR
 		/// <param name="e"></param>
 		private void bgwProcess_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			//当背景线程处理完毕后，显示处理完的（临时）图像
-			//try
-			//{
-			//	//pbxExample.Image = new Bitmap(_ocrImage.TempImageInfo.FilePath);
-
-			//	//if (File.Exists(_ocrImage.BoxFileInfo.FilePath))
-			//	//{
-			//	//	RefreshBoxesInPictureBox();
-			//	//}
-			//}
-			//catch (Exception ex)
-			//{
-			//	throw new Exception(ex.Message);
-			//}
 			if (progressBar != null)
 			{
 				progressBar.pbMain.Value = 100;
@@ -944,10 +928,7 @@ namespace SFY_OCR
 			toolStripBtnSaveBox.Enabled = false;
 		}
 
-		private void button3_Click(object sender, EventArgs e)
-		{
-			GetNewBoxesImage();
-		}
+
 
 		private void pbxExample_Paint(object sender, PaintEventArgs e)
 		{
@@ -968,8 +949,6 @@ namespace SFY_OCR
 					_ocrImage.ImageBoxList.Boxes[r.Index].Selected = r.Selected;
 				}
 			}
-
-			btnMakeBox.Text = _ocrImage.ImageBoxList.SelectedBoxes.Count.ToString();
 
 			RefreshBoxImageInPictureBox();
 			RefreshBoxInfoInHeader();
@@ -1205,6 +1184,16 @@ namespace SFY_OCR
 			toolStripBtnSaveBox.Enabled = true;
 		}
 
+		private void EnableGenerateTrainedDataButton()
+		{
+			toolStripBtnGenerateTrainedData.Enabled = true;
+		}
+
+		private void DisableGenerateTrainedDataButton()
+		{
+			toolStripBtnGenerateTrainedData.Enabled = false;
+		}
+
 		private void nudY_ValueChanged(object sender, EventArgs e)
 		{
 			if (nudY.Focused)
@@ -1318,7 +1307,6 @@ namespace SFY_OCR
 		{
 			ShowProgressBar();
 
-
 			//pbxExample.Image.Dispose();
 			////进行旋转操作
 			Dictionary<string, string> args = new Dictionary<string, string>
@@ -1350,8 +1338,8 @@ namespace SFY_OCR
 			dgvBoxes.RowCount = _ocrImage.ImageBoxList.Boxes.Count + 1;
 			//清楚网格中所有选择
 			dgvBoxes.ClearSelection();
-			toolStripBtnSaveBox.Enabled = true;
 			EnableSaveBoxButton();
+			EnableGenerateTrainedDataButton();
 
 			//重新显示
 
@@ -1488,13 +1476,7 @@ namespace SFY_OCR
 			EnableSaveBoxButton();
 		}
 
-		private void dgvBoxes_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-		{
-		}
 
-		private void button5_Click(object sender, EventArgs e)
-		{
-		}
 
 		private void btnReset_Click(object sender, EventArgs e)
 		{
@@ -1547,16 +1529,7 @@ namespace SFY_OCR
 		}
 
 
-		private void button1_Click_1(object sender, EventArgs e)
-		{
-			foreach (DataGridViewRow row in dgvBoxes.Rows)
-			{
-				foreach (DataGridViewCell cell in row.Cells)
-				{
-					cell.Value = "1";
-				}
-			}
-		}
+
 
 		private void AddBoxToDataGridView(Box box)
 		{
@@ -1640,25 +1613,55 @@ namespace SFY_OCR
 			g.DrawString(character, characterFont, new SolidBrush(Color.Black), toolTipX - 2, toolTipY - 2);
 		}
 
-		private void toolStripBtnMakeTrainedData_Click(object sender, EventArgs e)
+		private void toolStripBtnGenerateTrainedData_Click(object sender, EventArgs e)
 		{
 			//当要打开图片时，设置OpenFileDialog的filter属性
 			sfdTrainedData.Filter = string.Format("样本训练文件|*.{0}", StringResourceManager.TrainedDataExtName);
-
+			sfdTrainedData.FileName = "";
 			//打开样本图片
 			if (sfdTrainedData.ShowDialog() == DialogResult.OK)
 			{
-				GenerateFontPropertiesFile("b");
-				//GenerateFontPropertiesFile(_ocrImage.TempImageInfo.MainFileName);
-				GenerateTrainedData();
-				//
+
+				try
+				{
+					GenerateFontPropertiesFile("b");
+					//GenerateFontPropertiesFile(_ocrImage.TempImageInfo.MainFileName);
+					GenerateTrainedData();
+
+					string generatedTrainedDataFilePath = Settings.Default.OutputDir + _ocrImage.TempImageInfo.MainFileName + "." +
+														  StringResourceManager.TrainedDataExtName;
+					string savedTrainedDataFilePath = sfdTrainedData.FileName;
+					File.Copy(generatedTrainedDataFilePath, savedTrainedDataFilePath, true);
+
+					string destTessDataFilePath = Settings.Default.TesseractOcrDir + "\\" + StringResourceManager.TessdataDirName +
+												  "\\" +
+												  sfdTrainedData.FileName.Substring(sfdTrainedData.FileName.LastIndexOf("\\") + 1);
+					File.Copy(generatedTrainedDataFilePath, destTessDataFilePath, true);
+
+					if (File.Exists(savedTrainedDataFilePath))
+					{
+						MessageBox.Show("样本训练文件已生成成功，并自动导入 Tesseract-OCR 样本训练数据库中。", "信息", MessageBoxButtons.OK,
+							MessageBoxIcon.Information);
+					}
+					else
+					{
+						MessageBox.Show("样本训练文件生成失败，请调整后重试。", "错误", MessageBoxButtons.OK,
+							MessageBoxIcon.Error);
+					}
+
+				}
+				catch (Exception ex)
+				{
+					throw new Exception(ex.Message);
+				}
+
 			}
 		}
 
 		private void GenerateTrainedData()
 		{
 			string trFilePath = _ocrImage.BoxFileInfo.Dir + _ocrImage.BoxFileInfo.MainFileName + ".tr";
-
+			ShowProgressBar();
 			List<CommandLineProcess> commands = new List<CommandLineProcess>();
 
 			//生成 .tr 文件
@@ -1692,8 +1695,8 @@ namespace SFY_OCR
 				{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "mftraining.exe"},
 				{
 					"arguments",
-					string.Format("-F font_properties -U {0} -O {1} {2}", _ocrImage.BoxFileInfo.Dir + "unicharset",
-						_ocrImage.BoxFileInfo.Dir + _ocrImage.BoxFileInfo.MainFileName + ".unicharset", trFilePath)
+					string.Format("-F font_properties -U {0} -O {1} {2}", "unicharset",
+						 _ocrImage.BoxFileInfo.MainFileName + ".unicharset", trFilePath)
 				},
 				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
 			}));
@@ -1766,19 +1769,21 @@ namespace SFY_OCR
 				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
 			}));
 
-			////combine_tessdata.exe num.
-			//commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
-			//{
-			//	{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "combine_tessdata.exe"},
-			//	{
-			//		"arguments",
-			//		string.Format("{0}",  _ocrImage.BoxFileInfo.MainFileName + ".")
-			//	}
-			//}));
+			//combine_tessdata.exe num.
+			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
+			{
+				{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "combine_tessdata.exe"},
+				{
+					"arguments",
+					string.Format("{0}",  _ocrImage.BoxFileInfo.MainFileName + ".")
+				},
+				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
+			}));
 
-
+			int index = 0;
 			foreach (CommandLineProcess command in commands)
 			{
+
 				if (!bgwProcess.IsBusy)
 				{
 					bgwProcess.RunWorkerAsync(command);
@@ -1789,7 +1794,10 @@ namespace SFY_OCR
 				{
 					Application.DoEvents();
 				}
+				index++;
+
 			}
+
 		}
 
 		/// <summary>

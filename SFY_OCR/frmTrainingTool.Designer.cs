@@ -36,7 +36,7 @@
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this.toolStripOpenImage = new System.Windows.Forms.ToolStripButton();
 			this.toolStripBtnSaveBox = new System.Windows.Forms.ToolStripButton();
-			this.toolStripBtnMakeTrainedData = new System.Windows.Forms.ToolStripButton();
+			this.toolStripBtnGenerateTrainedData = new System.Windows.Forms.ToolStripButton();
 			this.dgvBoxes = new System.Windows.Forms.DataGridView();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -58,9 +58,9 @@
 			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
 			this.btnRotateLeft = new System.Windows.Forms.Button();
 			this.btnRotateRight = new System.Windows.Forms.Button();
-			this.btnMakeBox = new System.Windows.Forms.Button();
 			this.btnReset = new System.Windows.Forms.Button();
 			this.btnTextCleaner = new System.Windows.Forms.Button();
+			this.btnMakeBox = new System.Windows.Forms.Button();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcess = new System.ComponentModel.BackgroundWorker();
 			this.sfdTrainedData = new System.Windows.Forms.SaveFileDialog();
@@ -145,7 +145,7 @@
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripOpenImage,
             this.toolStripBtnSaveBox,
-            this.toolStripBtnMakeTrainedData});
+            this.toolStripBtnGenerateTrainedData});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Size = new System.Drawing.Size(256, 40);
@@ -172,15 +172,15 @@
 			this.toolStripBtnSaveBox.Text = "保存Box文件";
 			this.toolStripBtnSaveBox.Click += new System.EventHandler(this.toolStripBtnSaveBox_Click);
 			// 
-			// toolStripBtnMakeTrainedData
+			// toolStripBtnGenerateTrainedData
 			// 
-			this.toolStripBtnMakeTrainedData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripBtnMakeTrainedData.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnMakeTrainedData.Image")));
-			this.toolStripBtnMakeTrainedData.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripBtnMakeTrainedData.Name = "toolStripBtnMakeTrainedData";
-			this.toolStripBtnMakeTrainedData.Size = new System.Drawing.Size(36, 37);
-			this.toolStripBtnMakeTrainedData.Text = "生成训练文件";
-			this.toolStripBtnMakeTrainedData.Click += new System.EventHandler(this.toolStripBtnMakeTrainedData_Click);
+			this.toolStripBtnGenerateTrainedData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripBtnGenerateTrainedData.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnGenerateTrainedData.Image")));
+			this.toolStripBtnGenerateTrainedData.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripBtnGenerateTrainedData.Name = "toolStripBtnGenerateTrainedData";
+			this.toolStripBtnGenerateTrainedData.Size = new System.Drawing.Size(36, 37);
+			this.toolStripBtnGenerateTrainedData.Text = "生成训练文件";
+			this.toolStripBtnGenerateTrainedData.Click += new System.EventHandler(this.toolStripBtnGenerateTrainedData_Click);
 			// 
 			// dgvBoxes
 			// 
@@ -193,7 +193,6 @@
 			this.dgvBoxes.TabIndex = 3;
 			this.dgvBoxes.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvBoxes_CellValueChanged);
 			this.dgvBoxes.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dgvBoxes_CellValueNeeded);
-			this.dgvBoxes.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvBoxes_DataBindingComplete);
 			this.dgvBoxes.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvBoxes_RowsAdded);
 			this.dgvBoxes.SelectionChanged += new System.EventHandler(this.dgvBoxes_SelectionChanged);
 			this.dgvBoxes.Click += new System.EventHandler(this.dgvBoxes_Click);
@@ -406,16 +405,6 @@
 			this.btnRotateRight.UseVisualStyleBackColor = true;
 			this.btnRotateRight.Click += new System.EventHandler(this.btnRotateRight_Click);
 			// 
-			// btnMakeBox
-			// 
-			this.btnMakeBox.Location = new System.Drawing.Point(327, 3);
-			this.btnMakeBox.Name = "btnMakeBox";
-			this.btnMakeBox.Size = new System.Drawing.Size(100, 23);
-			this.btnMakeBox.TabIndex = 2;
-			this.btnMakeBox.Text = "重新识别(&C)";
-			this.btnMakeBox.UseVisualStyleBackColor = true;
-			this.btnMakeBox.Click += new System.EventHandler(this.btnMakeBox_Click);
-			// 
 			// btnReset
 			// 
 			this.btnReset.Location = new System.Drawing.Point(165, 3);
@@ -435,6 +424,16 @@
 			this.btnTextCleaner.Text = "降噪(&J)";
 			this.btnTextCleaner.UseVisualStyleBackColor = true;
 			this.btnTextCleaner.Click += new System.EventHandler(this.btnTextCleaner_Click);
+			// 
+			// btnMakeBox
+			// 
+			this.btnMakeBox.Location = new System.Drawing.Point(327, 3);
+			this.btnMakeBox.Name = "btnMakeBox";
+			this.btnMakeBox.Size = new System.Drawing.Size(100, 23);
+			this.btnMakeBox.TabIndex = 2;
+			this.btnMakeBox.Text = "重新识别(&C)";
+			this.btnMakeBox.UseVisualStyleBackColor = true;
+			this.btnMakeBox.Click += new System.EventHandler(this.btnMakeBox_Click);
 			// 
 			// bgwProcess
 			// 
@@ -517,7 +516,7 @@
 		private System.Windows.Forms.Button btnMakeBox;
 		private System.Windows.Forms.Button btnReset;
 		private System.Windows.Forms.PictureBox pbxExample;
-		private System.Windows.Forms.ToolStripButton toolStripBtnMakeTrainedData;
+		private System.Windows.Forms.ToolStripButton toolStripBtnGenerateTrainedData;
 		private System.Windows.Forms.SaveFileDialog sfdTrainedData;
 	}
 }

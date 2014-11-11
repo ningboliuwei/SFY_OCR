@@ -132,7 +132,7 @@ namespace SFY_OCR
 			         ControlStyles.AllPaintingInWmPaint, true);
 
 			//显示语言文件
-			ShowLanguageType();
+			
 		}
 
 
@@ -362,6 +362,7 @@ namespace SFY_OCR
 				//得到语言文件夹下所有语言文件路径
 				string[] trainedDataFilePaths = Directory.GetFiles(tessdataDirPath);
 
+				cbxLanguageType.Items.Clear();
 				foreach (string trainedDataFilePath in trainedDataFilePaths)
 				{
 					string extName = trainedDataFilePath.Substring(trainedDataFilePath.LastIndexOf(".") + 1);
@@ -399,6 +400,12 @@ namespace SFY_OCR
 
 		private void txtResult_MouseMove(object sender, MouseEventArgs e)
 		{
+		}
+
+		private void frmMain_Activated(object sender, EventArgs e)
+		{
+			//刷新训练库
+			ShowLanguageType();
 		}
 	}
 }

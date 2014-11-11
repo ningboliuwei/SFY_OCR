@@ -36,17 +36,20 @@
 			this.pbMain.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pbMain.Location = new System.Drawing.Point(0, 0);
 			this.pbMain.Name = "pbMain";
-			this.pbMain.Size = new System.Drawing.Size(284, 31);
+			this.pbMain.Size = new System.Drawing.Size(284, 35);
 			this.pbMain.TabIndex = 0;
 			// 
 			// frmProgressBar
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(284, 31);
+			this.ClientSize = new System.Drawing.Size(284, 35);
+			this.ControlBox = false;
 			this.Controls.Add(this.pbMain);
+			this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Name = "frmProgressBar";
-			this.Text = "ProgressBar";
+			this.Text = "进度";
 			this.Load += new System.EventHandler(this.ProgressBar_Load);
 			this.ResumeLayout(false);
 

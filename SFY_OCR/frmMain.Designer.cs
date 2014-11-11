@@ -330,6 +330,7 @@
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "frmMain";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+			this.Activated += new System.EventHandler(this.frmMain_Activated);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
 			this.Load += new System.EventHandler(this.Main_Load);
 			this.splitContainer1.Panel1.ResumeLayout(false);
