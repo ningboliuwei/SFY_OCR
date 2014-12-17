@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BoxBorderWidth" xml:space="preserve">
     <value>1</value>
@@ -138,7 +138,7 @@
     <comment>临时处理的图片文件后缀</comment>
   </data>
   <data name="TessdataDirName" xml:space="preserve">
-    <value>tessdata</value>
+    <value>tessdata\</value>
     <comment>语言训练文件所在文件夹名称</comment>
   </data>
   <data name="TrainedDataExtName" xml:space="preserve">

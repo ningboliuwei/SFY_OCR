@@ -106,7 +106,7 @@ namespace SFY_OCR {
         }
         
         /// <summary>
-        ///   查找类似 tessdata 的本地化字符串。
+        ///   查找类似 tessdata\ 的本地化字符串。
         /// </summary>
         internal static string TessdataDirName {
             get {

@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using SFY_OCR.Properties;
+using SFY_OCR.Untilities;
 
 #endregion
 
@@ -16,6 +17,7 @@ namespace SFY_OCR
 	{
 		//用于保存所有选中的图片文件
 		private const string NO_LANGUAGE_DATA_COMBOBOX_TEXT = "无语言文件";
+		private static bool errorShowed;
 		private readonly List<string> imageFilePaths = new List<string>();
 
 		public frmMain()
@@ -131,8 +133,9 @@ namespace SFY_OCR
 			         ControlStyles.ResizeRedraw |
 			         ControlStyles.AllPaintingInWmPaint, true);
 
+
+			ShowLanguageType();
 			//显示语言文件
-			
 		}
 
 
@@ -254,6 +257,16 @@ namespace SFY_OCR
 				//	{"resultFilePath", outputResultFilePath}
 				//});
 
+				CommandLineProcess command = new RecognitionTessProcess(new Dictionary<string, string>
+				{
+					{"sourceImagePath", imageFilePath},
+					{"resultFilePath", outputResultFilePath},
+					{"langType", langType}
+				});
+
+				command.Process();
+
+
 				//报告进度
 				bgwImageRecognition.ReportProgress(beforeSpan + (i + 1)*(100 - beforeSpan - afterSpan)/imageFilePaths.Count);
 			}
@@ -354,7 +367,7 @@ namespace SFY_OCR
 		/// </summary>
 		private void ShowLanguageType()
 		{
-			string tessdataDirPath = Settings.Default.TesseractOcrDir + "\\" + StringResourceManager.TessdataDirName;
+			string tessdataDirPath = Settings.Default.TesseractOcrDir + StringResourceManager.TessdataDirName;
 
 			//若语言训练文件夹路径存在，显示语言训练文件
 			if (Directory.Exists(tessdataDirPath))
@@ -386,7 +399,12 @@ namespace SFY_OCR
 			}
 			else
 			{
-				MessageBox.Show("语言文件夹不存在，可能是Tesseract-OCR文件夹路径不正确，请到“选项”对话框进行设置。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				if (!errorShowed)
+				{
+					errorShowed = true;
+					MessageBox.Show("语言文件夹不存在，可能是Tesseract-OCR文件夹路径不正确，请到“选项”对话框进行设置。", "错误", MessageBoxButtons.OK,
+						MessageBoxIcon.Error);
+				}
 			}
 		}
 
@@ -395,7 +413,7 @@ namespace SFY_OCR
 			//打开训练对话框
 			var frmTraining = new frmTrainingTool();
 
-			frmTraining.ShowDialog();
+			frmTraining.Show();
 		}
 
 		private void txtResult_MouseMove(object sender, MouseEventArgs e)
@@ -405,7 +423,8 @@ namespace SFY_OCR
 		private void frmMain_Activated(object sender, EventArgs e)
 		{
 			//刷新训练库
-			ShowLanguageType();
+
+			//ShowLanguageType();
 		}
 	}
 }

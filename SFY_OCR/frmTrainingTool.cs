@@ -90,7 +90,7 @@ namespace SFY_OCR
 
 			if (toolStripBtnSaveBox.Enabled)
 			{
-				DialogResult result = MessageBox.Show(this, "Box 文件还没有存盘，需要在退出训练程序前存盘吗?", "警告", MessageBoxButtons.YesNoCancel,
+				DialogResult result = MessageBox.Show(this, "Box 文件还没有存盘，需要在退出训练程序\n前存盘吗?", "警告", MessageBoxButtons.YesNoCancel,
 					MessageBoxIcon.Warning, MessageBoxDefaultButton.Button3);
 
 				if (result == DialogResult.Yes)
@@ -154,7 +154,8 @@ namespace SFY_OCR
 				}
 				catch (Exception ex)
 				{
-					throw new Exception(ex.Message);
+					//TODO
+					//throw new Exception(ex.Message);
 				}
 			}
 		}
@@ -323,7 +324,8 @@ namespace SFY_OCR
 		private void btnTextCleaner_Click(object sender, EventArgs e)
 		{
 			const int filterSize = 50;
-			pbxExample.Image.Dispose();
+
+			//DisposeAllResources();
 			//进行文本降噪黑白高对比度操作
 			Dictionary<string, string> args = new Dictionary<string, string>
 			{
@@ -335,7 +337,8 @@ namespace SFY_OCR
 				//裁剪时候倾斜角
 				{"deskew", 0.ToString()}
 			};
-
+			ShowProgressBar();
+			progressBar.pbMain.Value = 10;
 			//调用指向TextCleaner
 			ImageProcess imageProcess = new TextCleanerImageProcess(args);
 			bgwProcess.RunWorkerAsync(imageProcess);
@@ -345,8 +348,13 @@ namespace SFY_OCR
 				Application.DoEvents();
 			}
 
-			pbxExample.BackgroundImage = new Bitmap(_ocrImage.TempImageInfo.FilePath);
-			RefreshBoxImageInPictureBox();
+
+			pbxExample.BackgroundImage = Image.FromFile(_ocrImage.TempImageInfo.FilePath);
+			MessageBox.Show(Common.IsInUse(_ocrImage.TempImageInfo.FilePath).ToString());
+			pbxExample.Refresh();
+			//RefreshBoxImageInPictureBox();
+
+
 		}
 
 
@@ -382,6 +390,7 @@ namespace SFY_OCR
 		/// </summary>
 		private void ResetImage()
 		{
+			DisposeAllResources();
 			OpenImage(_ocrImage);
 		}
 
@@ -1631,6 +1640,7 @@ namespace SFY_OCR
 			string fileName = _ocrImage.TempImageInfo.MainFileName;
 			string fontName = fileName.Substring(fileName.IndexOf(".") + 1, fileName.LastIndexOf(".") - fileName.IndexOf(".") - 1);
 			string langName = fileName.Substring(0, fileName.IndexOf("."));
+			string savedTrainedDataFilePath = "";
 
 			//当要保存图片时，设置SaveFileDialog的filter属性
 			sfdTrainedData.Filter = string.Format("样本训练文件|*.{0}", StringResourceManager.TrainedDataExtName);
@@ -1650,37 +1660,50 @@ namespace SFY_OCR
 
 					string generatedTrainedDataFilePath = Settings.Default.OutputDir + langName + "." +
 														  StringResourceManager.TrainedDataExtName;
-					string savedTrainedDataFilePath = sfdTrainedData.FileName;
+					savedTrainedDataFilePath = sfdTrainedData.FileName;
+
+					//while (Common.IsInUse(generatedTrainedDataFilePath) || Common.IsInUse(savedTrainedDataFilePath))
+					//{
+					//	Application.DoEvents();
+					//}
+
+
+					
 					File.Copy(generatedTrainedDataFilePath, savedTrainedDataFilePath, true);
 
-					string destTessDataFilePath = Settings.Default.TesseractOcrDir + "\\" + StringResourceManager.TessdataDirName +
-												  "\\" +
+					string destTessDataFilePath = Settings.Default.TesseractOcrDir + StringResourceManager.TessdataDirName +
+
 												  sfdTrainedData.FileName.Substring(sfdTrainedData.FileName.LastIndexOf("\\") + 1);
+					//while (Common.IsInUse(generatedTrainedDataFilePath) || Common.IsInUse(destTessDataFilePath))
+					//{
+					//	Application.DoEvents();
+					//}
 					File.Copy(generatedTrainedDataFilePath, destTessDataFilePath, true);
 
-					progressBar.pbMain.Value = 100;
-					Thread.Sleep(1000);
-					progressBar.Close();
+					
 
 					if (File.Exists(savedTrainedDataFilePath))
 					{
 						MessageBox.Show("样本训练文件已生成成功，并自动导入 Tesseract-OCR 样本训练数据库中。", "信息", MessageBoxButtons.OK,
 							MessageBoxIcon.Information);
+						progressBar.pbMain.Value = 100;
+						Thread.Sleep(1000);
+						progressBar.Close();
 					}
 					else
 					{
-						MessageBox.Show("样本训练文件生成失败，请调整后重试。", "错误", MessageBoxButtons.OK,
-							MessageBoxIcon.Error);
+						
 					}
-
-					
-
 
 				}
 				catch (Exception ex)
 				{
-					throw new Exception(ex.Message);
+					//throw new Exception(ex.Message);
+					MessageBox.Show("样本训练文件生成失败，请调整后重试。", "错误", MessageBoxButtons.OK,
+						MessageBoxIcon.Error);
+					progressBar.Close();
 				}
+
 
 			}
 		}
@@ -1698,12 +1721,14 @@ namespace SFY_OCR
 			//tesseract.exe num.font.exp0.tif num.font.exp0 nobatch box.train  
 			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
 			{
-				{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "tesseract.exe"},
+				{"commandPath", Settings.Default.TesseractOcrDir +  "tesseract.exe"},
 				{
 					"arguments",
 					string.Format("{0} {1} nobatch box.train", _ocrImage.TempImageInfo.FilePath,
 						_ocrImage.BoxFileInfo.Dir + _ocrImage.BoxFileInfo.MainFileName)
 				}
+				,
+				{"workingDirectory", Settings.Default.TesseractOcrDir}
 			}));
 
 
@@ -1711,18 +1736,32 @@ namespace SFY_OCR
 			//unicharset_extractor.exe num.font.exp0.box  
 			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
 			{
-				{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "unicharset_extractor.exe"},
+				{"commandPath", Settings.Default.TesseractOcrDir  + "unicharset_extractor.exe" },
 				{
 					"arguments",
-					string.Format("{0}", _ocrImage.BoxFileInfo.FilePath)
+					string.Format("-D {0} {1}",_ocrImage.BoxFileInfo.Dir,  _ocrImage.BoxFileInfo.FilePath)
+				},
+				{"workingDirectory", Settings.Default.TesseractOcrDir}
+				//{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
+			}));
+
+			//shapeclustering -F font_properties -U unicharset lang.fontname.exp0.tr 
+			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
+			{
+				{"commandPath", Settings.Default.TesseractOcrDir + "shapeclustering.exe"},
+				{
+					"arguments",
+					string.Format("-F font_properties -U {0} {1}", "unicharset", trFilePath)
 				},
 				{"workingDirectory", _ocrImage.BoxFileInfo.Dir}
 			}));
 
+
+
 			//mftraining -F font_properties -U unicharset -O num.unicharset num.font.exp0.tr
 			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
 			{
-				{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "mftraining.exe"},
+				{"commandPath", Settings.Default.TesseractOcrDir + "mftraining.exe"},
 				{
 					"arguments",
 					string.Format("-F font_properties -U {0} -O {1} {2}", "unicharset",
@@ -1734,7 +1773,7 @@ namespace SFY_OCR
 			////cntraining.exe num.font.exp0.tr  
 			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
 			{
-				{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "cntraining.exe"},
+				{"commandPath", Settings.Default.TesseractOcrDir +  "cntraining.exe"},
 				{
 					"arguments",
 					string.Format("{0}", trFilePath)
@@ -1802,7 +1841,7 @@ namespace SFY_OCR
 			//combine_tessdata.exe num.
 			commands.Add(new CustomCommandLineProcess(new Dictionary<string, string>
 			{
-				{"commandPath", Settings.Default.TesseractOcrDir + "\\" + "combine_tessdata.exe"},
+				{"commandPath", Settings.Default.TesseractOcrDir +  "combine_tessdata.exe"},
 				{
 					"arguments",
 					string.Format("{0}",  langName + ".")
@@ -1813,18 +1852,25 @@ namespace SFY_OCR
 			int index = 0;
 			foreach (CommandLineProcess command in commands)
 			{
-				BackgroundWorker bgw = new BackgroundWorker();
+				//TODO
+				//BackgroundWorker bgw = new BackgroundWorker();
 
-				if (!bgw.IsBusy)
-				{
-					bgw.RunWorkerAsync(command);
-				}
+				//if (!bgw.IsBusy)
+				//{
+				//	//Thread.Sleep(-1);
+				//	bgw.RunWorkerAsync(command);
+				//}
 
-				//等待处理完毕
-				while (bgw.IsBusy)
-				{
-					Application.DoEvents();
-				}
+				////等待处理完毕
+				//while (bgw.IsBusy)
+				//{
+				//	Application.DoEvents();
+				//}
+
+				command.Process();
+
+				//bgw.RunWorkerAsync(command);
+
 				index++;
 				Thread.Sleep(500);
 				//前面留10，后面留10

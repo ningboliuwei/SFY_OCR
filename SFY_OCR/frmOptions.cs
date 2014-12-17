@@ -97,7 +97,8 @@ namespace SFY_OCR
 			{
 				try
 				{
-					txtTesseractOcrDir.Text = fbdChooseDir.SelectedPath;
+					//若末尾不是斜杠，则加上斜杠
+					txtTesseractOcrDir.Text = fbdChooseDir.SelectedPath[fbdChooseDir.SelectedPath.Length - 1] == '\\' ? fbdChooseDir.SelectedPath : fbdChooseDir.SelectedPath + "\\";
 				}
 				catch (Exception ex)
 				{
@@ -113,7 +114,7 @@ namespace SFY_OCR
 			{
 				try
 				{
-					txtOutputDir.Text = fbdChooseDir.SelectedPath;
+					txtOutputDir.Text = fbdChooseDir.SelectedPath[fbdChooseDir.SelectedPath.Length - 1] == '\\' ? fbdChooseDir.SelectedPath : fbdChooseDir.SelectedPath + "\\";
 				}
 				catch (Exception ex)
 				{
@@ -129,7 +130,7 @@ namespace SFY_OCR
 			{
 				try
 				{
-					txtImageMagickDir.Text = fbdChooseDir.SelectedPath;
+					txtImageMagickDir.Text = fbdChooseDir.SelectedPath[fbdChooseDir.SelectedPath.Length - 1] == '\\' ? fbdChooseDir.SelectedPath : fbdChooseDir.SelectedPath + "\\";
 				}
 				catch (Exception ex)
 				{

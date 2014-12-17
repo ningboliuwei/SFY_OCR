@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using SFY_OCR.Properties;
 
 namespace SFY_OCR.Untilities
@@ -24,6 +25,7 @@ namespace SFY_OCR.Untilities
 					process.StartInfo.UseShellExecute = false;
 					process.StartInfo.CreateNoWindow = true;
 					process.StartInfo.RedirectStandardOutput = true;
+					process.StartInfo.RedirectStandardError = true;
 					process.StartInfo.WorkingDirectory = _workingDirectory;
 					process.Start();
 					process.WaitForExit();

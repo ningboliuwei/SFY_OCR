@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SFY_OCR.Untilities
 {
-	class RecognitionTessProcess : CommandLineProcess
+	class RecognitionTessProcess : TessProcess
 	{
 		public RecognitionTessProcess(Dictionary<string, string> args)
 		{

@@ -58,11 +58,12 @@
 			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
 			this.btnRotateLeft = new System.Windows.Forms.Button();
 			this.btnRotateRight = new System.Windows.Forms.Button();
-			this.btnReset = new System.Windows.Forms.Button();
 			this.btnMakeBox = new System.Windows.Forms.Button();
 			this.ofdFile = new System.Windows.Forms.OpenFileDialog();
 			this.bgwProcess = new System.ComponentModel.BackgroundWorker();
 			this.sfdTrainedData = new System.Windows.Forms.SaveFileDialog();
+			this.btnTextCleaner = new System.Windows.Forms.Button();
+			this.btnReset = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -375,6 +376,7 @@
 			// 
 			this.flowLayoutPanel3.Controls.Add(this.btnRotateLeft);
 			this.flowLayoutPanel3.Controls.Add(this.btnRotateRight);
+			this.flowLayoutPanel3.Controls.Add(this.btnTextCleaner);
 			this.flowLayoutPanel3.Controls.Add(this.btnReset);
 			this.flowLayoutPanel3.Controls.Add(this.btnMakeBox);
 			this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -403,19 +405,9 @@
 			this.btnRotateRight.UseVisualStyleBackColor = true;
 			this.btnRotateRight.Click += new System.EventHandler(this.btnRotateRight_Click);
 			// 
-			// btnReset
-			// 
-			this.btnReset.Location = new System.Drawing.Point(165, 3);
-			this.btnReset.Name = "btnReset";
-			this.btnReset.Size = new System.Drawing.Size(75, 23);
-			this.btnReset.TabIndex = 4;
-			this.btnReset.Text = "复位(&F)";
-			this.btnReset.UseVisualStyleBackColor = true;
-			this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-			// 
 			// btnMakeBox
 			// 
-			this.btnMakeBox.Location = new System.Drawing.Point(246, 3);
+			this.btnMakeBox.Location = new System.Drawing.Point(327, 3);
 			this.btnMakeBox.Name = "btnMakeBox";
 			this.btnMakeBox.Size = new System.Drawing.Size(100, 23);
 			this.btnMakeBox.TabIndex = 2;
@@ -427,6 +419,25 @@
 			// 
 			this.bgwProcess.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProcess_DoWork);
 			this.bgwProcess.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwProcess_RunWorkerCompleted);
+			// 
+			// btnTextCleaner
+			// 
+			this.btnTextCleaner.Location = new System.Drawing.Point(165, 3);
+			this.btnTextCleaner.Name = "btnTextCleaner";
+			this.btnTextCleaner.Size = new System.Drawing.Size(75, 23);
+			this.btnTextCleaner.TabIndex = 3;
+			this.btnTextCleaner.Text = "降噪(&J)";
+			this.btnTextCleaner.UseVisualStyleBackColor = true;
+			this.btnTextCleaner.Click += new System.EventHandler(this.btnTextCleaner_Click);
+			// 
+			// btnReset
+			// 
+			this.btnReset.Location = new System.Drawing.Point(246, 3);
+			this.btnReset.Name = "btnReset";
+			this.btnReset.Size = new System.Drawing.Size(75, 23);
+			this.btnReset.TabIndex = 4;
+			this.btnReset.Text = "复位(&F)";
+			this.btnReset.UseVisualStyleBackColor = true;
 			// 
 			// frmTrainingTool
 			// 
@@ -501,9 +512,10 @@
 		private System.Windows.Forms.Button btnRotateLeft;
 		private System.Windows.Forms.Button btnRotateRight;
 		private System.Windows.Forms.Button btnMakeBox;
-		private System.Windows.Forms.Button btnReset;
 		private System.Windows.Forms.PictureBox pbxExample;
 		private System.Windows.Forms.ToolStripButton toolStripBtnGenerateTrainedData;
 		private System.Windows.Forms.SaveFileDialog sfdTrainedData;
+		private System.Windows.Forms.Button btnTextCleaner;
+		private System.Windows.Forms.Button btnReset;
 	}
 }

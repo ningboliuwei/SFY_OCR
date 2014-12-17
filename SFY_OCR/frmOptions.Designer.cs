@@ -32,6 +32,10 @@
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.fbdChooseDir = new System.Windows.Forms.FolderBrowserDialog();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+			this.btnDefault = new System.Windows.Forms.Button();
+			this.btnCancel = new System.Windows.Forms.Button();
+			this.btnOK = new System.Windows.Forms.Button();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.basicOptions = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -44,10 +48,6 @@
 			this.txtTesseractOcrDir = new System.Windows.Forms.TextBox();
 			this.btnChooseTesseractOcrDir = new System.Windows.Forms.Button();
 			this.trainingOptions = new System.Windows.Forms.TabPage();
-			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-			this.btnDefault = new System.Windows.Forms.Button();
-			this.btnCancel = new System.Windows.Forms.Button();
-			this.btnOK = new System.Windows.Forms.Button();
 			this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
@@ -55,13 +55,13 @@
 			this.txtImageMagickDir = new System.Windows.Forms.TextBox();
 			this.btnChooseImageMagickDir = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
+			this.tableLayoutPanel3.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.basicOptions.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel4.SuspendLayout();
 			this.tableLayoutPanel5.SuspendLayout();
 			this.trainingOptions.SuspendLayout();
-			this.tableLayoutPanel3.SuspendLayout();
 			this.tableLayoutPanel6.SuspendLayout();
 			this.tableLayoutPanel8.SuspendLayout();
 			this.SuspendLayout();
@@ -81,6 +81,56 @@
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(504, 161);
 			this.tableLayoutPanel1.TabIndex = 0;
 			// 
+			// tableLayoutPanel3
+			// 
+			this.tableLayoutPanel3.ColumnCount = 3;
+			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+			this.tableLayoutPanel3.Controls.Add(this.btnDefault, 2, 0);
+			this.tableLayoutPanel3.Controls.Add(this.btnCancel, 1, 0);
+			this.tableLayoutPanel3.Controls.Add(this.btnOK, 0, 0);
+			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 115);
+			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+			this.tableLayoutPanel3.RowCount = 1;
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(498, 43);
+			this.tableLayoutPanel3.TabIndex = 20;
+			// 
+			// btnDefault
+			// 
+			this.btnDefault.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnDefault.Location = new System.Drawing.Point(335, 3);
+			this.btnDefault.Name = "btnDefault";
+			this.btnDefault.Size = new System.Drawing.Size(160, 37);
+			this.btnDefault.TabIndex = 3;
+			this.btnDefault.Text = "默认(&D)";
+			this.btnDefault.UseVisualStyleBackColor = true;
+			this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
+			// 
+			// btnCancel
+			// 
+			this.btnCancel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnCancel.Location = new System.Drawing.Point(169, 3);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(160, 37);
+			this.btnCancel.TabIndex = 1;
+			this.btnCancel.Text = "取消(&C)";
+			this.btnCancel.UseVisualStyleBackColor = true;
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+			// 
+			// btnOK
+			// 
+			this.btnOK.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnOK.Location = new System.Drawing.Point(3, 3);
+			this.btnOK.Name = "btnOK";
+			this.btnOK.Size = new System.Drawing.Size(160, 37);
+			this.btnOK.TabIndex = 0;
+			this.btnOK.Text = "确定(&O)";
+			this.btnOK.UseVisualStyleBackColor = true;
+			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.basicOptions);
@@ -95,10 +145,10 @@
 			// basicOptions
 			// 
 			this.basicOptions.Controls.Add(this.tableLayoutPanel2);
-			this.basicOptions.Location = new System.Drawing.Point(4, 26);
+			this.basicOptions.Location = new System.Drawing.Point(4, 24);
 			this.basicOptions.Name = "basicOptions";
 			this.basicOptions.Padding = new System.Windows.Forms.Padding(3);
-			this.basicOptions.Size = new System.Drawing.Size(490, 76);
+			this.basicOptions.Size = new System.Drawing.Size(490, 78);
 			this.basicOptions.TabIndex = 0;
 			this.basicOptions.Text = "基本设置";
 			this.basicOptions.UseVisualStyleBackColor = true;
@@ -115,7 +165,7 @@
 			this.tableLayoutPanel2.RowCount = 2;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(484, 70);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(484, 72);
 			this.tableLayoutPanel2.TabIndex = 1;
 			// 
 			// tableLayoutPanel4
@@ -132,7 +182,7 @@
 			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
 			this.tableLayoutPanel4.RowCount = 1;
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel4.Size = new System.Drawing.Size(484, 29);
+			this.tableLayoutPanel4.Size = new System.Drawing.Size(484, 31);
 			this.tableLayoutPanel4.TabIndex = 21;
 			// 
 			// txtOutputDir
@@ -151,7 +201,7 @@
 			this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.label2.Location = new System.Drawing.Point(3, 0);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(178, 29);
+			this.label2.Size = new System.Drawing.Size(178, 31);
 			this.label2.TabIndex = 1;
 			this.label2.Text = "识别结果输出文件夹：";
 			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -161,7 +211,7 @@
 			this.btnChooseOutputDir.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.btnChooseOutputDir.Location = new System.Drawing.Point(437, 3);
 			this.btnChooseOutputDir.Name = "btnChooseOutputDir";
-			this.btnChooseOutputDir.Size = new System.Drawing.Size(44, 23);
+			this.btnChooseOutputDir.Size = new System.Drawing.Size(44, 25);
 			this.btnChooseOutputDir.TabIndex = 4;
 			this.btnChooseOutputDir.Text = "...";
 			this.btnChooseOutputDir.UseVisualStyleBackColor = true;
@@ -219,63 +269,13 @@
 			// trainingOptions
 			// 
 			this.trainingOptions.Controls.Add(this.tableLayoutPanel6);
-			this.trainingOptions.Location = new System.Drawing.Point(4, 26);
+			this.trainingOptions.Location = new System.Drawing.Point(4, 24);
 			this.trainingOptions.Name = "trainingOptions";
 			this.trainingOptions.Padding = new System.Windows.Forms.Padding(3);
-			this.trainingOptions.Size = new System.Drawing.Size(490, 76);
+			this.trainingOptions.Size = new System.Drawing.Size(490, 78);
 			this.trainingOptions.TabIndex = 1;
 			this.trainingOptions.Text = "训练设置";
 			this.trainingOptions.UseVisualStyleBackColor = true;
-			// 
-			// tableLayoutPanel3
-			// 
-			this.tableLayoutPanel3.ColumnCount = 3;
-			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-			this.tableLayoutPanel3.Controls.Add(this.btnDefault, 2, 0);
-			this.tableLayoutPanel3.Controls.Add(this.btnCancel, 1, 0);
-			this.tableLayoutPanel3.Controls.Add(this.btnOK, 0, 0);
-			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 115);
-			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-			this.tableLayoutPanel3.RowCount = 1;
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(498, 43);
-			this.tableLayoutPanel3.TabIndex = 20;
-			// 
-			// btnDefault
-			// 
-			this.btnDefault.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.btnDefault.Location = new System.Drawing.Point(335, 3);
-			this.btnDefault.Name = "btnDefault";
-			this.btnDefault.Size = new System.Drawing.Size(160, 37);
-			this.btnDefault.TabIndex = 3;
-			this.btnDefault.Text = "默认(&D)";
-			this.btnDefault.UseVisualStyleBackColor = true;
-			this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
-			// 
-			// btnCancel
-			// 
-			this.btnCancel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.btnCancel.Location = new System.Drawing.Point(169, 3);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(160, 37);
-			this.btnCancel.TabIndex = 1;
-			this.btnCancel.Text = "取消(&C)";
-			this.btnCancel.UseVisualStyleBackColor = true;
-			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-			// 
-			// btnOK
-			// 
-			this.btnOK.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.btnOK.Location = new System.Drawing.Point(3, 3);
-			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(160, 37);
-			this.btnOK.TabIndex = 0;
-			this.btnOK.Text = "确定(&O)";
-			this.btnOK.UseVisualStyleBackColor = true;
-			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
 			// 
 			// tableLayoutPanel6
 			// 
@@ -289,7 +289,7 @@
 			this.tableLayoutPanel6.RowCount = 2;
 			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
 			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-			this.tableLayoutPanel6.Size = new System.Drawing.Size(484, 70);
+			this.tableLayoutPanel6.Size = new System.Drawing.Size(484, 72);
 			this.tableLayoutPanel6.TabIndex = 2;
 			// 
 			// tableLayoutPanel7
@@ -303,7 +303,7 @@
 			this.tableLayoutPanel7.Name = "tableLayoutPanel7";
 			this.tableLayoutPanel7.RowCount = 1;
 			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel7.Size = new System.Drawing.Size(484, 29);
+			this.tableLayoutPanel7.Size = new System.Drawing.Size(484, 31);
 			this.tableLayoutPanel7.TabIndex = 21;
 			// 
 			// tableLayoutPanel8
@@ -355,9 +355,9 @@
 			this.btnChooseImageMagickDir.UseVisualStyleBackColor = true;
 			this.btnChooseImageMagickDir.Click += new System.EventHandler(this.btnChooseImageMagickDir_Click);
 			// 
-			// Options
+			// frmOptions
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(504, 161);
 			this.Controls.Add(this.tableLayoutPanel1);
@@ -366,13 +366,14 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.Name = "Options";
+			this.Name = "frmOptions";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "选项";
 			this.TopMost = true;
 			this.Load += new System.EventHandler(this.Options_Load);
 			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tabControl1.ResumeLayout(false);
 			this.basicOptions.ResumeLayout(false);
 			this.tableLayoutPanel2.ResumeLayout(false);
@@ -381,7 +382,6 @@
 			this.tableLayoutPanel5.ResumeLayout(false);
 			this.tableLayoutPanel5.PerformLayout();
 			this.trainingOptions.ResumeLayout(false);
-			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel6.ResumeLayout(false);
 			this.tableLayoutPanel8.ResumeLayout(false);
 			this.tableLayoutPanel8.PerformLayout();

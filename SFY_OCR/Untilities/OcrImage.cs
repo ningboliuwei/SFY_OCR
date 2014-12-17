@@ -157,7 +157,8 @@ namespace SFY_OCR.Untilities
 			}
 			else
 			{
-				throw new Exception("Box文件损坏，请重新识别。");
+				//TODO
+				//throw new Exception("Box文件损坏，请重新识别。");
 			}
 		}
 
